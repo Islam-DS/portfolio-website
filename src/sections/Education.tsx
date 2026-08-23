@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { education } from "@/data/education";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { attachTiltHover } from "@/lib/useTiltHover";
 
 export function Education() {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -14,10 +15,11 @@ export function Education() {
   useEffect(() => {
     const cards = gsap.utils.toArray<HTMLElement>("[data-edu-card]", gridRef.current);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const detachTilt = attachTiltHover(cards, 5);
 
     if (reducedMotion) {
       gsap.set(cards, { opacity: 1, y: 0 });
-      return;
+      return detachTilt;
     }
 
     gsap.set(cards, { opacity: 0, y: 32 });
@@ -31,7 +33,10 @@ export function Education() {
       })
     );
 
-    return () => triggers.forEach((t) => t.kill());
+    return () => {
+      triggers.forEach((t) => t.kill());
+      detachTilt();
+    };
   }, []);
 
   return (

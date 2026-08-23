@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { journey } from "@/data/journey";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { attachTiltHover } from "@/lib/useTiltHover";
 
 const typeAccent: Record<string, string> = {
   Work: "text-cinema-blue",
@@ -24,11 +25,12 @@ export function Experience() {
     const line = lineRef.current;
     const cards = gsap.utils.toArray<HTMLElement>("[data-journey-card]", list);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const detachTilt = attachTiltHover(cards, 5);
 
     if (reducedMotion) {
       gsap.set(cards, { opacity: 1, y: 0 });
       if (line) gsap.set(line, { scaleY: 1 });
-      return;
+      return detachTilt;
     }
 
     gsap.set(cards, { opacity: 0, y: 32 });
@@ -57,6 +59,7 @@ export function Experience() {
     return () => {
       cardTriggers.forEach((t) => t.kill());
       lineTrigger?.kill();
+      detachTilt();
     };
   }, []);
 

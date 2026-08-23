@@ -74,6 +74,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor
+              data-cursor-label="View Repo"
               className="group inline-flex items-center gap-2 text-[24.3px] font-medium text-white transition-colors hover:text-cinema-warm"
             >
               <Github className="h-4 w-4" />
@@ -86,6 +87,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor
+                data-cursor-label="Live Demo"
                 className="inline-flex items-center gap-2 text-[24.3px] font-medium text-cinema-warm transition-colors hover:text-white"
               >
                 Live demo <ExternalLink className="h-4 w-4" />
@@ -98,14 +100,14 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
           {project.image ? (
             <div
               ref={imageWrapRef}
-              className="relative aspect-[4/3] w-full overflow-hidden bg-cinema-surface lg:aspect-auto lg:h-full lg:min-h-[420px]"
+              className="group relative aspect-[4/3] w-full overflow-hidden bg-cinema-surface lg:aspect-auto lg:h-full lg:min-h-[420px]"
             >
               <div ref={imageInnerRef} className="absolute inset-0">
                 <Image
                   src={project.image}
                   alt={project.imageAlt ?? project.title}
                   fill
-                  className="object-contain p-6 lg:p-10"
+                  className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-110 lg:p-10"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>

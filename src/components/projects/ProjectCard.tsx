@@ -97,6 +97,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             target="_blank"
             rel="noopener noreferrer"
             data-cursor
+            data-cursor-label="View Repo"
             className="inline-flex items-center gap-1.5 text-[18.9px] font-medium text-cinema-text transition-colors hover:text-cinema-blue"
           >
             View repository
@@ -108,6 +109,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor
+              data-cursor-label="Live Demo"
               className="inline-flex items-center gap-1.5 text-[18.9px] font-medium text-cinema-gold transition-colors hover:text-cinema-text"
             >
               Live demo <ExternalLink className="h-3.5 w-3.5" />

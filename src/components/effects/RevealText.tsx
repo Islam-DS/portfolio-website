@@ -41,12 +41,13 @@ export function RevealText({
       return;
     }
 
-    gsap.set(units, { opacity: 0, yPercent: 100 });
+    gsap.set(units, { opacity: 0, yPercent: 100, filter: "blur(12px)" });
 
     const runAnim = () => {
       gsap.to(units, {
         opacity: 1,
         yPercent: 0,
+        filter: "blur(0px)",
         duration: 1,
         stagger: splitBy === "char" ? 0.018 : 0.06,
         ease: "power4.out",

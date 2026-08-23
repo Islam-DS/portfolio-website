@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { publications } from "@/data/publications";
@@ -7,14 +8,24 @@ import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PublicationDoi } from "@/components/publications/PublicationDoi";
 import { fadeInUp, staggerContainer, viewportOnce } from "@/lib/motion";
+import { attachTiltHover } from "@/lib/useTiltHover";
+import gsap from "gsap";
 
 export function Publications() {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const cards = gsap.utils.toArray<HTMLElement>("[data-pub-card]", listRef.current);
+    return attachTiltHover(cards, 4);
+  }, []);
+
   return (
     <SectionWrapper id="publications" className="bg-cinema-warm/[0.09]">
       <div className="cinema-container">
         <SectionHeading index="05" label="Publications" title="Peer-reviewed contributions" />
 
         <motion.div
+          ref={listRef}
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -24,6 +35,7 @@ export function Publications() {
           {publications.map((pub) => (
             <motion.div
               key={pub.title}
+              data-pub-card
               variants={fadeInUp}
               className="relative overflow-hidden rounded-[2rem] border border-black/10 bg-cinema-elevated p-8 md:p-14"
             >
@@ -52,6 +64,8 @@ export function Publications() {
                     href={pub.link}
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-cursor
+                    data-cursor-label="Read Paper"
                     className="inline-flex items-center gap-1.5 text-[18.9px] font-medium text-cinema-violet hover:text-cinema-text"
                   >
                     View on IEEE Xplore <ExternalLink className="h-3.5 w-3.5" />

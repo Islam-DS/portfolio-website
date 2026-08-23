@@ -9,6 +9,7 @@ export function CustomCursor() {
   const [active, setActive] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [tracking, setTracking] = useState(false);
+  const [label, setLabel] = useState<string | null>(null);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -43,6 +44,8 @@ export function CustomCursor() {
 
     const handleOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+      const labelEl = target.closest<HTMLElement>("[data-cursor-label]");
+      setLabel(labelEl ? labelEl.dataset.cursorLabel ?? null : null);
       setActive(!!target.closest("a, button, [data-cursor]"));
     };
 
@@ -70,20 +73,43 @@ export function CustomCursor() {
       <div
         ref={dotRef}
         className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black transition-[width,height,opacity] duration-150 ease-out"
-        style={{ width: pressed ? 7 : 10, height: pressed ? 7 : 10, opacity: tracking ? 1 : 0 }}
+        style={{
+          width: pressed ? 7 : 10,
+          height: pressed ? 7 : 10,
+          opacity: tracking && !label ? 1 : 0,
+        }}
         aria-hidden
       />
       <div
         ref={ringRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-[width,height,opacity,border-color] duration-200 ease-out"
-        style={{
-          width: ringSize,
-          height: ringSize,
-          opacity: tracking ? (pressed ? 1 : active ? 1 : 0.7) : 0,
-          borderColor: pressed ? "#000" : "rgba(0,0,0,0.55)",
-        }}
+        className="pointer-events-none fixed left-0 top-0 z-[9999] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center whitespace-nowrap rounded-full transition-[width,height,padding,opacity,background-color,border-color] duration-200 ease-out"
+        style={
+          label
+            ? {
+                padding: "9px 20px",
+                opacity: tracking ? 1 : 0,
+                backgroundColor: "rgba(247,243,233,0.9)",
+                border: "1px solid rgba(24,22,15,0.12)",
+                backdropFilter: "blur(8px)",
+                boxShadow: "0 8px 24px -12px rgba(24,22,15,0.35)",
+              }
+            : {
+                width: ringSize,
+                height: ringSize,
+                padding: 0,
+                opacity: tracking ? (pressed ? 1 : active ? 1 : 0.7) : 0,
+                backgroundColor: "transparent",
+                border: `2px solid ${pressed ? "#000" : "rgba(0,0,0,0.55)"}`,
+              }
+        }
         aria-hidden
-      />
+      >
+        {label && (
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cinema-ink">
+            {label}
+          </span>
+        )}
+      </div>
     </>
   );
 }
