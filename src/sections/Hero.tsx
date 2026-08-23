@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { RevealText } from "@/components/effects/RevealText";
 import { CountUpNumber } from "@/components/effects/CountUpNumber";
+import { HeroParticleField } from "@/components/effects/HeroParticleField";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
 
@@ -113,6 +114,8 @@ export function Hero() {
 
   return (
     <section id="top" ref={sectionRef} className="relative overflow-hidden pt-40 pb-20 lg:pt-48">
+      <HeroParticleField className="pointer-events-none absolute inset-0 -z-10 opacity-70" />
+
       <div className="cinema-container relative z-10 text-center">
         <RevealText
           as="p"
