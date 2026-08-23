@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://api.github.com/users/Islam-DS/repos?per_page=100&sort=created&direction=desc\" -H \"Accept: application/vnd.github+json\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s \"https://api.github.com/repos/Islam-DS/Med_AI-bias-audit/git/trees/HEAD?recursive=1\" -H \"Accept: application/vnd.github+json\")",
+      "Bash(curl -s \"https://api.github.com/repos/Islam-DS/Med_AI-bias-audit/languages\" -H \"Accept: application/vnd.github+json\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/Islam-DS/Med_AI-bias-audit/HEAD/README.md\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/Islam-DS/Med_AI-bias-audit/HEAD/results/reports/audit_summary.md\")",
+      "Bash(curl -sL \"https://raw.githubusercontent.com/Islam-DS/Med_AI-bias-audit/HEAD/results/figures/auroc_by_view_position.png\" -o \"C:/Users/User/AppData/Local/Temp/claude/e--PORTFOLIO-WEBSITE/c1280213-7e27-4be4-a707-54d99d03483b/scratchpad/bias_audit/auroc_by_view_position.png\")",
+      "Bash(curl -sL \"https://raw.githubusercontent.com/Islam-DS/Med_AI-bias-audit/HEAD/results/figures/auroc_by_age_group.png\" -o \"C:/Users/User/AppData/Local/Temp/claude/e--PORTFOLIO-WEBSITE/c1280213-7e27-4be4-a707-54d99d03483b/scratchpad/bias_audit/auroc_by_age_group.png\")",
+      "Bash(node screenshot7.mjs)"
+    ]
+  }
+}
