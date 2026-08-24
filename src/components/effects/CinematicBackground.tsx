@@ -19,9 +19,11 @@ export function CinematicBackground() {
         scrub: 0.8,
       },
     });
-    tl.to(el, { backgroundColor: "#F5EEDA", ease: "none" })
-      .to(el, { backgroundColor: "#EFEDE0", ease: "none" })
-      .to(el, { backgroundColor: "#F7F3E9", ease: "none" });
+    // The ground cools toward teal through the research sections, then warms
+    // back at the close — a slow temperature shift rather than a colour change.
+    tl.to(el, { backgroundColor: "#080C0E", ease: "none" })
+      .to(el, { backgroundColor: "#0A0C0D", ease: "none" })
+      .to(el, { backgroundColor: "#07090A", ease: "none" });
 
     return () => {
       tl.scrollTrigger?.kill();

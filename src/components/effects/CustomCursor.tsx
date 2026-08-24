@@ -72,7 +72,7 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black transition-[width,height,opacity] duration-150 ease-out"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cinema-text transition-[width,height,opacity] duration-150 ease-out"
         style={{
           width: pressed ? 7 : 10,
           height: pressed ? 7 : 10,
@@ -88,10 +88,10 @@ export function CustomCursor() {
             ? {
                 padding: "9px 20px",
                 opacity: tracking ? 1 : 0,
-                backgroundColor: "rgba(247,243,233,0.9)",
-                border: "1px solid rgba(24,22,15,0.12)",
+                backgroundColor: "rgba(230,237,236,0.94)",
+                border: "1px solid rgba(255,255,255,0.18)",
                 backdropFilter: "blur(8px)",
-                boxShadow: "0 8px 24px -12px rgba(24,22,15,0.35)",
+                boxShadow: "0 10px 30px -12px rgba(0,0,0,0.8)",
               }
             : {
                 width: ringSize,
@@ -99,7 +99,7 @@ export function CustomCursor() {
                 padding: 0,
                 opacity: tracking ? (pressed ? 1 : active ? 1 : 0.7) : 0,
                 backgroundColor: "transparent",
-                border: `2px solid ${pressed ? "#000" : "rgba(0,0,0,0.55)"}`,
+                border: `2px solid ${pressed ? "#E6EDEC" : "rgba(230,237,236,0.6)"}`,
               }
         }
         aria-hidden

@@ -10,7 +10,7 @@ const QUOTE = "“The most meaningful AI doesn't replace clinicians — it ampli
 
 export function About() {
   return (
-    <SectionWrapper id="about" className="bg-cinema-surface/80">
+    <SectionWrapper id="about">
       <div className="cinema-container">
         <SectionHeading
           index="01"
@@ -50,7 +50,7 @@ export function About() {
               Robotics Laboratory.
             </p>
 
-            <div className="mt-10 space-y-4 border-t border-black/10 pt-8">
+            <div className="mt-10 space-y-4 border-t border-white/10 pt-8">
               <div className="flex items-baseline gap-3">
                 <span className="font-display text-[27px] text-cinema-violet">01</span>
                 <p className="text-[24.3px] text-cinema-soft">Oncology &amp; Medical AI</p>

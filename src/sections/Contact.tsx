@@ -61,7 +61,7 @@ export function Contact() {
               type="button"
               onClick={handleCopyEmail}
               data-cursor
-              className="group inline-flex items-center gap-3 text-[32.4px] font-medium text-white transition-colors hover:text-cinema-warm md:text-[40.5px]"
+              className="group inline-flex max-w-full items-center gap-3 break-all text-left text-[22px] font-medium text-white transition-colors hover:text-cinema-warm sm:text-[28px] md:text-[40.5px]"
             >
               {siteConfig.email}
               {copied ? (

@@ -49,7 +49,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
   return (
     <div ref={cardRef} className="relative overflow-hidden rounded-[2rem] bg-cinema-ink">
       <div className="grid gap-0 lg:grid-cols-[1.3fr_1fr] lg:items-stretch">
-        <div className="order-2 p-10 md:p-14 lg:order-1 lg:p-16">
+        <div className="order-2 min-w-0 p-7 sm:p-10 md:p-14 lg:order-1 lg:p-16">
           <span className="font-mono text-[17.55px] font-medium uppercase tracking-[0.2em] text-white/40">
             Flagship Research
           </span>
@@ -57,7 +57,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
             as="h3"
             text={project.title}
             splitBy="word"
-            className="mt-6 block font-display text-[64.8px] font-bold leading-[1.05] tracking-tight text-white md:text-[81px]"
+            className="mt-6 block font-display text-[34px] font-bold leading-[1.05] tracking-tight text-white sm:text-[46px] md:text-[64.8px] lg:text-[72px] xl:text-[81px]"
           />
           <p className="mt-6 max-w-lg text-body-lg leading-relaxed text-white/55">
             {project.description}

@@ -10,7 +10,7 @@ export async function Projects() {
   const secondary = projects.filter((p) => p.id !== flagship.id);
 
   return (
-    <SectionWrapper id="projects" className="bg-cinema-surface/80">
+    <SectionWrapper id="projects">
       <div className="cinema-container">
         <SectionHeading
           index="04"

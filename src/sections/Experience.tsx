@@ -64,7 +64,7 @@ export function Experience() {
   }, []);
 
   return (
-    <SectionWrapper id="experience" className="bg-cinema-blue/[0.06]">
+    <SectionWrapper id="experience">
       <div className="cinema-container">
         <SectionHeading
           index="03"
@@ -74,7 +74,7 @@ export function Experience() {
         />
 
         <div ref={listRef} className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 hidden w-px -translate-x-1/2 bg-black/10 lg:block" />
+          <div className="absolute left-1/2 top-0 bottom-0 hidden w-px -translate-x-1/2 bg-white/10 lg:block" />
           <div
             ref={lineRef}
             className="absolute left-1/2 top-0 bottom-0 hidden w-px origin-top -translate-x-1/2 bg-cinema-blue lg:block"
@@ -91,7 +91,7 @@ export function Experience() {
                   <div className="lg:grid lg:grid-cols-2 lg:gap-x-16">
                     <div
                       data-journey-card
-                      className={`rounded-[1.75rem] border border-black/10 bg-cinema-elevated p-7 md:p-8 ${
+                      className={`rounded-[1.75rem] border border-white/10 bg-cinema-elevated p-7 md:p-8 ${
                         isLeft ? "lg:col-start-1 lg:text-right" : "lg:col-start-2"
                       }`}
                     >
@@ -128,7 +128,7 @@ export function Experience() {
                       </ul>
 
                       <div
-                        className={`mt-5 flex flex-wrap items-center gap-4 border-t border-black/10 pt-4 ${
+                        className={`mt-5 flex flex-wrap items-center gap-4 border-t border-white/10 pt-4 ${
                           isLeft ? "lg:justify-end" : ""
                         }`}
                       >

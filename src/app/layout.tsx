@@ -3,7 +3,6 @@ import { DM_Sans, Instrument_Serif, Syne, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CinematicBackground } from "@/components/effects/CinematicBackground";
-import { AmbientParticles } from "@/components/effects/AmbientParticles";
 import { SectionProgress } from "@/components/effects/SectionProgress";
 import { SmoothScroll } from "@/components/effects/SmoothScroll";
 import { CustomCursor } from "@/components/effects/CustomCursor";
@@ -72,7 +71,6 @@ export default function RootLayout({
       >
         <JsonLd />
         <CinematicBackground />
-        <AmbientParticles />
         <CustomCursor />
         <SectionProgress />
         <SmoothScroll>

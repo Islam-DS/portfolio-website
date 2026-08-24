@@ -40,7 +40,7 @@ export function Education() {
   }, []);
 
   return (
-    <SectionWrapper id="education" className="bg-cinema-deep/70">
+    <SectionWrapper id="education">
       <div className="cinema-container">
         <SectionHeading index="02" label="Education" title="Academic foundation" />
 
@@ -49,16 +49,16 @@ export function Education() {
             <div
               key={item.institution}
               data-edu-card
-              className="relative flex flex-col rounded-[1.75rem] border border-black/10 bg-cinema-elevated p-8 md:p-10"
+              className="relative flex min-w-0 flex-col rounded-[1.75rem] border border-white/10 bg-cinema-elevated p-6 sm:p-8 md:p-10"
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
                 {item.badge && (
                   <span
                     className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] ${
                       i === 0
                         ? "border-cinema-gold/30 text-cinema-gold"
-                        : "border-black/10 text-cinema-muted"
+                        : "border-white/10 text-cinema-muted"
                     }`}
                   >
                     {item.badge}
@@ -66,7 +66,7 @@ export function Education() {
                 )}
               </div>
 
-              <h3 className="mt-6 font-display text-[40.5px] font-bold leading-tight text-cinema-text md:text-[48.6px]">
+              <h3 className="mt-6 font-display text-[30px] font-bold leading-tight text-cinema-text sm:text-[34px] lg:text-[42px] xl:text-[48.6px]">
                 {item.institution}
               </h3>
               <p className="mt-2 text-[27px] text-cinema-muted">{item.degree}</p>
@@ -75,7 +75,7 @@ export function Education() {
                 {item.location}
               </p>
 
-              <ul className="mt-8 space-y-3 border-t border-black/10 pt-6">
+              <ul className="mt-8 space-y-3 border-t border-white/10 pt-6">
                 {item.highlights.map((highlight) => (
                   <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-muted">
                     <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-cinema-blue" />
