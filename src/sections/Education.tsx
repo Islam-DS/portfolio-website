@@ -40,7 +40,7 @@ export function Education() {
   }, []);
 
   return (
-    <SectionWrapper id="education">
+    <SectionWrapper id="education" className="bg-cinema-deep/70">
       <div className="cinema-container">
         <SectionHeading index="02" label="Education" title="Academic foundation" />
 
@@ -49,7 +49,7 @@ export function Education() {
             <div
               key={item.institution}
               data-edu-card
-              className="relative flex min-w-0 flex-col rounded-[1.75rem] border border-white/10 bg-cinema-elevated p-6 sm:p-8 md:p-10"
+              className="relative flex min-w-0 flex-col rounded-[1.75rem] border border-black/10 bg-cinema-elevated p-6 sm:p-8 md:p-10"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
@@ -58,7 +58,7 @@ export function Education() {
                     className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] ${
                       i === 0
                         ? "border-cinema-gold/30 text-cinema-gold"
-                        : "border-white/10 text-cinema-muted"
+                        : "border-black/10 text-cinema-muted"
                     }`}
                   >
                     {item.badge}
@@ -75,7 +75,7 @@ export function Education() {
                 {item.location}
               </p>
 
-              <ul className="mt-8 space-y-3 border-t border-white/10 pt-6">
+              <ul className="mt-8 space-y-3 border-t border-black/10 pt-6">
                 {item.highlights.map((highlight) => (
                   <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-muted">
                     <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-cinema-blue" />

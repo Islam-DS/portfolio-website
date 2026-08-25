@@ -20,7 +20,7 @@ export function Publications() {
   }, []);
 
   return (
-    <SectionWrapper id="publications">
+    <SectionWrapper id="publications" className="bg-cinema-warm/[0.09]">
       <div className="cinema-container">
         <SectionHeading index="05" label="Publications" title="Peer-reviewed contributions" />
 
@@ -37,7 +37,7 @@ export function Publications() {
               key={pub.title}
               data-pub-card
               variants={fadeInUp}
-              className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-cinema-elevated p-8 md:p-14"
+              className="relative overflow-hidden rounded-[2rem] border border-black/10 bg-cinema-elevated p-8 md:p-14"
             >
               <span
                 aria-hidden
@@ -57,7 +57,7 @@ export function Publications() {
                   <p className="mt-5 text-body-lg leading-relaxed text-cinema-muted">{pub.abstract}</p>
                 )}
 
-                <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-white/10 pt-6">
+                <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-black/10 pt-6">
                   <p className="text-[18.9px] text-cinema-muted/70">{pub.tags.join(" · ")}</p>
                   <PublicationDoi doi={pub.doi} link={pub.link} />
                   <a

@@ -10,28 +10,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Dark ground. Luminous particle work needs darkness to add light to —
-        // on the previous cream ground additive blending had nothing to burn against.
         cinema: {
-          navy: "#07090A", // page ground (blue-black, biased toward the teal accent)
-          deep: "#0B1012", // recessed
-          surface: "#0C1112",
-          elevated: "#121819", // cards
-          border: "rgba(150, 190, 190, 0.14)",
-          text: "#E6EDEC",
-          muted: "#8A9B99",
-          soft: "#C3CFCD",
-          blue: "#4FD1C0", // teal signal, lifted so it glows on ink
-          "blue-bright": "#6FE3D4",
-          cyan: "#4FD1C0",
-          violet: "#D2685F",
-          purple: "#D2685F",
-          gold: "#E0A455",
-          warm: "#EFC182",
-          // "ink" used to mean inverted-dark on a light page. On a dark page the
-          // emphasis device becomes elevation instead, so these read as raised panels.
-          ink: "#0D1214",
-          "ink-deep": "#05070A",
+          navy: "#F7F3E9",
+          deep: "#EEE6D4",
+          surface: "#FCFAF4",
+          elevated: "#FFFFFF",
+          border: "rgba(24, 22, 15, 0.09)",
+          text: "#18160F",
+          muted: "#6E6656",
+          soft: "#332F24",
+          blue: "#2F5654",
+          "blue-bright": "#3D716D",
+          cyan: "#2F5654",
+          violet: "#7A3434",
+          purple: "#7A3434",
+          gold: "#A97B33",
+          warm: "#C89A53",
+          ink: "#1B1914",
+          "ink-deep": "#100F0B",
         },
       },
       fontFamily: {
@@ -42,8 +38,8 @@ const config: Config = {
       },
       fontSize: {
         // The clamp MINIMUM applies on narrow screens, so it has to be small enough
-        // that a single long word still fits a 360px viewport. The maximum is what
-        // carries the intended scale on desktop.
+        // that a single long word still fits a 360px viewport. The maximum carries
+        // the intended scale on desktop.
         "display-2xl": ["clamp(3.4rem,13vw,17.55rem)", { lineHeight: "0.92", letterSpacing: "-0.045em" }],
         "display-xl": ["clamp(3rem,11vw,12.15rem)", { lineHeight: "0.95", letterSpacing: "-0.04em" }],
         "display-lg": ["clamp(2.6rem,9vw,8.775rem)", { lineHeight: "1", letterSpacing: "-0.03em" }],
@@ -53,11 +49,11 @@ const config: Config = {
       },
       backgroundImage: {
         "hero-mesh":
-          "radial-gradient(ellipse 70% 50% at 78% 8%, rgba(79,209,192,0.10) 0%, transparent 62%), radial-gradient(ellipse 55% 45% at 4% 96%, rgba(224,164,85,0.08) 0%, transparent 58%)",
+          "radial-gradient(ellipse 70% 50% at 80% 10%, rgba(47,86,84,0.05) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 0% 100%, rgba(184,132,60,0.06) 0%, transparent 55%)",
         "section-glow":
-          "radial-gradient(ellipse 100% 60% at 50% -10%, rgba(79,209,192,0.07) 0%, transparent 65%)",
+          "radial-gradient(ellipse 100% 60% at 50% -10%, rgba(47,86,84,0.05) 0%, transparent 65%)",
         "card-shine":
-          "linear-gradient(135deg, rgba(79,209,192,0.05) 0%, transparent 40%, transparent 60%, rgba(224,164,85,0.04) 100%)",
+          "linear-gradient(135deg, rgba(47,86,84,0.04) 0%, transparent 40%, transparent 60%, rgba(184,132,60,0.03) 100%)",
         "hero-overlay":
           "linear-gradient(115deg, rgba(22,19,16,0.92) 0%, rgba(34,31,26,0.78) 38%, rgba(34,31,26,0.45) 65%, rgba(34,31,26,0.2) 100%)",
       },
@@ -82,12 +78,12 @@ const config: Config = {
         },
       },
       boxShadow: {
-        cinema: "0 24px 70px -30px rgba(0, 0, 0, 0.75)",
-        glow: "0 14px 46px -22px rgba(0, 0, 0, 0.7)",
-        "glow-cyan": "0 14px 40px -20px rgba(79, 209, 192, 0.26)",
-        "glow-violet": "0 14px 40px -20px rgba(210, 104, 95, 0.24)",
-        "glow-gold": "0 14px 40px -20px rgba(224, 164, 85, 0.26)",
-        portrait: "0 34px 90px -28px rgba(0, 0, 0, 0.85)",
+        cinema: "0 20px 60px -28px rgba(24, 22, 15, 0.22)",
+        glow: "0 12px 40px -20px rgba(24, 22, 15, 0.18)",
+        "glow-cyan": "0 12px 32px -18px rgba(47, 86, 84, 0.2)",
+        "glow-violet": "0 12px 32px -18px rgba(122, 52, 52, 0.2)",
+        "glow-gold": "0 12px 32px -18px rgba(169, 123, 51, 0.22)",
+        portrait: "0 30px 80px -24px rgba(16, 15, 11, 0.4)",
       },
       transitionTimingFunction: {
         cinema: "cubic-bezier(0.16, 1, 0.3, 1)",

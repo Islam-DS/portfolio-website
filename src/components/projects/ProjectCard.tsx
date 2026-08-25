@@ -52,7 +52,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
   return (
     <div
       ref={cardRef}
-      className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-cinema-elevated"
+      className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-black/10 bg-cinema-elevated"
     >
       {project.image ? (
         <div ref={imageWrapRef} className="relative aspect-[16/10] w-full overflow-hidden bg-cinema-deep/40">
@@ -91,7 +91,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
         <p className="mt-4 text-[18.9px] text-cinema-muted/70">{project.tags.join(" · ")}</p>
 
-        <div className="mt-6 flex flex-wrap items-center gap-6 border-t border-white/10 pt-5">
+        <div className="mt-6 flex flex-wrap items-center gap-6 border-t border-black/10 pt-5">
           <a
             href={project.github}
             target="_blank"

@@ -42,7 +42,7 @@ export function SectionHeading({
         )}
       >
         <span className="font-mono text-[18.9px] text-cinema-muted/60">{index}</span>
-        <span className="h-px w-8 bg-white/15" />
+        <span className="h-px w-8 bg-black/15" />
         <span className="section-label">{label}</span>
       </div>
       <h2 className="font-display text-display-md font-bold tracking-tight text-cinema-text">

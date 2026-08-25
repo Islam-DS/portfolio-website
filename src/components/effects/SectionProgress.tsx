@@ -54,7 +54,7 @@ export function SectionProgress() {
       className="pointer-events-none fixed right-6 top-1/2 z-30 hidden -translate-y-1/2 xl:block"
     >
       <div className="pointer-events-auto relative flex flex-col items-center gap-6 py-2">
-        <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-white/10" />
+        <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-black/10" />
         <div
           ref={lineRef}
           className="absolute left-1/2 top-0 bottom-0 w-px origin-top -translate-x-1/2 bg-cinema-blue"

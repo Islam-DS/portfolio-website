@@ -8,7 +8,7 @@ interface TerminalPreviewProps {
 export function TerminalPreview({ command, output, className, bare = false }: TerminalPreviewProps) {
   return (
     <div
-      className={`overflow-hidden bg-cinema-ink ${bare ? "" : "rounded-2xl border border-white/10"} ${className ?? ""}`}
+      className={`overflow-hidden bg-cinema-ink ${bare ? "" : "rounded-2xl border border-black/10"} ${className ?? ""}`}
     >
       <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
