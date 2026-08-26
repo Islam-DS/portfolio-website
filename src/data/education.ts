@@ -5,6 +5,7 @@ export interface EducationItem {
   location: string;
   highlights: string[];
   badge?: string;
+  image?: string;
 }
 
 export const education: EducationItem[] = [
@@ -19,6 +20,7 @@ export const education: EducationItem[] = [
       "Research focus on medical AI and federated systems",
     ],
     badge: "International Scholar",
+    image: "/images/enhanced_university_images.gif",
   },
   {
     institution: "Government Laboratory High School",
@@ -30,5 +32,6 @@ export const education: EducationItem[] = [
       "Leadership in Red Crescent Society and English Club",
       "Foundation for computational and analytical thinking",
     ],
+    image: "/images/enhanced_school_images.gif",
   },
 ];
