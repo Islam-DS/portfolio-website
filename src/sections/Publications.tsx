@@ -20,7 +20,7 @@ export function Publications() {
   }, []);
 
   return (
-    <SectionWrapper id="publications" className="bg-cinema-warm/[0.09]">
+    <SectionWrapper id="publications">
       <div className="cinema-container">
         <SectionHeading index="05" label="Publications" title="Peer-reviewed contributions" />
 

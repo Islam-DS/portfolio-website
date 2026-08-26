@@ -40,7 +40,7 @@ export function Education() {
   }, []);
 
   return (
-    <SectionWrapper id="education" className="bg-cinema-deep/70">
+    <SectionWrapper id="education">
       <div className="cinema-container">
         <SectionHeading index="02" label="Education" title="Academic foundation" />
 

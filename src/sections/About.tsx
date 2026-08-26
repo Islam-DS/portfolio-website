@@ -10,7 +10,7 @@ const QUOTE = "“The most meaningful AI doesn't replace clinicians — it ampli
 
 export function About() {
   return (
-    <SectionWrapper id="about" className="bg-cinema-surface/80">
+    <SectionWrapper id="about">
       <div className="cinema-container">
         <SectionHeading
           index="01"

@@ -64,7 +64,7 @@ export function Experience() {
   }, []);
 
   return (
-    <SectionWrapper id="experience" className="bg-cinema-blue/[0.06]">
+    <SectionWrapper id="experience">
       <div className="cinema-container">
         <SectionHeading
           index="03"
