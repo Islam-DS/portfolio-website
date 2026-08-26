@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { RevealText } from "@/components/effects/RevealText";
 import { CountUpNumber } from "@/components/effects/CountUpNumber";
-import { ClayInstrument } from "@/components/effects/ClayInstrument";
+import { DataEmbedding } from "@/components/effects/DataEmbedding";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
 
@@ -114,9 +114,14 @@ export function Hero() {
 
   return (
     <section id="top" ref={sectionRef} className="relative overflow-hidden pt-40 pb-20 lg:pt-48">
-      {/* Sculptural form bleeding off the left margin — sits behind the content
-          (z-0 vs z-10) so it reads as depth rather than competing with the type. */}
-      <ClayInstrument className="pointer-events-none absolute left-[27%] top-[26%] z-0 hidden h-[54%] w-[25%] opacity-90 lg:block" />
+      {/* Sits behind the portrait (z-0 vs z-10) so it reads as depth. The caption
+          matters: an abstract form is decoration, a labelled embedding is a claim. */}
+      <DataEmbedding className="pointer-events-none absolute left-[33%] top-[19%] z-0 hidden h-[65%] w-[28%] lg:block" />
+      <p className="pointer-events-none absolute left-[10%] top-[70%] z-0 hidden w-[25%] font-mono text-[13px] leading-relaxed tracking-[0.06em] text-cinema-muted/65 lg:block">
+        PAM50 subtype embedding — five clusters
+        <br />
+        resolving from high-dimensional expression data
+      </p>
 
       <div className="cinema-container relative z-10 text-center">
         <RevealText

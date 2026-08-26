@@ -2,7 +2,7 @@ import { getGitHubProjects } from "@/lib/github";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FeaturedProject } from "@/components/projects/FeaturedProject";
-import { ProjectCard } from "@/components/projects/ProjectCard";
+import { ProjectRail } from "@/components/projects/ProjectRail";
 
 export async function Projects() {
   const projects = await getGitHubProjects();
@@ -23,12 +23,7 @@ export async function Projects() {
 
         {secondary.length > 0 && (
           <div className="mt-24">
-            <p className="section-label mb-8">More Research</p>
-            <div className="grid gap-8 md:grid-cols-2">
-              {secondary.map((project, i) => (
-                <ProjectCard key={project.id} project={project} index={i} />
-              ))}
-            </div>
+            <ProjectRail projects={secondary} />
           </div>
         )}
       </div>
