@@ -76,20 +76,34 @@ export function Education() {
                   {/* Real, animated campus photography — a plain <img> (not next/image)
                       so the GIF keeps animating rather than being frozen by optimization.
                       Below md the column is a single full-width block and the text runs
-                      edge to edge over it, so it needs a strong flat scrim to stay
-                      legible. At md+ the two columns are wide enough that text only
-                      occupies the left portion, so a directional scrim keeps it nearly
-                      invisible there while letting the photo bleed through clearly on
-                      the empty right side — a deliberate editorial photo bleed rather
-                      than a faded-out backdrop. */}
+                      edge to edge over it, so it stays a flat, mostly-hidden backdrop.
+                      At md+, an SVG turbulence mask (public/images/dissolve-mask.svg)
+                      dissolves the photo's left edge into true transparency through a
+                      jagged, hand-torn boundary — not a straight CSS gradient line — so
+                      the text side reads as clean card, not a washed-over photo, while
+                      the photo itself stays sharp and fully visible on the right. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image}
                     alt=""
-                    className="h-full w-full scale-105 object-cover opacity-[0.5] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.6] md:opacity-[0.78] md:group-hover:opacity-[0.9]"
+                    className="h-full w-full scale-105 object-cover opacity-[0.5] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.6] md:hidden"
                   />
                   <div className="absolute inset-0 bg-cinema-elevated/70 md:hidden" />
-                  <div className="absolute inset-0 hidden bg-gradient-to-r from-cinema-elevated/72 via-cinema-elevated/30 to-transparent md:block" />
+
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.image}
+                    alt=""
+                    style={{
+                      maskImage: "url('/images/dissolve-mask.svg')",
+                      maskSize: "100% 100%",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskImage: "url('/images/dissolve-mask.svg')",
+                      WebkitMaskSize: "100% 100%",
+                      WebkitMaskRepeat: "no-repeat",
+                    }}
+                    className="hidden h-full w-full scale-105 object-cover opacity-[0.92] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-100 md:block"
+                  />
                 </div>
               )}
 
