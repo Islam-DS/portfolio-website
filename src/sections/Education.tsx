@@ -83,9 +83,9 @@ export function Education() {
                   <img
                     src={item.image}
                     alt=""
-                    className="h-full w-full scale-105 object-cover opacity-[0.32] blur-[0.5px] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.44]"
+                    className="h-full w-full scale-105 object-cover opacity-[0.55] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.68]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-cinema-elevated/95 via-cinema-elevated/80 to-cinema-elevated/35" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-cinema-elevated/95 via-cinema-elevated/55 to-cinema-elevated/5" />
                 </div>
               )}
 
