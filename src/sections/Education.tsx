@@ -75,17 +75,21 @@ export function Education() {
                 <div className="pointer-events-none absolute inset-0" aria-hidden>
                   {/* Real, animated campus photography — a plain <img> (not next/image)
                       so the GIF keeps animating rather than being frozen by optimization.
-                      A directional scrim (not a flat wash) keeps it nearly invisible
-                      behind the text on the left, and lets it bleed through more openly
-                      toward the empty right side of the column — reads as a deliberate
-                      editorial photo bleed rather than a faded-out mistake. */}
+                      Below md the column is a single full-width block and the text runs
+                      edge to edge over it, so it needs a strong flat scrim to stay
+                      legible. At md+ the two columns are wide enough that text only
+                      occupies the left portion, so a directional scrim keeps it nearly
+                      invisible there while letting the photo bleed through clearly on
+                      the empty right side — a deliberate editorial photo bleed rather
+                      than a faded-out backdrop. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image}
                     alt=""
-                    className="h-full w-full scale-105 object-cover opacity-[0.55] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.68]"
+                    className="h-full w-full scale-105 object-cover opacity-[0.5] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.6] md:opacity-[0.78] md:group-hover:opacity-[0.9]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-cinema-elevated/95 via-cinema-elevated/55 to-cinema-elevated/5" />
+                  <div className="absolute inset-0 bg-cinema-elevated/88 md:hidden" />
+                  <div className="absolute inset-0 hidden bg-gradient-to-r from-cinema-elevated/92 via-cinema-elevated/38 to-transparent md:block" />
                 </div>
               )}
 
