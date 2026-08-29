@@ -43,72 +43,77 @@ export function Education() {
     <SectionWrapper id="education">
       <div className="cinema-container">
         <SectionHeading index="02" label="Education" title="Academic foundation" />
+      </div>
 
-        <div ref={gridRef} className="flex flex-col gap-6 md:gap-8">
-          {education.map((item, i) => (
-            <div
-              key={item.institution}
-              data-edu-card
-              className="group relative flex min-w-0 flex-col overflow-hidden rounded-[1.75rem] border border-black/10 bg-cinema-elevated"
-            >
-              {item.image && (
-                <div className="pointer-events-none absolute inset-0" aria-hidden>
-                  {/* Real, animated campus photography, filling the whole card as a
-                      faded backdrop — a plain <img> (not next/image) so the GIF keeps
-                      animating rather than being frozen by optimization. Opacity does
-                      the fading (not a dark scrim), since text here stays dark — the
-                      photo has to stay light enough for that to read. */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.image}
-                    alt=""
-                    className="h-full w-full scale-105 object-cover opacity-[0.16] blur-[0.5px] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.24]"
-                  />
-                  {/* cream wash ties the photo to the card's own tone and guarantees
-                      the text stays legible regardless of what the frame is showing */}
-                  <div className="absolute inset-0 bg-cinema-elevated/55" />
-                </div>
-              )}
-
-              <div className="relative z-10 grid flex-1 gap-8 p-6 sm:p-8 md:grid-cols-2 md:gap-12 md:p-10 lg:gap-16 lg:p-14">
-                <div className="flex flex-col md:justify-center">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
-                    {item.badge && (
-                      <span
-                        className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] backdrop-blur-sm ${
-                          i === 0
-                            ? "border-cinema-gold/30 bg-cinema-elevated/60 text-cinema-gold"
-                            : "border-black/10 bg-cinema-elevated/60 text-cinema-muted"
-                        }`}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="mt-6 font-display text-[30px] font-bold leading-tight text-cinema-text sm:text-[34px] lg:text-[42px] xl:text-[48.6px]">
-                    {item.institution}
-                  </h3>
-                  <p className="mt-2 text-[27px] text-cinema-muted">{item.degree}</p>
-                  <p className="mt-3 flex items-center gap-2 text-[21.6px] text-cinema-muted/80">
-                    <MapPin className="h-4 w-4 shrink-0" />
-                    {item.location}
-                  </p>
-                </div>
-
-                <ul className="flex flex-col justify-center gap-4 border-t border-black/10 pt-6 md:border-l md:border-t-0 md:pl-12 md:pt-0 lg:pl-16">
-                  {item.highlights.map((highlight) => (
-                    <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-muted">
-                      <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-cinema-blue" />
-                      {highlight}
-                    </li>
-                  ))}
-                </ul>
+      {/* True edge-to-edge split-screen: a direct child of the section (not
+          .cinema-container), so this grid runs the full width of the page
+          rather than the site's usual ~1920px content cap. University is
+          always column one (left), school always column two (right) —
+          the source order in @/data/education already matches that. */}
+      <div ref={gridRef} className="grid w-full grid-cols-1 border-y border-black/10 md:grid-cols-2">
+        {education.map((item, i) => (
+          <div
+            key={item.institution}
+            data-edu-card
+            className={`group relative flex min-h-[560px] flex-col justify-center overflow-hidden border-black/10 bg-cinema-elevated p-8 sm:p-12 md:min-h-[680px] md:p-16 lg:p-20 ${
+              i === 0 ? "border-b md:border-b-0 md:border-r" : ""
+            }`}
+          >
+            {item.image && (
+              <div className="pointer-events-none absolute inset-0" aria-hidden>
+                {/* Real, animated campus photography, filling the whole column as a
+                    faded backdrop — a plain <img> (not next/image) so the GIF keeps
+                    animating rather than being frozen by optimization. Opacity does
+                    the fading (not a dark scrim), since text here stays dark — the
+                    photo has to stay light enough for that to read. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.image}
+                  alt=""
+                  className="h-full w-full scale-105 object-cover opacity-[0.16] blur-[0.5px] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.24]"
+                />
+                {/* cream wash ties the photo to the column's own tone and guarantees
+                    the text stays legible regardless of what the frame is showing */}
+                <div className="absolute inset-0 bg-cinema-elevated/55" />
               </div>
+            )}
+
+            <div className="relative z-10 flex max-w-xl flex-col">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
+                {item.badge && (
+                  <span
+                    className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] backdrop-blur-sm ${
+                      i === 0
+                        ? "border-cinema-gold/30 bg-cinema-elevated/60 text-cinema-gold"
+                        : "border-black/10 bg-cinema-elevated/60 text-cinema-muted"
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+
+              <h3 className="mt-6 font-display text-[30px] font-bold leading-tight text-cinema-text sm:text-[34px] lg:text-[42px] xl:text-[48.6px]">
+                {item.institution}
+              </h3>
+              <p className="mt-2 text-[27px] text-cinema-muted">{item.degree}</p>
+              <p className="mt-3 flex items-center gap-2 text-[21.6px] text-cinema-muted/80">
+                <MapPin className="h-4 w-4 shrink-0" />
+                {item.location}
+              </p>
+
+              <ul className="mt-8 space-y-3 border-t border-black/10 pt-6">
+                {item.highlights.map((highlight) => (
+                  <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-muted">
+                    <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-cinema-blue" />
+                    {highlight}
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </SectionWrapper>
   );
