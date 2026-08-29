@@ -88,8 +88,8 @@ export function Education() {
                     alt=""
                     className="h-full w-full scale-105 object-cover opacity-[0.5] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.6] md:opacity-[0.78] md:group-hover:opacity-[0.9]"
                   />
-                  <div className="absolute inset-0 bg-cinema-elevated/88 md:hidden" />
-                  <div className="absolute inset-0 hidden bg-gradient-to-r from-cinema-elevated/92 via-cinema-elevated/38 to-transparent md:block" />
+                  <div className="absolute inset-0 bg-cinema-elevated/70 md:hidden" />
+                  <div className="absolute inset-0 hidden bg-gradient-to-r from-cinema-elevated/72 via-cinema-elevated/30 to-transparent md:block" />
                 </div>
               )}
 
@@ -105,9 +105,9 @@ export function Education() {
                 {item.institution.charAt(0)}
               </span>
 
-              <div className="relative z-10 flex max-w-xl flex-col">
+              <div className="relative z-10 flex max-w-xl flex-col [text-shadow:0_1px_10px_rgba(255,252,244,0.8)]">
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
+                  <span className="font-mono text-[18.9px] text-cinema-soft">{item.period}</span>
                   {item.badge && (
                     <span
                       className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] backdrop-blur-sm ${
@@ -130,15 +130,15 @@ export function Education() {
                   }`}
                   aria-hidden
                 />
-                <p className="mt-4 font-serif text-[27px] italic text-cinema-muted">{item.degree}</p>
-                <p className="mt-3 flex items-center gap-2 text-[21.6px] text-cinema-muted/80">
+                <p className="mt-4 font-serif text-[27px] italic text-cinema-soft">{item.degree}</p>
+                <p className="mt-3 flex items-center gap-2 text-[21.6px] text-cinema-soft/85">
                   <MapPin className="h-4 w-4 shrink-0" />
                   {item.location}
                 </p>
 
-                <ul className="mt-8 space-y-3 border-t border-black/10 pt-6">
+                <ul className="mt-8 space-y-3 border-t border-black/20 pt-6">
                   {item.highlights.map((highlight) => (
-                    <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-muted">
+                    <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-soft">
                       <span
                         className={`mt-2.5 h-1 w-1 shrink-0 rounded-full ${
                           accent === "gold" ? "bg-cinema-gold" : "bg-cinema-blue"
