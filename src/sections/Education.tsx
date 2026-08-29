@@ -70,32 +70,34 @@ export function Education() {
                 </div>
               )}
 
-              <div className="relative z-10 flex flex-1 flex-col p-6 sm:p-8 md:p-10">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
-                  {item.badge && (
-                    <span
-                      className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] backdrop-blur-sm ${
-                        i === 0
-                          ? "border-cinema-gold/30 bg-cinema-elevated/60 text-cinema-gold"
-                          : "border-black/10 bg-cinema-elevated/60 text-cinema-muted"
-                      }`}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
+              <div className="relative z-10 grid flex-1 gap-8 p-6 sm:p-8 md:grid-cols-2 md:gap-12 md:p-10 lg:gap-16 lg:p-14">
+                <div className="flex flex-col md:justify-center">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
+                    {item.badge && (
+                      <span
+                        className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] backdrop-blur-sm ${
+                          i === 0
+                            ? "border-cinema-gold/30 bg-cinema-elevated/60 text-cinema-gold"
+                            : "border-black/10 bg-cinema-elevated/60 text-cinema-muted"
+                        }`}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="mt-6 font-display text-[30px] font-bold leading-tight text-cinema-text sm:text-[34px] lg:text-[42px] xl:text-[48.6px]">
+                    {item.institution}
+                  </h3>
+                  <p className="mt-2 text-[27px] text-cinema-muted">{item.degree}</p>
+                  <p className="mt-3 flex items-center gap-2 text-[21.6px] text-cinema-muted/80">
+                    <MapPin className="h-4 w-4 shrink-0" />
+                    {item.location}
+                  </p>
                 </div>
 
-                <h3 className="mt-6 font-display text-[30px] font-bold leading-tight text-cinema-text sm:text-[34px] lg:text-[42px] xl:text-[48.6px]">
-                  {item.institution}
-                </h3>
-                <p className="mt-2 text-[27px] text-cinema-muted">{item.degree}</p>
-                <p className="mt-3 flex items-center gap-2 text-[21.6px] text-cinema-muted/80">
-                  <MapPin className="h-4 w-4 shrink-0" />
-                  {item.location}
-                </p>
-
-                <ul className="mt-8 space-y-3 border-t border-black/10 pt-6">
+                <ul className="flex flex-col justify-center gap-4 border-t border-black/10 pt-6 md:border-l md:border-t-0 md:pl-12 md:pt-0 lg:pl-16">
                   {item.highlights.map((highlight) => (
                     <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-muted">
                       <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-cinema-blue" />
