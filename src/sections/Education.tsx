@@ -44,7 +44,7 @@ export function Education() {
       <div className="cinema-container">
         <SectionHeading index="02" label="Education" title="Academic foundation" />
 
-        <div ref={gridRef} className="grid gap-6 md:grid-cols-2 md:gap-8">
+        <div ref={gridRef} className="flex flex-col gap-6 md:gap-8">
           {education.map((item, i) => (
             <div
               key={item.institution}
@@ -52,29 +52,33 @@ export function Education() {
               className="group relative flex min-w-0 flex-col overflow-hidden rounded-[1.75rem] border border-black/10 bg-cinema-elevated"
             >
               {item.image && (
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-cinema-deep/40">
-                  {/* Real, animated campus photography — a plain <img> (not next/image)
-                      so the GIF keeps animating rather than being frozen by optimization. */}
+                <div className="pointer-events-none absolute inset-0" aria-hidden>
+                  {/* Real, animated campus photography, filling the whole card as a
+                      faded backdrop — a plain <img> (not next/image) so the GIF keeps
+                      animating rather than being frozen by optimization. Opacity does
+                      the fading (not a dark scrim), since text here stays dark — the
+                      photo has to stay light enough for that to read. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image}
-                    alt={`${item.institution} campus`}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    alt=""
+                    className="h-full w-full scale-105 object-cover opacity-[0.16] blur-[0.5px] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.24]"
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-cinema-ink/25 via-transparent to-transparent" />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-cinema-elevated to-transparent" />
+                  {/* cream wash ties the photo to the card's own tone and guarantees
+                      the text stays legible regardless of what the frame is showing */}
+                  <div className="absolute inset-0 bg-cinema-elevated/55" />
                 </div>
               )}
 
-              <div className="flex flex-1 flex-col p-6 sm:p-8 md:p-10">
+              <div className="relative z-10 flex flex-1 flex-col p-6 sm:p-8 md:p-10">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
                   {item.badge && (
                     <span
-                      className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] ${
+                      className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] backdrop-blur-sm ${
                         i === 0
-                          ? "border-cinema-gold/30 text-cinema-gold"
-                          : "border-black/10 text-cinema-muted"
+                          ? "border-cinema-gold/30 bg-cinema-elevated/60 text-cinema-gold"
+                          : "border-black/10 bg-cinema-elevated/60 text-cinema-muted"
                       }`}
                     >
                       {item.badge}
