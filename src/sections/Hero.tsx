@@ -113,6 +113,19 @@ export function Hero() {
 
   return (
     <section id="top" ref={sectionRef} className="relative overflow-hidden pt-40 pb-20 lg:pt-48">
+      {/* Giant, very faint monogram watermark — the same oversized-letterform
+          technique used in Education (institution initial) and Publications
+          (year numeral), reused here so Hero reads as part of the same
+          premium editorial system rather than a separate, plainer opener. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 flex h-[640px] select-none items-center justify-center overflow-hidden md:h-[760px] lg:h-[860px]"
+      >
+        <span className="font-display text-[24vw] font-bold leading-none tracking-tighter text-cinema-gold/[0.08]">
+          MI
+        </span>
+      </span>
+
       <div className="cinema-container-full relative z-10 text-center">
         <RevealText
           as="p"
