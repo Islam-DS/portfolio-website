@@ -16,9 +16,9 @@ export async function Projects() {
 
   return (
     <SectionWrapper id="projects">
-      <div className="cinema-container">
+      <div className="cinema-container-full">
         <SectionHeading
-          index="04"
+          index="03"
           label="Projects"
           title="Research engineered for impact"
           description="Open-source systems spanning oncology AI, federated learning, and computational biology. Pulled live from GitHub."

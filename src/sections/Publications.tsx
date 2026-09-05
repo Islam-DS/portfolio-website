@@ -21,8 +21,8 @@ export function Publications() {
 
   return (
     <SectionWrapper id="publications">
-      <div className="cinema-container">
-        <SectionHeading index="05" label="Publications" title="Peer-reviewed contributions" />
+      <div className="cinema-container-full">
+        <SectionHeading index="04" label="Publications" title="Peer-reviewed contributions" />
 
         <motion.div
           ref={listRef}

@@ -20,7 +20,7 @@ export function Contact() {
 
   return (
     <SectionWrapper id="contact" className="bg-cinema-ink">
-      <div className="cinema-container">
+      <div className="cinema-container-full">
         <motion.p
           initial="hidden"
           whileInView="visible"
@@ -28,7 +28,7 @@ export function Contact() {
           variants={fadeInUp}
           className="section-label !text-white/40"
         >
-          06 — Contact
+          05 — Contact
         </motion.p>
 
         <RevealText

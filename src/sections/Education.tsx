@@ -41,8 +41,8 @@ export function Education() {
 
   return (
     <SectionWrapper id="education">
-      <div className="cinema-container">
-        <SectionHeading index="02" label="Education" title="Academic foundation" />
+      <div className="cinema-container-full">
+        <SectionHeading index="01" label="Education" title="Academic foundation" />
       </div>
 
       {/* True edge-to-edge split-screen: a direct child of the section (not

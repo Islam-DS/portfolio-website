@@ -113,7 +113,7 @@ export function Hero() {
 
   return (
     <section id="top" ref={sectionRef} className="relative overflow-hidden pt-40 pb-20 lg:pt-48">
-      <div className="cinema-container relative z-10 text-center">
+      <div className="cinema-container-full relative z-10 text-center">
         <RevealText
           as="p"
           text="International Government Scholar — AI Research"
@@ -135,7 +135,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="cinema-container relative z-10 mt-16 lg:mt-20">
+      <div className="cinema-container-full relative z-10 mt-16 lg:mt-20">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-6">
           <div ref={leftMetaRef} className="order-2 lg:order-1 lg:col-span-4">
             <p className="font-display text-[40.5px] font-bold leading-none tracking-tight text-cinema-text md:text-[48.6px] lg:text-[64.8px]">
@@ -217,7 +217,7 @@ export function Hero() {
         whileInView="visible"
         viewport={viewportOnce}
         variants={fadeInUp}
-        className="cinema-container relative z-10 mt-16 lg:mt-20"
+        className="cinema-container-full relative z-10 mt-16 lg:mt-20"
       >
         <div className="flex flex-col items-center gap-10 border-t border-black/10 pt-10 sm:flex-row sm:justify-center sm:gap-16">
           <div className="flex items-center gap-8">
@@ -253,7 +253,7 @@ export function Hero() {
         </div>
       </motion.div>
 
-      <div className="cinema-container relative z-10">
+      <div className="cinema-container-full relative z-10">
         <div className="flex items-center justify-center gap-3 border-t border-black/10 py-8 text-[21.6px] text-cinema-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-cinema-blue" />
           Currently — Research Assistant, Artificial Intelligence &amp; Robotics Laboratory

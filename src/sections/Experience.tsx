@@ -65,9 +65,9 @@ export function Experience() {
 
   return (
     <SectionWrapper id="experience">
-      <div className="cinema-container">
+      <div className="cinema-container-full">
         <SectionHeading
-          index="03"
+          index="02"
           label="Experience"
           title="The journey so far"
           description="Research, work, scholarship, and leadership — one continuous path, not separate chapters."
