@@ -45,12 +45,15 @@ export function Education() {
         <SectionHeading index="01" label="Education" title="Academic foundation" />
       </div>
 
-      {/* True edge-to-edge split-screen: a direct child of the section (not
-          .cinema-container), so this grid runs the full width of the page
-          rather than the site's usual ~1920px content cap. University is
-          always column one (left), school always column two (right) —
-          the source order in @/data/education already matches that. */}
-      <div ref={gridRef} className="relative grid w-full grid-cols-1 border-y border-black/10 md:grid-cols-2">
+      {/* Near edge-to-edge split-screen: a direct child of the section (not
+          .cinema-container), so this grid runs almost the full width of the
+          page rather than the site's ~1920px content cap — only the small
+          .cinema-edge inset keeps it just off the exact browser edge.
+          University is always column one (left), school always column two
+          (right) — the source order in @/data/education already matches
+          that. */}
+      <div className="cinema-edge">
+        <div ref={gridRef} className="relative grid w-full grid-cols-1 border-y border-black/10 md:grid-cols-2">
         {education.map((item, i) => {
           const accent = i === 0 ? "gold" : "blue";
           return (
@@ -172,6 +175,7 @@ export function Education() {
           className="pointer-events-none absolute left-1/2 top-1/2 z-20 hidden h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-cinema-gold/50 bg-cinema-surface md:block"
           aria-hidden
         />
+        </div>
       </div>
     </SectionWrapper>
   );
