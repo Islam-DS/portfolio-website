@@ -47,7 +47,7 @@ export function Publications() {
               </span>
 
               <div className="relative max-w-3xl">
-                <p className="section-label">Conference Paper · {pub.year}</p>
+                <p className="section-label">{pub.type ?? "Conference Paper"} · {pub.year}</p>
                 <h3 className="mt-6 font-display text-[40.5px] font-bold leading-tight text-cinema-text md:text-[48.6px]">
                   {pub.title}
                 </h3>

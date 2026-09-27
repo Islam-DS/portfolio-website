@@ -1,9 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { ComponentType } from "react";
 import * as THREE from "three";
-import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Dna, FlaskConical, Microscope, Network } from "lucide-react";
 import { Project } from "@/data/projects";
+import { fadeInUp, viewportOnce } from "@/lib/motion";
+
+/** Rough tag -> icon mapping for projects that don't have a result image yet
+ * — a designed placeholder instead of a bare centered label. Falls back to
+ * a generic flask icon for tags not listed here. */
+const TAG_ICON: Record<string, ComponentType<{ className?: string; strokeWidth?: number }>> = {
+  "DNA Methylation": Dna,
+  Epigenetics: Dna,
+  Genomics: Dna,
+  "Graph Learning": Network,
+  "Spatial Biology": Network,
+  "Computational Pathology": Microscope,
+  "Negative Result": Microscope,
+};
+
+const ACCENTS = [
+  { wash: "bg-cinema-gold/[0.07]", icon: "text-cinema-gold" },
+  { wash: "bg-cinema-blue/[0.07]", icon: "text-cinema-blue" },
+  { wash: "bg-cinema-violet/[0.07]", icon: "text-cinema-violet" },
+];
 
 /**
  * A large project tile whose thumbnail is a WebGL plane.
@@ -207,14 +229,22 @@ export function ProjectTile({ project, index }: { project: Project; index: numbe
     };
   }, [project.image]);
 
+  const accent = ACCENTS[index % ACCENTS.length];
+  const Icon = TAG_ICON[project.tags[0]] ?? FlaskConical;
+
   return (
-    <a
+    <motion.a
       href={project.github}
       target="_blank"
       rel="noopener noreferrer"
       data-cursor
       data-cursor-label="View Repo"
       data-tile
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={fadeInUp}
+      transition={{ ...fadeInUp.visible.transition, delay: (index % 3) * 0.08 }}
       className="group relative block overflow-hidden rounded-[1.75rem] border border-black/10 bg-cinema-elevated transition-shadow duration-500 hover:shadow-cinema"
     >
       <div
@@ -234,7 +264,8 @@ export function ProjectTile({ project, index }: { project: Project; index: numbe
             loading="lazy"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 ${accent.wash}`}>
+            <Icon className={`h-8 w-8 ${accent.icon}`} strokeWidth={1.5} />
             <span className="font-mono text-[13px] uppercase tracking-[0.18em] text-cinema-muted/60">
               {project.language ?? "Repository"}
             </span>
@@ -262,6 +293,6 @@ export function ProjectTile({ project, index }: { project: Project; index: numbe
           {project.tags.slice(0, 3).join(" · ")}
         </p>
       </div>
-    </a>
+    </motion.a>
   );
 }
