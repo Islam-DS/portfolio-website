@@ -71,6 +71,7 @@ export async function getGitHubProjects(): Promise<Project[]> {
         image: override.image,
         imageAlt: override.imageAlt,
         codeDemo: override.codeDemo,
+        pipeline: override.pipeline,
       };
     });
 

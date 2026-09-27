@@ -1,3 +1,9 @@
+export interface ProjectPipelineStep {
+  icon: "scan" | "users" | "scale" | "eye";
+  label: string;
+  detail: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -11,6 +17,11 @@ export interface Project {
   image?: string;
   imageAlt?: string;
   codeDemo?: { command: string; output: string };
+  /** Optional methodology diagram for the flagship card — a few real
+   * pipeline stages pulled from the project's own description, not
+   * fabricated. Only set where a project actually has a clear process
+   * worth diagramming. */
+  pipeline?: ProjectPipelineStep[];
 }
 
 /**

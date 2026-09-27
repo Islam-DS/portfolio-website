@@ -17,6 +17,12 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     image: "/images/projects/bias-audit-auroc-view-position.png",
     imageAlt:
       "Bar chart of AUROC by imaging view position (PA vs AP) across five chest X-ray findings, showing significant subgroup performance gaps",
+    pipeline: [
+      { icon: "scan", label: "Train Classifier", detail: "ConvNeXt-Tiny on NIH ChestX-ray14, 14 findings" },
+      { icon: "users", label: "Audit Subgroups", detail: "14 significant AUROC gaps by sex, age, view" },
+      { icon: "scale", label: "Fairness + Calibration", detail: "Equalized Odds gaps, temperature scaling" },
+      { icon: "eye", label: "Explain", detail: "Captum saliency maps for each failure mode" },
+    ],
   },
   "pediatric-appendicitis-multimodal-ai": {
     title: "Pediatric Appendicitis Multimodal AI",

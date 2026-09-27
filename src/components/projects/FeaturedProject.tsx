@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
+import type { ComponentType } from "react";
+import { ArrowRight, ArrowUpRight, Eye, ExternalLink, Github, Scale, ScanLine, Users } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Project } from "@/data/projects";
+import { Project, ProjectPipelineStep } from "@/data/projects";
 import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
 import { RevealText } from "@/components/effects/RevealText";
 
@@ -13,7 +14,15 @@ interface FeaturedProjectProps {
   project: Project;
 }
 
+const PIPELINE_ICONS: Record<ProjectPipelineStep["icon"], ComponentType<{ className?: string }>> = {
+  scan: ScanLine,
+  users: Users,
+  scale: Scale,
+  eye: Eye,
+};
+
 export function FeaturedProject({ project }: FeaturedProjectProps) {
+  const pipeline = project.pipeline ?? [];
   const cardRef = useRef<HTMLDivElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
   const imageInnerRef = useRef<HTMLDivElement>(null);
@@ -121,6 +130,35 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
           )}
         </div>
       </div>
+
+      {pipeline.length > 0 && (
+        <div className="border-t border-white/10 px-7 py-10 sm:px-10 md:px-14 lg:px-16">
+          <span className="font-mono text-[15.3px] font-medium uppercase tracking-[0.2em] text-white/35">
+            Methodology
+          </span>
+          <div className="mt-7 flex flex-wrap items-start gap-x-3 gap-y-8">
+            {pipeline.map((step, i) => {
+              const Icon = PIPELINE_ICONS[step.icon];
+              return (
+                <div key={step.label} className="flex items-start gap-3">
+                  <div className="flex w-[168px] flex-col gap-3 sm:w-[188px]">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/5">
+                      <Icon className="h-5 w-5 text-cinema-warm" />
+                    </div>
+                    <div>
+                      <p className="text-[17px] font-medium text-white">{step.label}</p>
+                      <p className="mt-1 text-[15px] leading-snug text-white/45">{step.detail}</p>
+                    </div>
+                  </div>
+                  {i < pipeline.length - 1 && (
+                    <ArrowRight className="mt-3.5 hidden h-4 w-4 shrink-0 text-white/20 sm:block" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
