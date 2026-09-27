@@ -98,6 +98,8 @@ export const projectOverrides: Record<string, Partial<Project>> = {
       "An open-source biological age estimator that shows its work: computes DNA-methylation age three published ways (Horvath, Hannum, DNAmPhenoAge), cross-checked through two independent open-source libraries (pyaging and biolearn), with each clock's own measured bias reported against two public validation cohorts (1,388 people total) instead of a single black-box number.",
     tags: ["Epigenetics", "DNA Methylation", "Open Source"],
     language: "Python",
+    image: "/images/projects/openclock-result-ui.png",
+    imageAlt: "OpenClock results screen showing Horvath, Hannum, and DNAmPhenoAge age estimates cross-checked between two independent libraries, each with its own known bias noted",
   },
   "topognn-tnbc-recurrence": {
     title: "Topology-Augmented Graph Learning of TME Niches for TNBC Recurrence",
@@ -105,6 +107,8 @@ export const projectOverrides: Record<string, Partial<Project>> = {
       "A pre-registered, externally-validated study testing whether the spatial and topological organization of the tumor microenvironment improves triple-negative breast cancer recurrence prediction beyond cellular niche composition alone, benchmarked against the QUICHE spatial-niche baseline under a leakage-controlled protocol.",
     tags: ["Spatial Biology", "Graph Learning", "Oncology"],
     language: "Python",
+    image: "/images/projects/topognn-spatial-organization.png",
+    imageAlt: "Two tumor microenvironments with the same cell types and numbers but different spatial organization, illustrating the project's central question of whether spatial arrangement carries independent prognostic signal",
   },
   "nematic-orientation-histopathology": {
     title: "Anatomically Supervised Orientation-Tensor Learning in Histopathology",
@@ -112,5 +116,7 @@ export const projectOverrides: Record<string, Partial<Project>> = {
       "A D8-equivariant network trained to predict glandular orientation in histopathology as a rank-2 nematic (Q-tensor) field, tested against a prospectively frozen evaluation protocol. Reports a negative/inconclusive result — the anatomical reference was not recovered, a finding that held up across five random seeds, a patient-disjoint split, five rotation-consistency metrics, and an external cross-dataset evaluation. Submitted to Symmetry (MDPI).",
     tags: ["Equivariant Networks", "Computational Pathology", "Negative Result"],
     language: "Python",
+    image: "/images/projects/nematic-pipeline-figure1.png",
+    imageAlt: "Pipeline diagram from H&E histology image through gland segmentation, principal orientation, rank-2 tensor target, and D8-equivariant CNN, to predicted tensor and validation",
   },
 };
