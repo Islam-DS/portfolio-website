@@ -7,14 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { journey } from "@/data/journey";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { attachTiltHover } from "@/lib/useTiltHover";
-
-const ACCENT: Record<string, { text: string; border: string; bg: string }> = {
-  Work: { text: "text-cinema-blue", border: "border-cinema-blue", bg: "bg-cinema-blue" },
-  Leadership: { text: "text-cinema-violet", border: "border-cinema-violet", bg: "bg-cinema-violet" },
-  Scholarship: { text: "text-cinema-gold", border: "border-cinema-gold", bg: "bg-cinema-gold" },
-  Research: { text: "text-cinema-gold", border: "border-cinema-gold", bg: "bg-cinema-gold" },
-};
 
 export function Experience() {
   const listRef = useRef<HTMLDivElement>(null);
@@ -25,22 +17,21 @@ export function Experience() {
     const line = lineRef.current;
     const cards = gsap.utils.toArray<HTMLElement>("[data-journey-card]", list);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const detachTilt = attachTiltHover(cards, 5);
 
     if (reducedMotion) {
       gsap.set(cards, { opacity: 1, y: 0 });
       if (line) gsap.set(line, { scaleY: 1 });
-      return detachTilt;
+      return;
     }
 
-    gsap.set(cards, { opacity: 0, y: 32 });
+    gsap.set(cards, { opacity: 0, y: 24 });
     const cardTriggers = cards.map((card, i) =>
       ScrollTrigger.create({
         trigger: card,
         start: "top 88%",
         once: true,
         onEnter: () =>
-          gsap.to(card, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay: (i % 2) * 0.08 }),
+          gsap.to(card, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: (i % 2) * 0.06 }),
       })
     );
 
@@ -59,7 +50,6 @@ export function Experience() {
     return () => {
       cardTriggers.forEach((t) => t.kill());
       lineTrigger?.kill();
-      detachTilt();
     };
   }, []);
 
@@ -77,57 +67,37 @@ export function Experience() {
           <div className="absolute left-1/2 top-0 bottom-0 hidden w-px -translate-x-1/2 bg-black/10 lg:block" />
           <div
             ref={lineRef}
-            className="absolute left-1/2 top-0 bottom-0 hidden w-px origin-top -translate-x-1/2 bg-cinema-gold lg:block"
+            className="absolute left-1/2 top-0 bottom-0 hidden w-px origin-top -translate-x-1/2 bg-cinema-gold/60 lg:block"
           />
 
-          <div className="space-y-8 lg:space-y-4">
+          <div className="space-y-6 lg:space-y-2">
             {journey.map((item, i) => {
-              const accent = ACCENT[item.type] ?? ACCENT.Work;
               const isLeft = i % 2 === 0;
-              const index = String(i + 1).padStart(2, "0");
               return (
                 <div key={`${item.title}-${item.organization}`} className="relative lg:py-8">
-                  <span
-                    className={`absolute left-1/2 top-8 hidden h-3 w-3 -translate-x-1/2 rounded-full border-2 bg-cinema-navy lg:block ${accent.border}`}
-                  />
-                  {/* step number riding the spine itself — avoids hunting for
-                      empty space inside these text-dense cards the way a
-                      full watermark letterform needs (that worked for
-                      Education's sparser cards, not here) */}
-                  <span
-                    className={`absolute left-1/2 top-2 hidden -translate-x-1/2 select-none font-mono text-[15px] tracking-wider lg:block ${accent.text}/70`}
-                  >
-                    {index}
-                  </span>
+                  <span className="absolute left-1/2 top-8 hidden h-2 w-2 -translate-x-1/2 rounded-full border border-black/20 bg-cinema-navy lg:block" />
 
                   <div className="lg:grid lg:grid-cols-2 lg:gap-x-16">
                     <div
                       data-journey-card
-                      className={`group relative overflow-hidden rounded-[1.75rem] border border-black/10 bg-cinema-elevated p-7 md:p-8 ${
-                        isLeft ? "lg:col-start-1 lg:text-right" : "lg:col-start-2"
+                      className={`flex flex-col p-7 md:p-8 ${
+                        isLeft ? "lg:col-start-1 lg:items-end lg:text-right" : "lg:col-start-2"
                       }`}
                     >
-                      {/* thin spine bar, same accent-coding technique as Education —
-                          ties each entry's type (Work/Leadership/etc.) to a color
-                          that carries through the dot, bullets and watermark below */}
-                      <div className={`pointer-events-none absolute inset-x-0 top-0 h-[3px] ${accent.bg}/70`} aria-hidden />
-
-                      <div
-                        className={`relative flex items-center gap-3 ${isLeft ? "lg:flex-row-reverse" : ""}`}
-                      >
-                        <span className="font-mono text-[18.9px] text-cinema-muted">{item.period}</span>
-                        <span className={`font-mono text-[16.2px] font-medium uppercase tracking-[0.15em] ${accent.text}`}>
+                      <div className={`flex items-center gap-3 ${isLeft ? "lg:flex-row-reverse" : ""}`}>
+                        <span className="font-mono text-[16.2px] text-cinema-muted/70">{item.period}</span>
+                        <span className="font-mono text-[14.4px] uppercase tracking-[0.15em] text-cinema-muted/50">
                           {item.type}
                         </span>
                       </div>
 
-                      <h3 className="relative mt-4 font-display text-[32.4px] font-bold text-cinema-text md:text-[40.5px]">
+                      <h3 className="mt-4 font-display text-[30px] font-semibold leading-tight text-cinema-text md:text-[36px]">
                         {item.title}
                       </h3>
-                      <p className="relative mt-2 font-serif text-[24.3px] italic text-cinema-muted">{item.organization}</p>
+                      <p className="mt-2 text-[22px] text-cinema-muted">{item.organization}</p>
                       {item.location && (
                         <p
-                          className={`relative mt-1 flex items-center gap-2 text-[21.6px] text-cinema-muted/80 ${
+                          className={`mt-1 flex items-center gap-2 text-[19px] text-cinema-muted/70 ${
                             isLeft ? "lg:flex-row-reverse" : ""
                           }`}
                         >
@@ -136,32 +106,31 @@ export function Experience() {
                         </p>
                       )}
 
-                      <ul className="relative mt-5 space-y-2">
+                      <ul className="mt-6 space-y-2.5">
                         {item.description.map((desc) => (
                           <li
                             key={desc}
-                            className={`flex w-full items-start gap-3 text-[21.6px] leading-relaxed text-cinema-muted ${
-                              isLeft ? "lg:flex-row-reverse lg:text-right" : ""
+                            className={`text-[19px] leading-relaxed text-cinema-muted ${
+                              isLeft ? "lg:text-right" : ""
                             }`}
                           >
-                            <span className={`mt-2.5 h-1 w-1 shrink-0 rounded-full ${accent.bg}`} />
-                            <span className="flex-1">{desc}</span>
+                            {desc}
                           </li>
                         ))}
                       </ul>
 
                       <div
-                        className={`relative mt-5 flex flex-wrap items-center gap-4 border-t border-black/10 pt-4 ${
+                        className={`mt-6 flex flex-wrap items-center gap-4 border-t border-black/10 pt-4 ${
                           isLeft ? "lg:justify-end" : ""
                         }`}
                       >
-                        <p className="text-[18.9px] text-cinema-muted/70">{item.tags.join(" · ")}</p>
+                        <p className="text-[16.2px] text-cinema-muted/50">{item.tags.join(" · ")}</p>
                         {item.link && (
                           <a
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-[18.9px] font-medium text-cinema-blue hover:text-cinema-blue-bright"
+                            className="inline-flex items-center gap-1.5 text-[16.2px] font-medium text-cinema-text/70 transition-colors hover:text-cinema-text"
                           >
                             Read paper <ExternalLink className="h-3.5 w-3.5" />
                           </a>

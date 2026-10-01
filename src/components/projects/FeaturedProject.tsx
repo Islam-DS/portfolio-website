@@ -116,7 +116,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
                   src={project.image}
                   alt={project.imageAlt ?? project.title}
                   fill
-                  className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-110 lg:p-10"
+                  className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-105 lg:p-10"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
