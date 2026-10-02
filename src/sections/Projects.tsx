@@ -2,6 +2,7 @@ import { getGitHubProjects } from "@/lib/github";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectTile } from "@/components/projects/ProjectTile";
+import { ProjectStack } from "@/components/projects/ProjectStack";
 
 /**
  * A deliberately curated subset, not "every repo with the portfolio topic" —
@@ -28,14 +29,17 @@ export async function Projects() {
   return (
     <SectionWrapper id="projects">
       <div className="cinema-container-full">
-        <SectionHeading
-          index="03"
-          label="Projects"
-          title="Research engineered for impact"
-          description="A curated selection of research spanning oncology AI, federated learning, and computational biology — synced live from GitHub."
-        />
+        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-12">
+          <SectionHeading
+            index="03"
+            label="Projects"
+            title="Research engineered for impact"
+            description="A curated selection of research spanning oncology AI, federated learning, and computational biology — synced live from GitHub."
+          />
+          <ProjectStack projects={featured} />
+        </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-24 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((project, i) => (
             <ProjectTile key={project.id} project={project} index={i} />
           ))}
