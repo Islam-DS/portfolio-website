@@ -14,27 +14,48 @@ export function Education() {
 
   useEffect(() => {
     const cards = gsap.utils.toArray<HTMLElement>("[data-edu-card]", gridRef.current);
+    const photos = gsap.utils.toArray<HTMLElement>("[data-edu-photo]", gridRef.current);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const detachTilt = attachTiltHover(cards, 5);
 
     if (reducedMotion) {
-      gsap.set(cards, { opacity: 1, y: 0 });
+      gsap.set(cards, { opacity: 1, x: 0 });
       return detachTilt;
     }
 
-    gsap.set(cards, { opacity: 0, y: 32 });
+    // Landing-page-style entrance: each half slides in from its own outer
+    // edge (university from the left, school from the right) and meets in
+    // the middle, instead of a plain fade.
+    cards.forEach((card, i) => gsap.set(card, { opacity: 0, x: i === 0 ? -72 : 72 }));
     const triggers = cards.map((card, i) =>
       ScrollTrigger.create({
         trigger: card,
         start: "top 85%",
         once: true,
         onEnter: () =>
-          gsap.to(card, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay: i * 0.1 }),
+          gsap.to(card, { opacity: 1, x: 0, duration: 1.1, ease: "power3.out", delay: i * 0.15 }),
       })
     );
 
+    // Gentle parallax on the campus photos while the section is on screen —
+    // the kind of ambient motion a landing page uses instead of a static
+    // backdrop. Kept small so the mask-reveal edge never exposes bare pixels.
+    const parallaxTrigger = gridRef.current
+      ? ScrollTrigger.create({
+          trigger: gridRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.6,
+          onUpdate: (self) => {
+            const shift = (self.progress - 0.5) * 8;
+            photos.forEach((photo) => gsap.set(photo, { yPercent: shift }));
+          },
+        })
+      : undefined;
+
     return () => {
       triggers.forEach((t) => t.kill());
+      parallaxTrigger?.kill();
       detachTilt();
     };
   }, []);
@@ -75,7 +96,7 @@ export function Education() {
               />
 
               {item.image && (
-                <div className="pointer-events-none absolute inset-0" aria-hidden>
+                <div data-edu-photo className="pointer-events-none absolute -inset-y-10 inset-x-0" aria-hidden>
                   {/* Real, animated campus photography — a plain <img> (not next/image)
                       so the GIF keeps animating rather than being frozen by optimization.
                       Below md the column is a single full-width block and the text runs
