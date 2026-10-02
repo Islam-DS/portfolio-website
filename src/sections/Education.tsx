@@ -74,7 +74,7 @@ export function Education() {
           (right) — the source order in @/data/education already matches
           that. */}
       <div className="cinema-edge">
-        <div ref={gridRef} className="relative grid w-full grid-cols-1 border-y border-black/10 md:grid-cols-2">
+        <div ref={gridRef} className="relative grid w-full grid-cols-1 overflow-hidden border-y border-black/10 md:grid-cols-2">
         {education.map((item, i) => {
           const accent = i === 0 ? "gold" : "blue";
           return (

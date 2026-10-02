@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { ComponentType } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Dna, FlaskConical, Microscope, Network } from "lucide-react";
 import { Project } from "@/data/projects";
-import { fadeInUp, viewportOnce } from "@/lib/motion";
+import { viewportOnce } from "@/lib/motion";
+import { attachTiltHover } from "@/lib/useTiltHover";
 
 /** Rough tag -> icon mapping for projects that don't have a result image yet
  * — a quiet, single-tone placeholder instead of a bare centered label.
@@ -19,11 +21,31 @@ const TAG_ICON: Record<string, ComponentType<{ className?: string; strokeWidth?:
   "Negative Result": Microscope,
 };
 
+// Local to this component (not the shared fadeInUp) — a touch more dramatic
+// than the plain fade-up used elsewhere, since a grid of landing-page-style
+// tiles reads better with a bit of scale-in pop.
+const tileReveal = {
+  hidden: { opacity: 0, y: 36, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
 export function ProjectTile({ project, index }: { project: Project; index: number }) {
   const Icon = TAG_ICON[project.tags[0]] ?? FlaskConical;
+  const tileRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (!tileRef.current) return;
+    return attachTiltHover([tileRef.current], 4);
+  }, []);
 
   return (
     <motion.a
+      ref={tileRef}
       href={project.github}
       target="_blank"
       rel="noopener noreferrer"
@@ -33,9 +55,9 @@ export function ProjectTile({ project, index }: { project: Project; index: numbe
       initial="hidden"
       whileInView="visible"
       viewport={viewportOnce}
-      variants={fadeInUp}
-      transition={{ ...fadeInUp.visible.transition, delay: (index % 3) * 0.06 }}
-      className="group relative block overflow-hidden rounded-2xl border border-black/10 bg-cinema-elevated transition-colors duration-300 hover:border-black/20"
+      variants={tileReveal}
+      transition={{ ...tileReveal.visible.transition, delay: (index % 3) * 0.08 }}
+      className="group relative block overflow-hidden rounded-2xl border border-black/10 bg-cinema-elevated transition-colors duration-300 hover:border-black/20 hover:shadow-cinema"
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-cinema-deep/20">
         {project.image ? (
@@ -43,7 +65,7 @@ export function ProjectTile({ project, index }: { project: Project; index: numbe
           <img
             src={project.image}
             alt={project.imageAlt ?? project.title}
-            className="absolute inset-0 h-full w-full object-contain p-6 transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+            className="absolute inset-0 h-full w-full object-contain p-6 transition-transform duration-500 ease-out group-hover:scale-[1.04]"
             loading="lazy"
           />
         ) : (

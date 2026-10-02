@@ -1,20 +1,41 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import gsap from "gsap";
 import { ExternalLink } from "lucide-react";
 import { publications } from "@/data/publications";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PublicationDoi } from "@/components/publications/PublicationDoi";
-import { fadeInUp, staggerContainer, viewportOnce } from "@/lib/motion";
+import { staggerContainer, viewportOnce } from "@/lib/motion";
+import { attachTiltHover } from "@/lib/useTiltHover";
+
+const cardReveal = {
+  hidden: { opacity: 0, y: 40, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
 
 export function Publications() {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const cards = gsap.utils.toArray<HTMLElement>("[data-pub-card]", listRef.current);
+    return attachTiltHover(cards, 3);
+  }, []);
+
   return (
     <SectionWrapper id="publications">
       <div className="cinema-container-full">
         <SectionHeading index="04" label="Publications" title="Peer-reviewed contributions" />
 
         <motion.div
+          ref={listRef}
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -24,8 +45,9 @@ export function Publications() {
           {publications.map((pub) => (
             <motion.div
               key={pub.title}
-              variants={fadeInUp}
-              className="rounded-2xl border border-black/10 bg-cinema-elevated p-8 md:p-12"
+              data-pub-card
+              variants={cardReveal}
+              className="rounded-2xl border border-black/10 bg-cinema-elevated p-8 transition-shadow duration-300 hover:shadow-cinema md:p-12"
             >
               <div className="max-w-3xl">
                 <p className="section-label">{pub.type ?? "Conference Paper"} · {pub.year}</p>

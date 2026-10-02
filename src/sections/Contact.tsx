@@ -94,9 +94,15 @@ export function Contact() {
           variants={fadeInUp}
           className="mt-16 flex gap-6"
         >
-          <SocialLink href={siteConfig.github} icon={Github} label="GitHub" />
-          <SocialLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
-          <SocialLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
+          <Magnetic strength={0.4}>
+            <SocialLink href={siteConfig.github} icon={Github} label="GitHub" />
+          </Magnetic>
+          <Magnetic strength={0.4}>
+            <SocialLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
+          </Magnetic>
+          <Magnetic strength={0.4}>
+            <SocialLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
+          </Magnetic>
         </motion.div>
       </div>
     </SectionWrapper>
@@ -118,7 +124,8 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="text-white/40 transition-colors hover:text-white"
+      data-cursor
+      className="block text-white/40 transition-all duration-300 hover:scale-110 hover:text-white"
     >
       <Icon className="h-5 w-5" />
     </a>
