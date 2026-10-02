@@ -24,32 +24,38 @@ const TAG_ICON: Record<string, ComponentType<{ className?: string; strokeWidth?:
 };
 
 const AUTO_ADVANCE_MS = 3500;
-const ROW_H = 76;
-const ROW_GAP = 10;
-const BODY_H = 340;
-const PULL_PX = -24;
+
+type Slot = { xPercent: number; yPercent: number; scale: number; opacity: number; zIndex: number };
+
+// Positions along the diagonal, keyed by distance from the active card.
+// Cards travel top-left -> bottom-right: enter faded from above, grow into
+// the front, then slide off past the bottom-right edge.
+const SLOTS: Record<number, Slot> = {
+  [-2]: { xPercent: 115, yPercent: 60, scale: 0.92, opacity: 0, zIndex: 1 },
+  [-1]: { xPercent: 55, yPercent: 42, scale: 0.92, opacity: 0.9, zIndex: 25 },
+  0: { xPercent: 0, yPercent: 0, scale: 1, opacity: 1, zIndex: 30 },
+  1: { xPercent: -12, yPercent: -62, scale: 0.84, opacity: 0.95, zIndex: 20 },
+  2: { xPercent: -20, yPercent: -108, scale: 0.72, opacity: 0, zIndex: 10 },
+};
 
 /**
- * Desktop-only, motion-enabled filing cabinet: one drawer per project,
- * stacked top to bottom. Every few seconds the next drawer is pulled out
- * sideways — its front shifts out a little and its body (the project's
- * image and headline stat) slides out of the cabinet's left edge — while
- * the previous drawer slides shut. Loops after the last drawer.
+ * Desktop-only, motion-enabled stacked card animation, modelled on the
+ * Taste Skill reference video: one card per project, overlapping along a
+ * diagonal. Every few seconds the pile shifts one step — the front card
+ * slides off the bottom-right, the card behind it grows into the front,
+ * and the next one fades in from the top. Wraps around, so it loops
+ * forever. The text panel beside it follows the front card.
  *
- * Drawer bodies live in a clipping strip that ends exactly at the
- * cabinet's left edge, so sliding a body to xPercent 100 tucks it "inside"
- * the cabinet; only transforms animate. Runs only while the section is on
- * screen (ScrollTrigger enter/leave, no pin) and pauses while the visitor
- * hovers or keyboard-focuses it.
+ * Runs only while the section is on screen (ScrollTrigger enter/leave, no
+ * pin) and pauses while the visitor hovers or keyboard-focuses it.
+ * Transform/opacity only; cards leaving past the column's right edge are
+ * clipped there (overflow-x only, so nothing is cut off vertically).
  */
 export function ProjectDeck({ projects }: ProjectDeckProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
-
-  const n = projects.length;
-  const cabinetH = n * ROW_H + (n - 1) * ROW_GAP;
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -60,17 +66,20 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
     const stage = stageRef.current;
     if (!section || !stage) return;
 
-    const fronts = gsap.utils.toArray<HTMLElement>("[data-drawer-front]", stage);
-    const marks = gsap.utils.toArray<HTMLElement>("[data-drawer-mark]", stage);
-    const bodies = gsap.utils.toArray<HTMLElement>("[data-drawer-body]", stage);
+    const cards = gsap.utils.toArray<HTMLElement>("[data-stack-card]", stage);
     const infos = gsap.utils.toArray<HTMLElement>("[data-stage-info]", stage);
+    const n = projects.length;
 
-    fronts.forEach((el, i) => gsap.set(el, { x: i === 0 ? PULL_PX : 0 }));
-    marks.forEach((el, i) => gsap.set(el, { opacity: i === 0 ? 1 : 0 }));
-    // The SSR translateX(100%) only prevents a pre-hydration flash; GSAP
-    // would parse it as a pixel offset and stack xPercent on top, so clear it.
-    gsap.set(bodies, { clearProps: "transform" });
-    bodies.forEach((el, i) => gsap.set(el, { xPercent: i === 0 ? 0 : 100 }));
+    // Wrapped distance in [-2, n-3], so the pile loops without a visible jump.
+    function distance(i: number, active: number) {
+      const d = (((i - active) % n) + n) % n;
+      return d >= n - 2 ? d - n : d;
+    }
+    function slotFor(d: number): Slot {
+      return SLOTS[d] ?? SLOTS[2];
+    }
+
+    cards.forEach((el, i) => gsap.set(el, slotFor(distance(i, 0))));
     infos.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0, y: i === 0 ? 0 : 24 }));
     if (counterRef.current) counterRef.current.textContent = "01";
     if (lineRef.current) lineRef.current.style.transform = `scaleY(${1 / n})`;
@@ -80,21 +89,17 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
       const prev = activeIndex;
       if (next === prev) return;
 
-      gsap.to(bodies[prev], { xPercent: 100, duration: 0.55, ease: "power2.in" });
-      gsap.to(fronts[prev], { x: 0, duration: 0.5, ease: "power2.inOut" });
-      gsap.to(marks[prev], { opacity: 0, duration: 0.3 });
-
-      gsap.to(fronts[next], { x: PULL_PX, duration: 0.5, ease: "power3.out", delay: 0.35 });
-      gsap.to(marks[next], { opacity: 1, duration: 0.3, delay: 0.35 });
-      gsap.fromTo(
-        bodies[next],
-        { xPercent: 100 },
-        { xPercent: 0, duration: 0.8, ease: "power3.out", delay: 0.4 }
-      );
+      cards.forEach((el, i) => {
+        const from = slotFor(distance(i, prev));
+        const to = slotFor(distance(i, next));
+        // Hidden -> hidden (wrapping from the bottom back to the top): jump, don't fly across.
+        if (from.opacity === 0 && to.opacity === 0) gsap.set(el, to);
+        else gsap.to(el, { ...to, duration: 1.1, ease: "power3.inOut" });
+      });
 
       infos.forEach((el, i) => {
         if (i === next) {
-          gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.4 });
+          gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.35 });
         } else if (i === prev) {
           gsap.to(el, { autoAlpha: 0, y: -20, duration: 0.4, ease: "power2.inOut" });
         } else {
@@ -164,13 +169,13 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
       stage.removeEventListener("focusin", pause);
       stage.removeEventListener("focusout", resume);
     };
-  }, [projects, n]);
+  }, [projects]);
 
   return (
     <div ref={sectionRef} className="cinema-container-full relative py-12">
       <div ref={stageRef} className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
-          <ProjectProgress total={n} counterRef={counterRef} lineRef={lineRef} />
+          <ProjectProgress total={projects.length} counterRef={counterRef} lineRef={lineRef} />
           <div className="relative mt-8 min-h-[340px]">
             {projects.map((project) => (
               <div key={project.id} data-stage-info className="absolute inset-0">
@@ -180,78 +185,48 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
           </div>
         </div>
 
-        <div className="relative lg:col-span-7" style={{ height: cabinetH }}>
-          {/* Drawer bodies: clipped at the cabinet's left edge so a closed drawer is tucked inside it. */}
-          <div className="absolute inset-y-0 left-0 right-[40%] overflow-hidden">
-            {projects.map((project, i) => {
-              const Icon = TAG_ICON[project.tags[0]] ?? FlaskConical;
-              const rowCenter = i * (ROW_H + ROW_GAP) + ROW_H / 2;
-              const top = Math.min(Math.max(rowCenter - BODY_H / 2, 0), cabinetH - BODY_H);
-              return (
-                <div
-                  key={project.id}
-                  data-drawer-body
-                  className="absolute right-0 w-full max-w-[420px]"
-                  style={{ top, height: BODY_H, transform: i === 0 ? undefined : "translateX(100%)" }}
-                >
-                  <div className="flex h-full flex-col overflow-hidden rounded-l-[28px] border border-r-0 border-black/10 bg-cinema-elevated shadow-cinema">
-                    <div className="relative flex-1 overflow-hidden">
-                      {project.image ? (
-                        <img
-                          src={project.image}
-                          alt={project.imageAlt ?? project.title}
-                          loading="lazy"
-                          className="absolute inset-0 h-full w-full object-contain p-5 motion-safe:animate-ken-burns"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                          <Icon className="h-9 w-9 text-cinema-muted/50" strokeWidth={1.5} />
-                          <span className="font-mono text-[13px] uppercase tracking-[0.18em] text-cinema-muted/50">
-                            {project.language}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between gap-3 border-t border-black/10 px-5 py-3.5">
-                      <span className="shrink-0 rounded-full border border-cinema-gold/30 px-3 py-1 font-mono text-[12px] uppercase tracking-[0.1em] text-cinema-gold">
-                        {project.tags[0]}
-                      </span>
-                      {project.stat && (
-                        <span className="truncate font-display text-[14px] font-semibold text-cinema-text">
-                          {project.stat}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* The cabinet: drawer fronts stacked top to bottom. */}
-          <div className="absolute inset-y-0 right-0 z-10 flex w-[40%] flex-col" style={{ gap: ROW_GAP }}>
-            {projects.map((project, i) => (
+        <div className="relative h-[640px] overflow-x-clip lg:col-span-7">
+          {projects.map((project, i) => {
+            const Icon = TAG_ICON[project.tags[0]] ?? FlaskConical;
+            return (
               <div
                 key={project.id}
-                data-drawer-front
-                className="relative flex shrink-0 items-center gap-4 overflow-hidden rounded-2xl border border-black/10 bg-cinema-elevated px-5 shadow-cinema"
-                style={{ height: ROW_H, transform: i === 0 ? `translateX(${PULL_PX}px)` : undefined }}
+                data-stack-card
+                className="absolute left-[8%] top-[30%] w-[76%]"
+                style={i === 0 ? undefined : { opacity: 0 }}
               >
-                <span
-                  data-drawer-mark
-                  className="absolute inset-y-0 left-0 w-1 bg-cinema-gold"
-                  style={{ opacity: i === 0 ? 1 : 0 }}
-                />
-                <span className="font-mono text-[13px] text-cinema-muted/60">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="min-w-0 flex-1 truncate font-display text-[15px] font-semibold text-cinema-text">
-                  {project.title}
-                </span>
-                <span className="h-1.5 w-8 shrink-0 rounded-full bg-black/15" aria-hidden />
+                <div className="flex flex-col overflow-hidden rounded-[32px] border border-black/10 bg-cinema-elevated shadow-cinema">
+                  <div className="relative aspect-[16/10] w-full overflow-hidden">
+                    {project.image ? (
+                      <img
+                        src={project.image}
+                        alt={project.imageAlt ?? project.title}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-contain p-6 motion-safe:animate-ken-burns"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                        <Icon className="h-9 w-9 text-cinema-muted/50" strokeWidth={1.5} />
+                        <span className="font-mono text-[13px] uppercase tracking-[0.18em] text-cinema-muted/50">
+                          {project.language}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between gap-3 border-t border-black/10 px-5 py-4">
+                    <span className="shrink-0 rounded-full border border-cinema-gold/30 px-3 py-1 font-mono text-[12px] uppercase tracking-[0.1em] text-cinema-gold">
+                      {project.tags[0]}
+                    </span>
+                    {project.stat && (
+                      <span className="truncate font-display text-[14px] font-semibold text-cinema-text">
+                        {project.stat}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
     </div>
