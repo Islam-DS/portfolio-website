@@ -64,7 +64,7 @@ export function ProjectTile({ project, index }: { project: Project; index: numbe
           <ArrowUpRight className="h-5 w-5 shrink-0 text-cinema-muted/60 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </div>
 
-        <h3 className="font-display text-[28px] font-semibold leading-tight text-cinema-text md:text-[34px]">
+        <h3 className="line-clamp-2 font-display text-[28px] font-semibold leading-tight text-cinema-text md:text-[34px]">
           {project.title}
         </h3>
 
@@ -72,7 +72,7 @@ export function ProjectTile({ project, index }: { project: Project; index: numbe
           {project.description}
         </p>
 
-        <p className="mt-1 font-mono text-[14px] text-cinema-muted/50">
+        <p className="mt-1 truncate font-mono text-[14px] text-cinema-muted/50">
           {project.tags.slice(0, 3).join(" · ")}
         </p>
       </div>

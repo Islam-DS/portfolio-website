@@ -1,18 +1,29 @@
 import { getGitHubProjects } from "@/lib/github";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { FeaturedProject } from "@/components/projects/FeaturedProject";
 import { ProjectTile } from "@/components/projects/ProjectTile";
 
-// Editorial rhythm across a 6-column grid: two wide tiles, then a row of three
-// narrower ones, then two wide again. Avoids the flat uniform grid while still
-// filling every row. Extra projects simply flow on in the same cadence.
-const SPAN_PATTERN = ["md:col-span-3", "md:col-span-3", "md:col-span-2", "md:col-span-2", "md:col-span-2"];
+/**
+ * A deliberately curated subset, not "every repo with the portfolio topic" —
+ * the strongest, most visually substantiated work rather than an exhaustive
+ * list. Order is editorial (lead with the most rigorous/published piece),
+ * not alphabetical or fetch order. Every entry here has a real result image,
+ * so the grid reads as uniform tiles rather than a mix of photos and
+ * icon-only placeholders.
+ */
+const FEATURED_IDS = [
+  "Med_AI-bias-audit",
+  "pediatric-appendicitis-multimodal-ai",
+  "OpenClock",
+  "nematic-orientation-histopathology",
+  "topognn-tnbc-recurrence",
+  "brca-singlecell-pam50",
+];
 
 export async function Projects() {
   const projects = await getGitHubProjects();
-  const flagship = projects.find((p) => p.featured) ?? projects[0];
-  const secondary = projects.filter((p) => p.id !== flagship.id);
+  const byId = new Map(projects.map((p) => [p.id, p]));
+  const featured = FEATURED_IDS.map((id) => byId.get(id)).filter((p) => p != null);
 
   return (
     <SectionWrapper id="projects">
@@ -21,26 +32,14 @@ export async function Projects() {
           index="03"
           label="Projects"
           title="Research engineered for impact"
-          description="Open-source systems spanning oncology AI, federated learning, and computational biology. Pulled live from GitHub."
+          description="A curated selection of research spanning oncology AI, federated learning, and computational biology — synced live from GitHub."
         />
 
-        <FeaturedProject project={flagship} />
-
-        {secondary.length > 0 && (
-          <div className="mt-24">
-            <p className="section-label mb-8">More Research</p>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-6">
-              {secondary.map((project, i) => (
-                <div
-                  key={project.id}
-                  className={SPAN_PATTERN[i % SPAN_PATTERN.length]}
-                >
-                  <ProjectTile project={project} index={i} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((project, i) => (
+            <ProjectTile key={project.id} project={project} index={i} />
+          ))}
+        </div>
       </div>
     </SectionWrapper>
   );
