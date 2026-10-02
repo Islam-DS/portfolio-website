@@ -16,6 +16,10 @@ export interface Project {
   featured?: boolean;
   image?: string;
   imageAlt?: string;
+  /** A real headline number or finding pulled verbatim from the project's
+   * own description (e.g. "0.896 AUC") — never a separate invented claim.
+   * Used as the pull-quote/stat card in the Projects Bento composition. */
+  stat?: string;
   codeDemo?: { command: string; output: string };
   /** Optional methodology diagram for the flagship card — a few real
    * pipeline stages pulled from the project's own description, not

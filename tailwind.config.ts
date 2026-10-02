@@ -62,6 +62,7 @@ const config: Config = {
         float: "float 8s ease-in-out infinite",
         "pulse-glow": "pulse-glow 4s ease-in-out infinite",
         "spin-slow": "spin 20s linear infinite",
+        "ken-burns": "ken-burns 18s ease-in-out infinite alternate",
       },
       keyframes: {
         "gradient-flow": {
@@ -75,6 +76,10 @@ const config: Config = {
         "pulse-glow": {
           "0%, 100%": { opacity: "0.5" },
           "50%": { opacity: "0.85" },
+        },
+        "ken-burns": {
+          "0%": { transform: "scale(1.03) translate(0, 0)" },
+          "100%": { transform: "scale(1.07) translate(-1.2%, -1%)" },
         },
       },
       boxShadow: {

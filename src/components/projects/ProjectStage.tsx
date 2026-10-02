@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Project } from "@/data/projects";
-import { ProjectVisual } from "./ProjectVisual";
+import { BENTO_LAYOUTS, ProjectImageCard, ProjectPillsCard, ProjectStatCard } from "./ProjectBento";
 import { ProjectInfo } from "./ProjectInfo";
 import { ProjectProgress } from "./ProjectProgress";
 
@@ -13,27 +13,31 @@ interface ProjectStageProps {
 }
 
 /**
- * Desktop-only, motion-enabled pinned showcase. The section is held in
- * place (position fixed, via GSAP's `pin`) for a scroll distance
- * proportional to the project count; scroll position alone (not time,
- * not arbitrary wheel-event math) determines which project is active.
+ * Desktop-only, motion-enabled pinned Bento showcase. The section is held
+ * in place (via GSAP's `pin`) for a scroll distance proportional to the
+ * project count; scroll position alone determines which project is active.
  *
- * Every project's visual sits in the DOM simultaneously, absolutely
- * positioned, and is animated purely via transform/opacity (scale, x, y,
- * autoAlpha) based on its distance from the active index:
- *   delta  0  -> "main": full size, centered, fully visible
- *   delta  1  -> "peek": small, offset into the corner, fully visible
- *   delta <0  -> "retired": faded out, shifted left (just exited)
+ * Each project contributes three heterogeneous cards (its real result
+ * image, a real headline stat pulled from its own description, and its
+ * tag pills — see ProjectBento) laid out in one of three rest-position
+ * presets (BENTO_LAYOUTS, cycled by index). Every card from every project
+ * sits in the DOM simultaneously, absolutely positioned, and is animated
+ * purely via transform/opacity based on its distance from the active
+ * index — but each of the three card types gets its OWN entry/exit
+ * direction (image from the right, stat from the top, pills from the
+ * left) so the composition doesn't just slide uniformly; it rearranges,
+ * per the brief.
+ *   delta  0  -> active: full size, at rest, fully visible
+ *   delta  1  -> entering: small, offset in its own direction, still visible
+ *   delta <0  -> retired: faded out, exited in its own direction
  *   delta >=2 -> waiting off-stage, invisible
- * Advancing the active index re-targets every element's animation to its
- * new role; GSAP tweens it there smoothly, which is what makes the
- * "peek" card visually grow into the "main" slot — same element, new
- * target, not a swap.
+ * Advancing the active index re-targets every card's animation to its new
+ * role; GSAP tweens it there smoothly rather than swapping DOM nodes.
  *
  * Mounted even on screens/pointer settings where it's not shown (CSS
  * handles visibility — see ProjectsSection) so there's no hydration
- * mismatch; this effect itself still guards against doing any work
- * when the stage isn't the active experience.
+ * mismatch; this effect itself still guards against doing any work when
+ * the stage isn't the active experience.
  */
 export function ProjectStage({ projects }: ProjectStageProps) {
   const pinWrapRef = useRef<HTMLDivElement>(null);
@@ -50,26 +54,48 @@ export function ProjectStage({ projects }: ProjectStageProps) {
     const stage = stageRef.current;
     if (!pinWrap || !stage) return;
 
-    const visuals = gsap.utils.toArray<HTMLElement>("[data-stage-visual]", stage);
+    const images = gsap.utils.toArray<HTMLElement>("[data-bento-image]", stage);
+    const stats = gsap.utils.toArray<HTMLElement>("[data-bento-stat]", stage);
+    const pills = gsap.utils.toArray<HTMLElement>("[data-bento-pills]", stage);
     const infos = gsap.utils.toArray<HTMLElement>("[data-stage-info]", stage);
     const n = projects.length;
 
-    function roleTarget(delta: number) {
+    // Each card type gets its own entry/exit direction so the whole
+    // composition rearranges rather than sliding uniformly.
+    function roleTarget(cardType: "image" | "stat" | "pills", delta: number) {
       if (delta === 0) return { x: "0%", y: "0%", scale: 1, autoAlpha: 1, zIndex: 30 };
-      if (delta === 1) return { x: "27%", y: "36%", scale: 0.48, autoAlpha: 1, zIndex: 20 };
-      if (delta < 0) return { x: "-16%", y: "-10%", scale: 0.8, autoAlpha: 0, zIndex: 5 };
-      return { x: "34%", y: "42%", scale: 0.4, autoAlpha: 0, zIndex: 1 };
+      if (delta === 1) {
+        if (cardType === "image") return { x: "16%", y: "10%", scale: 0.82, autoAlpha: 0.85, zIndex: 20 };
+        if (cardType === "stat") return { x: "0%", y: "-38%", scale: 0.72, autoAlpha: 0.2, zIndex: 20 };
+        return { x: "-32%", y: "10%", scale: 0.78, autoAlpha: 0.2, zIndex: 20 };
+      }
+      if (delta < 0) {
+        if (cardType === "image") return { x: "-20%", y: "-8%", scale: 0.84, autoAlpha: 0, zIndex: 5 };
+        if (cardType === "stat") return { x: "0%", y: "-28%", scale: 0.78, autoAlpha: 0, zIndex: 5 };
+        return { x: "22%", y: "16%", scale: 0.8, autoAlpha: 0, zIndex: 5 };
+      }
+      if (cardType === "image") return { x: "22%", y: "16%", scale: 0.78, autoAlpha: 0, zIndex: 1 };
+      if (cardType === "stat") return { x: "0%", y: "-32%", scale: 0.74, autoAlpha: 0, zIndex: 1 };
+      return { x: "-24%", y: "8%", scale: 0.78, autoAlpha: 0, zIndex: 1 };
     }
 
-    visuals.forEach((el, i) => gsap.set(el, roleTarget(i)));
+    images.forEach((el, i) => gsap.set(el, roleTarget("image", i)));
+    stats.forEach((el, i) => gsap.set(el, roleTarget("stat", i)));
+    pills.forEach((el, i) => gsap.set(el, roleTarget("pills", i)));
     infos.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0, y: i === 0 ? 0 : 24 }));
     if (counterRef.current) counterRef.current.textContent = "01";
 
     let activeIndex = 0;
     function setActive(next: number) {
       if (next === activeIndex) return;
-      visuals.forEach((el, i) =>
-        gsap.to(el, { ...roleTarget(i - next), duration: 0.85, ease: "power3.out" })
+      images.forEach((el, i) =>
+        gsap.to(el, { ...roleTarget("image", i - next), duration: 0.85, ease: "power3.out" })
+      );
+      stats.forEach((el, i) =>
+        gsap.to(el, { ...roleTarget("stat", i - next), duration: 0.85, ease: "power3.out" })
+      );
+      pills.forEach((el, i) =>
+        gsap.to(el, { ...roleTarget("pills", i - next), duration: 0.85, ease: "power3.out" })
       );
       infos.forEach((el, i) => {
         if (i === next) {
@@ -117,12 +143,17 @@ export function ProjectStage({ projects }: ProjectStageProps) {
             </div>
 
             <div className="relative lg:col-span-7">
-              <div className="relative aspect-[4/3] w-full">
-                {projects.map((project) => (
-                  <div key={project.id} data-stage-visual className="absolute left-0 top-0 h-[58%] w-[58%]">
-                    <ProjectVisual project={project} />
-                  </div>
-                ))}
+              <div className="relative min-h-[460px] w-full lg:min-h-[560px]">
+                {projects.map((project, i) => {
+                  const layout = BENTO_LAYOUTS[i % BENTO_LAYOUTS.length];
+                  return (
+                    <div key={project.id} className="contents">
+                      <ProjectImageCard project={project} layout={layout} />
+                      <ProjectStatCard project={project} layout={layout} />
+                      <ProjectPillsCard project={project} layout={layout} />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

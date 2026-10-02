@@ -17,6 +17,7 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     image: "/images/projects/bias-audit-auroc-view-position.png",
     imageAlt:
       "Bar chart of AUROC by imaging view position (PA vs AP) across five chest X-ray findings, showing significant subgroup performance gaps",
+    stat: "14 Subgroup AUROC Gaps Found",
     pipeline: [
       { icon: "scan", label: "Train Classifier", detail: "ConvNeXt-Tiny on NIH ChestX-ray14, 14 findings" },
       { icon: "users", label: "Audit Subgroups", detail: "14 significant AUROC gaps by sex, age, view" },
@@ -33,6 +34,7 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     image: "/images/projects/pediatric-appendicitis-roc.png",
     imageAlt:
       "ROC and precision-recall curves comparing clinical, image-only, and multimodal models for pediatric appendicitis diagnosis",
+    stat: "0.896 AUC, Multimodal Fusion",
   },
   "brca-singlecell-pam50": {
     title: "Single-Cell Breast Cancer PAM50 Subtype Classifier",
@@ -42,6 +44,7 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     language: "Jupyter Notebook",
     image: "/images/projects/brca-pam50-umap.png",
     imageAlt: "UMAP projection of single-cell breast cancer data colored by predicted PAM50 molecular subtype",
+    stat: "4 Molecular Subtypes Classified",
   },
   "EduMind-Sentinel": {
     title: "EduMind Sentinel",
@@ -100,6 +103,7 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     language: "Python",
     image: "/images/projects/openclock-result-ui.png",
     imageAlt: "OpenClock results screen showing Horvath, Hannum, and DNAmPhenoAge age estimates cross-checked between two independent libraries, each with its own known bias noted",
+    stat: "1,388-Person Cross-Validation",
   },
   "topognn-tnbc-recurrence": {
     title: "Topology-Augmented Graph Learning of TME Niches for TNBC Recurrence",
@@ -109,6 +113,7 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     language: "Python",
     image: "/images/projects/topognn-spatial-organization.png",
     imageAlt: "Two tumor microenvironments with the same cell types and numbers but different spatial organization, illustrating the project's central question of whether spatial arrangement carries independent prognostic signal",
+    stat: "Pre-Registered, Externally Validated",
   },
   "nematic-orientation-histopathology": {
     title: "Anatomically Supervised Orientation-Tensor Learning in Histopathology",
@@ -118,5 +123,6 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     language: "Python",
     image: "/images/projects/nematic-pipeline-figure1.png",
     imageAlt: "Pipeline diagram from H&E histology image through gland segmentation, principal orientation, rank-2 tensor target, and D8-equivariant CNN, to predicted tensor and validation",
+    stat: "Negative Result, Held Across 5 Seeds",
   },
 };

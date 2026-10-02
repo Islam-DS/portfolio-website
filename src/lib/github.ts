@@ -70,6 +70,7 @@ export async function getGitHubProjects(): Promise<Project[]> {
         featured: override.featured ?? r.topics.includes(FEATURE_TOPIC),
         image: override.image,
         imageAlt: override.imageAlt,
+        stat: override.stat,
         codeDemo: override.codeDemo,
         pipeline: override.pipeline,
       };
