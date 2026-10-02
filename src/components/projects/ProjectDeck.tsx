@@ -23,7 +23,7 @@ const TAG_ICON: Record<string, ComponentType<{ className?: string; strokeWidth?:
   "Negative Result": Microscope,
 };
 
-const AUTO_ADVANCE_MS = 3500;
+const AUTO_ADVANCE_MS = 2200;
 
 type Slot = { xPercent: number; yPercent: number; scale: number; opacity: number; zIndex: number };
 
@@ -94,14 +94,14 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
         const to = slotFor(distance(i, next));
         // Hidden -> hidden (wrapping from the bottom back to the top): jump, don't fly across.
         if (from.opacity === 0 && to.opacity === 0) gsap.set(el, to);
-        else gsap.to(el, { ...to, duration: 1.1, ease: "power3.inOut" });
+        else gsap.to(el, { ...to, duration: 0.75, ease: "power3.inOut" });
       });
 
       infos.forEach((el, i) => {
         if (i === next) {
-          gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.35 });
+          gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power3.out", delay: 0.2 });
         } else if (i === prev) {
-          gsap.to(el, { autoAlpha: 0, y: -20, duration: 0.4, ease: "power2.inOut" });
+          gsap.to(el, { autoAlpha: 0, y: -20, duration: 0.3, ease: "power2.inOut" });
         } else {
           gsap.set(el, { autoAlpha: 0, y: 20 });
         }
@@ -206,8 +206,8 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
                       />
                     ) : (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                        <Icon className="h-9 w-9 text-cinema-muted/50" strokeWidth={1.5} />
-                        <span className="font-mono text-[13px] uppercase tracking-[0.18em] text-cinema-muted/50">
+                        <Icon className="h-9 w-9 text-cinema-muted/80" strokeWidth={1.5} />
+                        <span className="font-mono text-[17.5px] uppercase tracking-[0.08em] text-cinema-muted/80">
                           {project.language}
                         </span>
                       </div>
@@ -218,7 +218,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
                       {project.tags[0]}
                     </span>
                     {project.stat && (
-                      <span className="truncate font-display text-[14px] font-semibold text-cinema-text">
+                      <span className="truncate font-display text-[16.5px] font-semibold text-cinema-text">
                         {project.stat}
                       </span>
                     )}

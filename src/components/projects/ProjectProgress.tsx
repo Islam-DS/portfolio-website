@@ -22,7 +22,7 @@ export function ProjectProgress({ total, counterRef, lineRef }: ProjectProgressP
         <span ref={counterRef} className="font-display text-[20px] font-bold text-cinema-text">
           01
         </span>
-        <span className="font-mono text-[15px] text-cinema-muted/50">/ {String(total).padStart(2, "0")}</span>
+        <span className="font-mono text-[17.5px] text-cinema-muted/80">/ {String(total).padStart(2, "0")}</span>
       </div>
     </div>
   );

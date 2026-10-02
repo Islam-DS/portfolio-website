@@ -41,7 +41,7 @@ export function SectionHeading({
           isCenter && "justify-center"
         )}
       >
-        <span className="font-mono text-[18.9px] text-cinema-muted/60">{index}</span>
+        <span className="font-mono text-[18.9px] text-cinema-muted/80">{index}</span>
         <span className="h-px w-8 bg-black/15" />
         <span className="section-label">{label}</span>
       </div>

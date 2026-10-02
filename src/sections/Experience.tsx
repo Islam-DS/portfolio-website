@@ -123,8 +123,8 @@ export function Experience() {
                 <span ref={counterRef} className="font-display text-[22px] font-bold text-cinema-text">
                   01
                 </span>
-                <span className="font-mono text-[16px] text-cinema-muted/50">/ {String(journey.length).padStart(2, "0")}</span>
-                <span className="font-mono text-[14px] uppercase tracking-[0.15em] text-cinema-muted/40">— scroll to explore</span>
+                <span className="font-mono text-[18.5px] text-cinema-muted/80">/ {String(journey.length).padStart(2, "0")}</span>
+                <span className="font-mono text-[16.5px] uppercase tracking-[0.08em] text-cinema-muted/80">— scroll to explore</span>
               </div>
 
               <div className="relative min-h-[480px] pl-8">
@@ -133,8 +133,8 @@ export function Experience() {
                     <div className="grid grid-cols-12 gap-x-10">
                       <div className="col-span-7">
                         <div className="flex items-center gap-3">
-                          <span className="font-mono text-[17px] text-cinema-muted/70">{item.period}</span>
-                          <span className="font-mono text-[15px] uppercase tracking-[0.15em] text-cinema-muted/50">
+                          <span className="font-mono text-[17px] text-cinema-muted/90">{item.period}</span>
+                          <span className="font-mono text-[17.5px] uppercase tracking-[0.08em] text-cinema-muted/80">
                             {item.type}
                           </span>
                         </div>
@@ -143,7 +143,7 @@ export function Experience() {
                         </h3>
                         <p className="mt-4 text-[26px] text-cinema-muted">{item.organization}</p>
                         {item.location && (
-                          <p className="mt-1 flex items-center gap-2 text-[19px] text-cinema-muted/70">
+                          <p className="mt-1 flex items-center gap-2 text-[19px] text-cinema-muted/90">
                             <MapPin className="h-3.5 w-3.5 shrink-0" />
                             {item.location}
                           </p>
@@ -159,13 +159,13 @@ export function Experience() {
                           ))}
                         </ul>
                         <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-black/10 pt-4">
-                          <p className="text-[16px] text-cinema-muted/50">{item.tags.join(" · ")}</p>
+                          <p className="text-[18.5px] text-cinema-muted/80">{item.tags.join(" · ")}</p>
                           {item.link && (
                             <a
                               href={item.link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-[16px] font-medium text-cinema-text/70 transition-colors hover:text-cinema-text"
+                              className="inline-flex items-center gap-1.5 text-[18.5px] font-medium text-cinema-text/85 transition-colors hover:text-cinema-text"
                             >
                               Read paper <ExternalLink className="h-3.5 w-3.5" />
                             </a>
@@ -186,13 +186,13 @@ export function Experience() {
         {journey.map((item) => (
           <div key={`${item.title}-${item.organization}`} data-mobile-card className="border-t border-black/10 pt-8 first:border-t-0 first:pt-0">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[16px] text-cinema-muted/70">{item.period}</span>
-              <span className="font-mono text-[14px] uppercase tracking-[0.15em] text-cinema-muted/50">{item.type}</span>
+              <span className="font-mono text-[18.5px] text-cinema-muted/90">{item.period}</span>
+              <span className="font-mono text-[16.5px] uppercase tracking-[0.08em] text-cinema-muted/80">{item.type}</span>
             </div>
             <h3 className="mt-3 font-display text-[28px] font-bold leading-tight text-cinema-text">{item.title}</h3>
             <p className="mt-2 text-[20px] text-cinema-muted">{item.organization}</p>
             {item.location && (
-              <p className="mt-1 flex items-center gap-2 text-[17px] text-cinema-muted/70">
+              <p className="mt-1 flex items-center gap-2 text-[17px] text-cinema-muted/90">
                 <MapPin className="h-3.5 w-3.5 shrink-0" />
                 {item.location}
               </p>
@@ -205,13 +205,13 @@ export function Experience() {
               ))}
             </ul>
             <div className="mt-5 flex flex-wrap items-center gap-4">
-              <p className="text-[15px] text-cinema-muted/50">{item.tags.join(" · ")}</p>
+              <p className="text-[17.5px] text-cinema-muted/80">{item.tags.join(" · ")}</p>
               {item.link && (
                 <a
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[15px] font-medium text-cinema-text/70"
+                  className="inline-flex items-center gap-1.5 text-[17.5px] font-medium text-cinema-text/85"
                 >
                   Read paper <ExternalLink className="h-3.5 w-3.5" />
                 </a>

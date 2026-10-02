@@ -55,13 +55,13 @@ export function Publications() {
                   {pub.title}
                 </h3>
                 <p className="mt-5 text-[25px] text-cinema-muted">{pub.authors}</p>
-                <p className="mt-1 text-[22px] italic text-cinema-muted/70">{pub.venue}</p>
+                <p className="mt-1 text-[22px] italic text-cinema-muted/90">{pub.venue}</p>
                 {pub.abstract && (
                   <p className="mt-5 text-body-lg leading-relaxed text-cinema-muted">{pub.abstract}</p>
                 )}
 
                 <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-black/10 pt-6">
-                  <p className="text-[17px] text-cinema-muted/60">{pub.tags.join(" · ")}</p>
+                  <p className="text-[17px] text-cinema-muted/80">{pub.tags.join(" · ")}</p>
                   <PublicationDoi doi={pub.doi} link={pub.link} />
                   <a
                     href={pub.link}
@@ -69,7 +69,7 @@ export function Publications() {
                     rel="noopener noreferrer"
                     data-cursor
                     data-cursor-label="Read Paper"
-                    className="inline-flex items-center gap-1.5 text-[17px] font-medium text-cinema-text/70 transition-colors hover:text-cinema-text"
+                    className="inline-flex items-center gap-1.5 text-[17px] font-medium text-cinema-text/85 transition-colors hover:text-cinema-text"
                   >
                     View paper <ExternalLink className="h-3.5 w-3.5" />
                   </a>

@@ -18,8 +18,8 @@ export function PhotoPlaceholder({ label, className, aspect = "aspect-[4/3]", ba
         className
       )}
     >
-      <ImagePlus className="h-6 w-6 text-cinema-muted/60" strokeWidth={1.5} />
-      <p className="text-[18.9px] font-medium leading-snug text-cinema-muted/70">{label}</p>
+      <ImagePlus className="h-6 w-6 text-cinema-muted/80" strokeWidth={1.5} />
+      <p className="text-[18.9px] font-medium leading-snug text-cinema-muted/90">{label}</p>
     </div>
   );
 }

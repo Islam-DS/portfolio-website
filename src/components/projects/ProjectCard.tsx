@@ -89,7 +89,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         </h3>
         <p className="mt-3 text-[24.3px] leading-relaxed text-cinema-muted">{project.description}</p>
 
-        <p className="mt-4 text-[18.9px] text-cinema-muted/70">{project.tags.join(" · ")}</p>
+        <p className="mt-4 text-[18.9px] text-cinema-muted/90">{project.tags.join(" · ")}</p>
 
         <div className="mt-6 flex flex-wrap items-center gap-6 border-t border-black/10 pt-5">
           <a

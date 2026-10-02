@@ -26,7 +26,7 @@ export function Contact() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeInUp}
-          className="section-label !text-white/40"
+          className="section-label !text-white/70"
         >
           05 — Contact
         </motion.p>
@@ -43,7 +43,7 @@ export function Contact() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeInUp}
-          className="mt-8 max-w-xl text-body-xl leading-relaxed text-white/50"
+          className="mt-8 max-w-xl text-body-xl leading-relaxed text-white/75"
         >
           Open to research collaborations, speaking engagements, and transformative
           AI projects.
@@ -78,7 +78,7 @@ export function Contact() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeInUp}
-          className="mt-8 flex flex-wrap items-center gap-8 text-white/50"
+          className="mt-8 flex flex-wrap items-center gap-8 text-white/75"
         >
           <a href={siteConfig.whatsapp} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
             WhatsApp
@@ -125,7 +125,7 @@ function SocialLink({
       rel="noopener noreferrer"
       aria-label={label}
       data-cursor
-      className="block text-white/40 transition-all duration-300 hover:scale-110 hover:text-white"
+      className="block text-white/70 transition-all duration-300 hover:scale-110 hover:text-white"
     >
       <Icon className="h-5 w-5" />
     </a>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Instrument_Serif, Syne, Geist_Mono } from "next/font/google";
+import { DM_Sans, Instrument_Serif, Geist, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CinematicBackground } from "@/components/effects/CinematicBackground";
@@ -17,7 +17,10 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-const syne = Syne({
+// Geist replaces Syne for headings: Syne's extra-wide letterforms made long
+// project/publication titles hard to scan. Geist stays bold and striking at
+// display sizes but reads cleanly.
+const geist = Geist({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
@@ -68,7 +71,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmSans.variable} ${syne.variable} ${instrumentSerif.variable} ${geistMono.variable} font-sans text-[clamp(1.52rem,1.35rem+0.81vw,2.03rem)]`}
+        className={`${dmSans.variable} ${geist.variable} ${instrumentSerif.variable} ${geistMono.variable} font-sans text-[clamp(1.52rem,1.35rem+0.81vw,2.03rem)]`}
       >
         <JsonLd />
         <CinematicBackground />

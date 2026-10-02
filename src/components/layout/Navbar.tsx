@@ -66,7 +66,7 @@ export function Navbar() {
                     href={link.href}
                     className={cn(
                       "relative py-1 text-[21.6px] font-medium tracking-wide transition-colors duration-300",
-                      isActive ? "text-white" : "text-white/50 hover:text-white/80"
+                      isActive ? "text-white" : "text-white/75 hover:text-white"
                     )}
                   >
                     {link.label}
@@ -85,7 +85,7 @@ export function Navbar() {
 
           <a
             href="#contact"
-            className="hidden whitespace-nowrap text-[21.6px] font-medium tracking-wide text-white/70 transition-colors duration-300 hover:text-white xl:block"
+            className="hidden whitespace-nowrap text-[21.6px] font-medium tracking-wide text-white/85 transition-colors duration-300 hover:text-white xl:block"
           >
             Get in touch →
           </a>

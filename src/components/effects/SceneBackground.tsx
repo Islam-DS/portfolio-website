@@ -32,11 +32,18 @@ export function SceneBackground() {
     const canvas = document.createElement("canvas");
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: false,
+        powerPreference: "low-power",
+      });
     } catch {
       return; // no WebGL — the flat cream background stands on its own
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+    // A soft, half-opacity backdrop gains nothing from retina resolution;
+    // rendering below 1x keeps the GPU from competing with scrolling.
+    renderer.setPixelRatio(0.75);
     renderer.setSize(width, height);
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
@@ -53,10 +60,6 @@ export function SceneBackground() {
 
     const geo = new THREE.PlaneGeometry(120, 120, SEG, SEG);
     geo.rotateX(-Math.PI / 2);
-    const base = Float32Array.from(
-      (geo.attributes.position as THREE.BufferAttribute).array
-    );
-    const pos = geo.attributes.position as THREE.BufferAttribute;
 
     const mat = new THREE.MeshStandardMaterial({
       color: 0xf6f1e5,
@@ -64,6 +67,26 @@ export function SceneBackground() {
       metalness: 0,
       flatShading: true,
     });
+    // Waves are displaced in the vertex shader rather than on the CPU: the old
+    // per-frame loop over every vertex plus computeVertexNormals() ran on the
+    // main thread and stalled scrolling. flatShading derives face normals from
+    // screen-space derivatives, so no normals need recomputing at all.
+    const uniforms = { uTime: { value: 0 }, uDrift: { value: 0 } };
+    mat.onBeforeCompile = (shader) => {
+      shader.uniforms.uTime = uniforms.uTime;
+      shader.uniforms.uDrift = uniforms.uDrift;
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nuniform float uTime;\nuniform float uDrift;")
+        .replace(
+          "#include <begin_vertex>",
+          `vec3 transformed = vec3(position);
+          float wz = position.z + uDrift;
+          transformed.y =
+            sin(position.x * 0.42 + uTime * 0.22) * 1.1 +
+            sin(wz * 0.36 - uTime * 0.17) * 1.3 +
+            sin((position.x + wz) * 0.26 + uTime * 0.13) * 0.8;`
+        );
+    };
     const mesh = new THREE.Mesh(geo, mat);
     scene.add(mesh);
 
@@ -100,34 +123,25 @@ export function SceneBackground() {
 
     const clock = new THREE.Clock();
     let scrollEased = scrollN;
+    let lastRender = -1;
 
     const tick = () => {
       raf = requestAnimationFrame(tick);
       if (!docVisible) return;
 
       const t = clock.getElapsedTime();
-      scrollEased += (scrollN - scrollEased) * 0.05;
-      mouse.x += (mouse.tx - mouse.x) * 0.03;
-      mouse.y += (mouse.ty - mouse.y) * 0.03;
+      // The waves move slowly enough that 30fps is indistinguishable from 60,
+      // and it halves the GPU time competing with scroll.
+      if (t - lastRender < 1 / 30) return;
+      lastRender = t;
+      // easing factors doubled to keep the same feel at the halved frame rate
+      scrollEased += (scrollN - scrollEased) * 0.1;
+      mouse.x += (mouse.tx - mouse.x) * 0.06;
+      mouse.y += (mouse.ty - mouse.y) * 0.06;
 
       // scroll pushes the wave field forward so the surface keeps changing
-      const drift = scrollEased * 26;
-
-      for (let i = 0; i < pos.count; i++) {
-        const i3 = i * 3;
-        const x = base[i3];
-        const z = base[i3 + 2] + drift;
-        // Shading comes from SLOPE, not height — long gentle waves read as a flat
-        // field however tall they are. Shorter wavelengths give the normals
-        // something to vary against.
-        const y =
-          Math.sin(x * 0.42 + t * 0.22) * 1.1 +
-          Math.sin(z * 0.36 - t * 0.17) * 1.3 +
-          Math.sin((x + z) * 0.26 + t * 0.13) * 0.8;
-        pos.setY(i, y);
-      }
-      pos.needsUpdate = true;
-      geo.computeVertexNormals();
+      uniforms.uTime.value = t;
+      uniforms.uDrift.value = scrollEased * 26;
 
       camera.position.x = mouse.x * 1.6;
       camera.position.y = 13 - mouse.y * 0.8 - scrollEased * 1.2;
