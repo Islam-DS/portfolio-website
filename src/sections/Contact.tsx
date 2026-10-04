@@ -34,7 +34,9 @@ export function Contact() {
         <RevealText
           as="h2"
           text="Let's build the future together."
-          splitBy="char"
+          splitBy="word"
+          emphasisFrom={4}
+          emphasisClassName="pr-[0.08em] font-serif font-normal italic tracking-normal text-[#E3B566]"
           className="mt-8 block max-w-3xl font-display text-display-lg font-bold leading-[1.05] tracking-tight text-white"
         />
 
@@ -43,7 +45,7 @@ export function Contact() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeInUp}
-          className="mt-8 max-w-xl text-body-xl leading-relaxed text-white/75"
+          className="mt-8 max-w-xl text-body-xl text-white/75"
         >
           Open to research collaborations, speaking engagements, and transformative
           AI projects.

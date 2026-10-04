@@ -44,8 +44,8 @@ const config: Config = {
         "display-xl": ["clamp(3rem,11vw,12.15rem)", { lineHeight: "0.95", letterSpacing: "-0.04em" }],
         "display-lg": ["clamp(2.6rem,9vw,8.775rem)", { lineHeight: "0.98", letterSpacing: "-0.04em" }],
         "display-md": ["clamp(2.1rem,6.4vw,6.075rem)", { lineHeight: "1.04", letterSpacing: "-0.035em" }],
-        "body-xl": ["clamp(1.86rem,1.62rem+0.81vw,2.36rem)", { lineHeight: "1.65" }],
-        "body-lg": ["clamp(1.55rem,1.35rem+0.68vw,2.03rem)", { lineHeight: "1.7" }],
+        "body-xl": ["clamp(1.86rem,1.62rem+0.81vw,2.36rem)", { lineHeight: "1.5" }],
+        "body-lg": ["clamp(1.55rem,1.35rem+0.68vw,2.03rem)", { lineHeight: "1.5" }],
       },
       backgroundImage: {
         "hero-mesh":

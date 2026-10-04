@@ -32,7 +32,7 @@ export function Publications() {
   return (
     <SectionWrapper id="publications">
       <div className="cinema-container-full">
-        <SectionHeading index="04" label="Publications" title="Peer-reviewed contributions" />
+        <SectionHeading index="04" label="Publications" title="Peer-reviewed contributions" emphasis="contributions" />
 
         <motion.div
           ref={listRef}
@@ -57,7 +57,7 @@ export function Publications() {
                 <p className="mt-5 text-[25px] text-cinema-muted">{pub.authors}</p>
                 <p className="mt-1 text-[22px] italic text-cinema-muted/90">{pub.venue}</p>
                 {pub.abstract && (
-                  <p className="mt-5 text-body-lg leading-relaxed text-cinema-muted">{pub.abstract}</p>
+                  <p className="mt-5 text-body-lg text-cinema-muted">{pub.abstract}</p>
                 )}
 
                 <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-black/10 pt-6">

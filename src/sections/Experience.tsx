@@ -156,7 +156,9 @@ export function Experience() {
             <span className="h-px w-8 bg-white/25" />
             <span className="section-label !text-white/80">Experience</span>
           </div>
-          <h2 className="font-display text-display-md font-bold tracking-tight text-white">The journey so far</h2>
+          <h2 className="font-display text-display-md font-bold tracking-tight text-white">
+            The journey <em className="font-serif font-normal italic tracking-normal text-[#D9F99D]">so far</em>
+          </h2>
           <p className="mt-6 max-w-2xl text-body-lg text-white/75">
             Research, work, scholarship, and leadership — one continuous path, not separate chapters.
           </p>

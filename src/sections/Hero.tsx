@@ -154,7 +154,7 @@ export function Hero() {
             <p className="font-display text-[40.5px] font-bold leading-none tracking-tight text-cinema-text md:text-[48.6px] lg:text-[64.8px]">
               researcher
             </p>
-            <p className="mt-5 max-w-xs text-body-lg leading-relaxed text-cinema-muted">
+            <p className="mt-5 max-w-md text-body-lg leading-snug text-cinema-muted">
               AI researcher specialising in medical imaging, oncology, and
               privacy-preserving federated learning.
             </p>
@@ -217,7 +217,7 @@ export function Hero() {
             <p className="font-mono text-[40.5px] font-bold leading-none tracking-tight text-cinema-text md:text-[48.6px] lg:text-[64.8px]">
               &lt;engineer&gt;
             </p>
-            <p className="mt-5 max-w-xs text-body-lg leading-relaxed text-cinema-muted lg:ml-auto">
+            <p className="mt-5 max-w-md text-body-lg leading-snug text-cinema-muted lg:ml-auto">
               Machine learning engineer who ships reproducible,
               production-grade pipelines.
             </p>

@@ -124,20 +124,28 @@ export function SceneBackground() {
     const clock = new THREE.Clock();
     let scrollEased = scrollN;
     let lastRender = -1;
+    // Frame-rate-independent easing: same feel at 30, 60 or 144Hz.
+    const ease = (perFrameAt60: number, dt: number) => 1 - Math.pow(1 - perFrameAt60, dt * 60);
 
     const tick = () => {
       raf = requestAnimationFrame(tick);
       if (!docVisible) return;
 
       const t = clock.getElapsedTime();
-      // The waves move slowly enough that 30fps is indistinguishable from 60,
-      // and it halves the GPU time competing with scroll.
-      if (t - lastRender < 1 / 30) return;
+      // While the page scrolls (or the mouse moves the camera) render every
+      // frame: at 30fps the backdrop visibly judders against content scrolling
+      // at the display's 60-144Hz. Only when idle — just the slow waves
+      // moving — drop to 30fps, where the difference can't be seen.
+      const moving =
+        Math.abs(scrollN - scrollEased) > 0.0001 ||
+        Math.abs(mouse.tx - mouse.x) > 0.001 ||
+        Math.abs(mouse.ty - mouse.y) > 0.001;
+      if (!moving && t - lastRender < 1 / 30) return;
+      const dt = lastRender < 0 ? 1 / 60 : Math.min(t - lastRender, 0.1);
       lastRender = t;
-      // easing factors doubled to keep the same feel at the halved frame rate
-      scrollEased += (scrollN - scrollEased) * 0.1;
-      mouse.x += (mouse.tx - mouse.x) * 0.06;
-      mouse.y += (mouse.ty - mouse.y) * 0.06;
+      scrollEased += (scrollN - scrollEased) * ease(0.05, dt);
+      mouse.x += (mouse.tx - mouse.x) * ease(0.03, dt);
+      mouse.y += (mouse.ty - mouse.y) * ease(0.03, dt);
 
       // scroll pushes the wave field forward so the surface keeps changing
       uniforms.uTime.value = t;

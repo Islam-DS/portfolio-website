@@ -8,6 +8,8 @@ interface SectionHeadingProps {
   index: string;
   label: string;
   title: string;
+  /** Trailing words of `title` to set in gold serif italic as an accent. */
+  emphasis?: string;
   description?: string;
   align?: "left" | "center";
   className?: string;
@@ -17,11 +19,14 @@ export function SectionHeading({
   index,
   label,
   title,
+  emphasis,
   description,
   align = "left",
   className,
 }: SectionHeadingProps) {
   const isCenter = align === "center";
+  const hasEmphasis = emphasis && title.endsWith(emphasis);
+  const lead = hasEmphasis ? title.slice(0, title.length - emphasis.length) : title;
 
   return (
     <motion.header
@@ -46,7 +51,10 @@ export function SectionHeading({
         <span className="section-label">{label}</span>
       </div>
       <h2 className="font-display text-display-md font-bold tracking-tight text-cinema-text">
-        {title}
+        {lead}
+        {hasEmphasis && (
+          <em className="pr-[0.08em] font-serif font-normal italic tracking-normal text-cinema-gold">{emphasis}</em>
+        )}
       </h2>
       {description && (
         <p
