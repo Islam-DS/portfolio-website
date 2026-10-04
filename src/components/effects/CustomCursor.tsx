@@ -72,7 +72,7 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black transition-[width,height,opacity] duration-150 ease-out"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference transition-[width,height,opacity] duration-150 ease-out"
         style={{
           width: pressed ? 7 : 10,
           height: pressed ? 7 : 10,
@@ -82,7 +82,12 @@ export function CustomCursor() {
       />
       <div
         ref={ringRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center whitespace-nowrap rounded-full transition-[width,height,padding,opacity,background-color,border-color] duration-200 ease-out"
+        className={`pointer-events-none fixed left-0 top-0 z-[9999] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center whitespace-nowrap rounded-full transition-[width,height,padding,opacity,background-color,border-color] duration-200 ease-out ${
+          // Inverts against whatever is underneath: dark on cream sections,
+          // light on the black Experience/Contact sections. The label pill
+          // has its own background, so it stays un-blended.
+          label ? "" : "mix-blend-difference"
+        }`}
         style={
           label
             ? {
@@ -99,7 +104,7 @@ export function CustomCursor() {
                 padding: 0,
                 opacity: tracking ? (pressed ? 1 : active ? 1 : 0.7) : 0,
                 backgroundColor: "transparent",
-                border: `2px solid ${pressed ? "#000" : "rgba(0,0,0,0.55)"}`,
+                border: `2px solid ${pressed ? "#fff" : "rgba(255,255,255,0.75)"}`,
               }
         }
         aria-hidden
