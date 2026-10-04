@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { GraduationCap, MapPin } from "lucide-react";
+import { GraduationCap, MapPin, Plane } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { education } from "@/data/education";
@@ -13,6 +13,90 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 const records = [...education].reverse();
 
 const STAMP_COLOR = { scholar: "#C2412D", done: "#2F5654" };
+
+// Quadratic arc from the first record's city (left) to the last (right).
+const ROUTE_D = "M 40 140 Q 500 -50 960 140";
+// Tangent at the end of the arc, so the plane sits correctly before JS runs.
+const PLANE_END = "translate(960 140) rotate(67.4) translate(-12 -12)";
+const COUNTRY_CODE: Record<string, string> = { Bangladesh: "BD", Kazakhstan: "KZ" };
+const city = (location: string) => location.split(",")[0].trim();
+const country = (location: string) => location.split(",").pop()?.trim() ?? "";
+
+/** Dotted route between the two cities with a plane flying it once in view. */
+function FlightRoute() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const routeRef = useRef<SVGPathElement>(null);
+  const planeRef = useRef<SVGGElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const wrap = wrapRef.current;
+    const route = routeRef.current;
+    const plane = planeRef.current;
+    if (!wrap || !route || !plane) return;
+
+    const len = route.getTotalLength();
+    const placePlane = (p: number) => {
+      const d = len * p;
+      const a = route.getPointAtLength(d);
+      const from = route.getPointAtLength(Math.max(0, Math.min(d, len - 1)));
+      const to = route.getPointAtLength(Math.min(len, Math.max(d, 1) + 1));
+      const angle = (Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI;
+      // lucide's plane glyph points up-right (-45deg), hence the +45.
+      plane.setAttribute("transform", `translate(${a.x} ${a.y}) rotate(${angle + 45}) translate(-12 -12)`);
+    };
+
+    gsap.set(route, { strokeDasharray: len, strokeDashoffset: len });
+    placePlane(0);
+
+    const progress = { p: 0 };
+    const tween = gsap.to(progress, {
+      p: 1,
+      duration: 2.2,
+      ease: "power1.inOut",
+      paused: true,
+      onUpdate: () => {
+        route.style.strokeDashoffset = String(len * (1 - progress.p));
+        placePlane(progress.p);
+      },
+    });
+    const st = ScrollTrigger.create({ trigger: wrap, start: "top 75%", once: true, onEnter: () => tween.play() });
+    return () => {
+      st.kill();
+      tween.kill();
+    };
+  }, []);
+
+  const [from, to] = [records[0], records[records.length - 1]];
+
+  return (
+    <div ref={wrapRef} className="cinema-container-full mb-16 md:mb-20">
+      <svg viewBox="0 0 1000 170" className="h-auto w-full overflow-visible" aria-hidden>
+        <path d={ROUTE_D} fill="none" stroke="rgba(24,22,15,0.2)" strokeWidth="2.5" strokeDasharray="2 12" strokeLinecap="round" />
+        <path ref={routeRef} d={ROUTE_D} fill="none" stroke="#A97B33" strokeWidth="3.5" strokeLinecap="round" />
+        <circle cx="40" cy="140" r="10" fill="#2F5654" />
+        <circle cx="960" cy="140" r="10" fill="#A97B33" />
+        <g ref={planeRef} transform={PLANE_END}>
+          <circle cx="12" cy="12" r="25" fill="#18160F" />
+          <Plane x={0} y={0} width={24} height={24} color="#F7F3E9" strokeWidth={2} />
+        </g>
+      </svg>
+      <div className="mt-3 flex items-start justify-between gap-6">
+        {[from, to].map((rec, i) => (
+          <div key={rec.institution} className={i === 1 ? "text-right" : ""}>
+            <p className="font-display text-[34px] font-extrabold uppercase leading-none tracking-tight text-cinema-text md:text-[52px]">
+              {city(rec.location)}
+              <span className="ml-2 align-middle font-mono text-[18.5px] font-semibold text-cinema-muted">
+                {COUNTRY_CODE[country(rec.location)] ?? country(rec.location)}
+              </span>
+            </p>
+            <p className="mt-2 text-[19px] text-cinema-muted md:text-[21.6px]">{rec.degree}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /**
  * Education as two diplomas: each slides up like a sheet of paper, its
@@ -98,6 +182,8 @@ export function Education() {
       <div className="cinema-container-full">
         <SectionHeading index="01" label="Education" title="Academic foundation" />
       </div>
+
+      <FlightRoute />
 
       <div ref={sectionRef} className="cinema-container-full grid grid-cols-1 gap-16 overflow-x-clip py-10 lg:grid-cols-2 lg:gap-12">
         {records.map((item, i) => {
