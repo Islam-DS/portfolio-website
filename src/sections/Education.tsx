@@ -1,162 +1,95 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MapPin, Plane } from "lucide-react";
+import { GraduationCap, MapPin } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { education } from "@/data/education";
+import { siteConfig } from "@/data/site";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
-// Chronological for the story (school -> university); the data file is
-// newest-first.
-const legs = [...education].reverse();
+// Chronological (school -> university); the data file is newest-first.
+const records = [...education].reverse();
 
-const FLAP_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-// Quadratic arc from Dhaka (left) to Almaty (right) in a 1000x170 viewBox.
-const ROUTE_D = "M 40 140 Q 500 -50 960 140";
-// Tangent at the end of the arc, so the plane sits correctly before JS runs.
-const PLANE_END = "translate(960 140) rotate(67.4) translate(-12 -12)";
-
-const city = (location: string) => location.split(",")[0].trim();
-const country = (location: string) => location.split(",").pop()?.trim() ?? "";
-const COUNTRY_CODE: Record<string, string> = { Bangladesh: "BD", Kazakhstan: "KZ" };
-
-/** Text rendered as split-flap tiles, one tile per character, words kept intact. */
-function FlapText({ text }: { text: string }) {
-  return (
-    <span className="flex flex-wrap gap-x-[0.55em] gap-y-[0.18em]" aria-label={text}>
-      {text
-        .toUpperCase()
-        .split(" ")
-        .filter(Boolean)
-        .map((word, wi) => (
-          <span key={wi} className="flex gap-[0.1em]" aria-hidden>
-            {Array.from(word).map((ch, ci) => (
-              <span
-                key={ci}
-                data-flap={ch}
-                className="relative inline-flex h-[1.55em] w-[1.12em] items-center justify-center overflow-hidden rounded-[3px] bg-[#1e1d1a] font-mono font-semibold text-[#F5EFE0] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)] after:absolute after:inset-x-0 after:top-1/2 after:h-px after:bg-black/70"
-              >
-                {ch}
-              </span>
-            ))}
-          </span>
-        ))}
-    </span>
-  );
-}
+const STAMP_COLOR = { scholar: "#C2412D", done: "#2F5654" };
 
 /**
- * Education as a journey between two countries: a dotted flight route draws
- * itself from Dhaka to Almaty with a plane flying it, an airport departure
- * board flips each letter into place (school first, then university), and an
- * "International Scholar" stamp slams onto the university row. Boarding-pass
- * cards below carry the readable details and campus photos.
+ * Education as two diplomas: each slides up like a sheet of paper, its
+ * details are "written in" line by line, then a rubber stamp slams down —
+ * "International Scholar" on the university record, "Completed" on the
+ * school. Campus photos are clipped to each sheet like attached polaroids.
  *
- * Every animated element is server-rendered in its finished state, so
- * prefers-reduced-motion simply skips the effect and sees the final page.
+ * Wording stays truthful: the BSc is in progress, so nothing claims a
+ * degree was awarded — the sheet just records institution, programme,
+ * period and highlights from data/education.ts.
+ *
+ * Server-rendered in the finished state; prefers-reduced-motion skips the
+ * effect and sees exactly that.
  */
 export function Education() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const routeRef = useRef<SVGPathElement>(null);
-  const planeRef = useRef<SVGGElement>(null);
-  const boardRef = useRef<HTMLDivElement>(null);
-  const stampRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const section = sectionRef.current;
-    const route = routeRef.current;
-    const plane = planeRef.current;
-    const board = boardRef.current;
-    const stamp = stampRef.current;
-    if (!section || !route || !plane || !board || !stamp) return;
+    if (!section) return;
 
-    const len = route.getTotalLength();
-    const placePlane = (p: number) => {
-      const d = len * p;
-      const a = route.getPointAtLength(d);
-      const b = route.getPointAtLength(Math.min(len, d + 1));
-      const c = d >= len ? route.getPointAtLength(len - 1) : a;
-      const angle = (Math.atan2(b.y - c.y, b.x - c.x) * 180) / Math.PI;
-      // lucide's plane glyph points up-right (-45deg), hence the +45.
-      plane.setAttribute("transform", `translate(${a.x} ${a.y}) rotate(${angle + 45}) translate(-12 -12)`);
-    };
+    const sheets = gsap.utils.toArray<HTMLElement>("[data-diploma]", section);
+    const tl = gsap.timeline({ paused: true });
 
-    const rows = gsap.utils.toArray<HTMLElement>("[data-board-row]", board);
+    sheets.forEach((sheet, i) => {
+      const lines = sheet.querySelectorAll<HTMLElement>("[data-ink]");
+      const stamp = sheet.querySelector<HTMLElement>("[data-stamp]");
+      const photo = sheet.querySelector<HTMLElement>("[data-photo]");
 
-    // One schedule for every tile, driven by a single ticker against elapsed
-    // time — hundreds of chained setTimeouts drifted badly on slow devices
-    // (the board took 2.5x longer than intended).
-    type Tile = { el: HTMLElement; start: number; end: number; last: number; done: boolean };
-    const tiles: Tile[] = [];
-    rows.forEach((row, r) => {
-      const rowStart = r === 0 ? 0.5 : 1.3;
-      row.querySelectorAll<HTMLElement>("[data-flap]").forEach((el, i) => {
-        const start = rowStart + i * 0.022;
-        tiles.push({ el, start, end: start + 0.3 + Math.random() * 0.4, last: -1, done: false });
-      });
+      // Rotation lives in GSAP (not a CSS `rotate`) so the shake and the
+      // settle compose with it instead of fighting a separate property.
+      gsap.set(sheet, { autoAlpha: 0, y: 140, rotation: i === 0 ? -4 : 4 });
+      gsap.set(lines, { clipPath: "inset(0 100% 0 0)" });
+      if (stamp) gsap.set(stamp, { autoAlpha: 0 });
+      if (photo) gsap.set(photo, { autoAlpha: 0, scale: 0.6, rotation: 0 });
+
+      const at = i * 0.35;
+      tl.to(sheet, { autoAlpha: 1, y: 0, rotation: i === 0 ? -0.6 : 0.6, duration: 1, ease: "power3.out" }, at).to(
+        lines,
+        { clipPath: "inset(0 0% 0 0)", duration: 0.55, ease: "power1.inOut", stagger: 0.16 },
+        at + 0.75
+      );
+      if (photo) {
+        tl.to(photo, { autoAlpha: 1, scale: 1, rotation: i === 0 ? -7 : 6, duration: 0.6, ease: "back.out(2)" }, at + 0.9);
+      }
     });
 
-    // Hide everything in its pre-animation state.
-    gsap.set(route, { strokeDasharray: len, strokeDashoffset: len });
-    placePlane(0);
-    tiles.forEach((t) => (t.el.textContent = ""));
-    gsap.set(stamp, { autoAlpha: 0 });
+    // The sheets are taller than the screen, so each stamp gets its own
+    // trigger and slams down only once it's actually in view — never after
+    // the visitor has already scrolled past it. Waits for the sheet's ink
+    // if the visitor scrolls fast.
+    const stampTriggers = sheets.map((sheet, i) => {
+      const stamp = sheet.querySelector<HTMLElement>("[data-stamp]");
+      if (!stamp) return undefined;
+      const finalRot = Number(stamp.dataset.rot ?? -8);
+      const slam = () =>
+        gsap
+          .timeline({ delay: Math.max(0, i * 0.35 + 1.6 - tl.time()) })
+          .fromTo(
+            stamp,
+            { autoAlpha: 0, scale: 2.8, rotation: finalRot - 18 },
+            { autoAlpha: 1, scale: 1, rotation: finalRot, duration: 0.3, ease: "power4.in" }
+          )
+          .fromTo(
+            sheet,
+            { x: i === 0 ? -5 : -9, y: 4 },
+            { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.28)" }
+          );
+      return ScrollTrigger.create({ trigger: stamp, start: "bottom 88%", once: true, onEnter: slam });
+    });
 
-    let t0 = 0;
-    let remaining = tiles.length;
-    const slam = () =>
-      gsap
-        .timeline()
-        .fromTo(
-          stamp,
-          { autoAlpha: 0, scale: 2.6, rotation: -24 },
-          { autoAlpha: 1, scale: 1, rotation: -9, duration: 0.32, ease: "power4.in" }
-        )
-        .fromTo(board, { x: -6, y: 3 }, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.3)" });
-
-    const tick = (time: number) => {
-      const now = time - t0;
-      for (const t of tiles) {
-        if (t.done || now < t.start) continue;
-        if (now >= t.end) {
-          t.el.textContent = t.el.dataset.flap ?? "";
-          t.done = true;
-          remaining--;
-        } else if (now - t.last >= 0.045) {
-          t.el.textContent = FLAP_CHARS[(Math.random() * FLAP_CHARS.length) | 0];
-          t.last = now;
-        }
-      }
-      if (remaining === 0) {
-        gsap.ticker.remove(tick);
-        slam();
-      }
-    };
-
-    const play = () => {
-      t0 = gsap.ticker.time;
-      gsap.ticker.add(tick);
-      const progress = { p: 0 };
-      gsap.to(progress, {
-        p: 1,
-        duration: 2.4,
-        ease: "power1.inOut",
-        onUpdate: () => {
-          gsap.set(route, { strokeDashoffset: len * (1 - progress.p) });
-          placePlane(progress.p);
-        },
-      });
-    };
-
-    const st = ScrollTrigger.create({ trigger: section, start: "top 70%", once: true, onEnter: play });
-
+    const st = ScrollTrigger.create({ trigger: section, start: "top 72%", once: true, onEnter: () => tl.play() });
     return () => {
       st.kill();
-      gsap.ticker.remove(tick);
+      stampTriggers.forEach((t) => t?.kill());
+      tl.kill();
     };
   }, []);
 
@@ -166,152 +99,130 @@ export function Education() {
         <SectionHeading index="01" label="Education" title="Academic foundation" />
       </div>
 
-      <div ref={sectionRef} className="cinema-container-full">
-        {/* Flight route */}
-        <div className="mb-10 md:mb-14">
-          <svg viewBox="0 0 1000 170" className="h-auto w-full overflow-visible" aria-hidden>
-            <path d={ROUTE_D} fill="none" stroke="rgba(24,22,15,0.18)" strokeWidth="2.5" strokeDasharray="2 12" strokeLinecap="round" />
-            <path ref={routeRef} d={ROUTE_D} fill="none" stroke="#A97B33" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="40" cy="140" r="9" fill="#2F5654" />
-            <circle cx="960" cy="140" r="9" fill="#A97B33" />
-            <g ref={planeRef} transform={PLANE_END}>
-              <circle cx="12" cy="12" r="25" fill="#18160F" />
-              <Plane x={0} y={0} width={24} height={24} color="#F7F3E9" strokeWidth={2} />
-            </g>
-          </svg>
-          <div className="mt-3 flex items-start justify-between gap-6">
-            {legs.map((leg, i) => (
-              <div key={leg.institution} className={i === 1 ? "text-right" : ""}>
-                <p className="font-display text-[30px] font-extrabold uppercase leading-none tracking-tight text-cinema-text md:text-[44px]">
-                  {city(leg.location)}
-                  <span className="ml-2 align-middle font-mono text-[18.5px] font-semibold text-cinema-muted">
-                    {COUNTRY_CODE[country(leg.location)] ?? country(leg.location)}
-                  </span>
-                </p>
-                <p className="mt-2 text-[19px] text-cinema-muted md:text-[21.6px]">{leg.degree}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Departure board */}
-        <div
-          ref={boardRef}
-          className="relative rounded-[28px] bg-cinema-ink-deep p-5 text-[15px] shadow-portrait sm:p-8 md:text-[16px] lg:p-10 lg:text-[15px] xl:text-[19px] 2xl:text-[21px]"
-        >
-          <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-5">
-            <p className="flex items-center gap-3 font-display text-[24px] font-extrabold uppercase tracking-tight text-[#F5C451] md:text-[30px]">
-              <Plane className="h-7 w-7" strokeWidth={2.2} />
-              Departures
-            </p>
-            <p className="hidden font-mono text-[16.5px] uppercase tracking-[0.08em] text-white/60 sm:block">Education</p>
-          </div>
-
-          <div className="hidden grid-cols-12 gap-6 pb-3 font-mono text-[16.5px] uppercase tracking-[0.08em] text-white/55 lg:grid">
-            <span className="col-span-2">From</span>
-            <span className="col-span-4">Institution</span>
-            <span className="col-span-3">Programme</span>
-            <span className="col-span-3">Status</span>
-          </div>
-
-          <div className="space-y-6 lg:space-y-4">
-            {legs.map((leg, i) => (
-              <div
-                key={leg.institution}
-                data-board-row
-                className="grid grid-cols-1 gap-3 border-t border-white/10 pt-6 first:border-t-0 first:pt-0 lg:grid-cols-12 lg:gap-6 lg:pt-4"
-              >
-                {[
-                  { label: "From", text: city(leg.location), span: "lg:col-span-2" },
-                  { label: "Institution", text: leg.institution, span: "lg:col-span-4" },
-                  { label: "Programme", text: leg.degree, span: "lg:col-span-3" },
-                  { label: "Status", text: leg.period, span: "lg:col-span-3" },
-                ].map((field) => (
-                  <div key={field.label} className={field.span}>
-                    <p className="mb-1.5 font-mono text-[14px] uppercase tracking-[0.08em] text-white/50 lg:hidden">
-                      {field.label}
-                    </p>
-                    <FlapText text={field.text} />
-                  </div>
-                ))}
-                {/* the university row carries the stamp */}
-                {i === legs.length - 1 && legs[i].badge && (
-                  <span className="sr-only">{legs[i].badge}</span>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {legs[legs.length - 1].badge && (
-            <div
-              ref={stampRef}
-              aria-hidden
-              className="pointer-events-none absolute -bottom-6 right-4 rotate-[-9deg] rounded-xl border-[3px] border-[#C2412D] px-4 py-2 font-display text-[19px] font-extrabold uppercase leading-tight tracking-tight text-[#C2412D] sm:right-8 md:-bottom-8 md:text-[26px] lg:right-12"
-              style={{ boxShadow: "inset 0 0 0 3px rgba(194,65,45,0.25)", background: "rgba(247,243,233,0.94)" }}
-            >
-              ★ {legs[legs.length - 1].badge} ★
-            </div>
-          )}
-        </div>
-
-        {/* Boarding passes — the readable details */}
-        <div className="mt-20 grid grid-cols-1 gap-8 md:grid-cols-2">
-          {legs.map((leg, i) => (
+      <div ref={sectionRef} className="cinema-container-full grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-12">
+        {records.map((item, i) => {
+          const isScholar = Boolean(item.badge);
+          const stampText = item.badge ?? item.period;
+          const stampColor = isScholar ? STAMP_COLOR.scholar : STAMP_COLOR.done;
+          const stampRot = isScholar ? -11 : 9;
+          return (
             <article
-              key={leg.institution}
-              className="group flex flex-col overflow-hidden rounded-[28px] border border-black/10 bg-cinema-elevated shadow-cinema transition-transform duration-500 ease-cinema hover:-translate-y-1.5"
+              key={item.institution}
+              data-diploma
+              className="relative rounded-[6px] bg-[#FDFAF2] p-3 shadow-[0_30px_70px_-30px_rgba(24,22,15,0.45),0_2px_6px_rgba(24,22,15,0.08)] sm:p-4"
             >
-              {leg.image && (
-                <div className="relative h-56 overflow-hidden md:h-64">
+              {/* double gold frame */}
+              <div className="relative flex h-full flex-col border-[3px] border-cinema-gold/70 p-1.5">
+                <div className="relative flex h-full flex-col items-center border border-cinema-gold/50 px-6 pb-14 pt-10 text-center sm:px-10 md:px-14 md:pt-14">
+                  {/* corner ornaments */}
+                  {["left-2 top-2", "right-2 top-2 rotate-90", "bottom-2 right-2 rotate-180", "bottom-2 left-2 -rotate-90"].map(
+                    (pos) => (
+                      <span key={pos} aria-hidden className={`absolute ${pos} h-6 w-6 border-l-2 border-t-2 border-cinema-gold/60`} />
+                    )
+                  )}
+
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-cinema-gold/60 text-cinema-gold">
+                    <GraduationCap className="h-8 w-8" strokeWidth={1.6} />
+                  </span>
+
+                  <p data-ink className="mt-6 font-mono text-[16.5px] uppercase tracking-[0.14em] text-cinema-muted">
+                    Academic Record · {String(i + 1).padStart(2, "0")}
+                  </p>
+
+                  <h3
+                    data-ink
+                    className="mt-5 font-display text-[30px] font-bold leading-[1.1] tracking-tight text-cinema-text md:text-[38px] xl:text-[44px]"
+                  >
+                    {item.institution}
+                  </h3>
+
+                  <div className="mt-5 flex w-full items-center gap-4" aria-hidden>
+                    <span className="h-px flex-1 bg-cinema-gold/50" />
+                    <span className="h-2 w-2 rotate-45 bg-cinema-gold/70" />
+                    <span className="h-px flex-1 bg-cinema-gold/50" />
+                  </div>
+
+                  <p data-ink className="mt-5 text-[20px] text-cinema-muted">
+                    Student
+                  </p>
+                  <p data-ink className="font-serif text-[40px] italic leading-tight text-cinema-text md:text-[46px]">
+                    {siteConfig.name}
+                  </p>
+
+                  <p data-ink className="mt-5 font-serif text-[30px] italic text-cinema-soft md:text-[34px]">
+                    {item.degree}
+                  </p>
+                  <p data-ink className="mt-2 flex flex-wrap items-center justify-center gap-x-2 text-[20px] text-cinema-muted">
+                    <MapPin className="h-4 w-4 shrink-0" />
+                    {item.location} · {item.period}
+                  </p>
+
+                  <ul className="mt-8 w-full space-y-3 border-t border-cinema-gold/30 pt-6 text-left">
+                    {item.highlights.map((h) => (
+                      <li key={h} data-ink className="flex gap-3 text-[21.6px] leading-relaxed text-cinema-soft">
+                        <span className="mt-3 h-1.5 w-1.5 shrink-0 rotate-45 bg-cinema-gold" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* signature line + rubber stamp on their own row, so the stamp
+                      never sits on top of readable text */}
+                  <div className="mt-10 flex w-full items-end justify-between gap-3 sm:gap-6">
+                    <div data-ink className="text-left">
+                      <span className="block h-px w-20 bg-cinema-text/40 sm:w-40" />
+                      <span className="mt-2 block font-mono text-[15px] uppercase tracking-[0.1em] text-cinema-muted">
+                        {item.location.split(",")[0]}
+                      </span>
+                    </div>
+
+                    {/* rotation set by GSAP (data-rot), with the same value inline
+                        so the server-rendered final state matches */}
+                    <div
+                      data-stamp
+                      data-rot={stampRot}
+                      className="shrink-0 rounded-full border-[4px] p-1.5"
+                      style={{
+                        color: stampColor,
+                        borderColor: stampColor,
+                        transform: `rotate(${stampRot}deg)`,
+                        background: "rgba(253,250,242,0.6)",
+                      }}
+                    >
+                      <span
+                        className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-dashed px-2 font-display text-[11px] font-extrabold uppercase leading-tight tracking-tight sm:h-32 sm:w-32 sm:px-3 sm:text-[13.5px] md:h-36 md:w-36 md:text-[15px]"
+                        style={{ borderColor: stampColor }}
+                      >
+                        <span aria-hidden>★</span>
+                        {stampText}
+                        <span aria-hidden>★</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* attached campus photo */}
+              {item.image && (
+                <figure
+                  data-photo
+                  className="absolute -top-8 hidden w-36 bg-white p-2 pb-6 shadow-cinema sm:block md:w-44"
+                  style={{ [i === 0 ? "left" : "right"]: "-1.25rem", transform: `rotate(${i === 0 ? -7 : 6}deg)` }}
+                >
+                  <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-3 -ml-1.5 rounded-full border-2 border-cinema-muted/70" />
                   {/* plain <img> so the campus GIF keeps animating */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={leg.image}
-                    alt={`${leg.institution} campus`}
+                    src={item.image}
+                    alt={`${item.institution} campus`}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="aspect-square w-full object-cover"
                   />
-                  <span className="absolute left-5 top-5 rounded-full bg-cinema-ink-deep/85 px-3.5 py-1 font-mono text-[15px] uppercase tracking-[0.08em] text-white">
-                    Boarding pass · {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
+                </figure>
               )}
-
-              {/* perforation */}
-              <div className="relative h-0 border-t-2 border-dashed border-black/15" aria-hidden>
-                <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-cinema-navy" />
-                <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-cinema-navy" />
-              </div>
-
-              <div className="flex flex-1 flex-col p-7 md:p-9">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="font-mono text-[18.9px] text-cinema-soft">{leg.period}</span>
-                  {leg.badge && (
-                    <span className="rounded-full border border-[#C2412D]/40 px-3 py-0.5 font-mono text-[15px] uppercase tracking-[0.08em] text-[#C2412D]">
-                      {leg.badge}
-                    </span>
-                  )}
-                </div>
-                <h3 className="mt-4 font-display text-[30px] font-bold leading-tight tracking-tight text-cinema-text lg:text-[38px]">
-                  {leg.institution}
-                </h3>
-                <p className="mt-2 font-serif text-[26px] italic text-cinema-soft">{leg.degree}</p>
-                <p className="mt-2 flex items-center gap-2 text-[20px] text-cinema-muted">
-                  <MapPin className="h-4 w-4 shrink-0" />
-                  {leg.location}
-                </p>
-                <ul className="mt-6 space-y-2.5 border-t border-black/10 pt-5">
-                  {leg.highlights.map((h) => (
-                    <li key={h} className="flex gap-3 text-[21.6px] leading-relaxed text-cinema-soft">
-                      <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-cinema-gold" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </article>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </SectionWrapper>
   );
