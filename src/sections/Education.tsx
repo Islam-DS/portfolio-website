@@ -1,62 +1,162 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, Plane } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { education } from "@/data/education";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { attachTiltHover } from "@/lib/useTiltHover";
 
+// Chronological for the story (school -> university); the data file is
+// newest-first.
+const legs = [...education].reverse();
+
+const FLAP_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+// Quadratic arc from Dhaka (left) to Almaty (right) in a 1000x170 viewBox.
+const ROUTE_D = "M 40 140 Q 500 -50 960 140";
+// Tangent at the end of the arc, so the plane sits correctly before JS runs.
+const PLANE_END = "translate(960 140) rotate(67.4) translate(-12 -12)";
+
+const city = (location: string) => location.split(",")[0].trim();
+const country = (location: string) => location.split(",").pop()?.trim() ?? "";
+const COUNTRY_CODE: Record<string, string> = { Bangladesh: "BD", Kazakhstan: "KZ" };
+
+/** Text rendered as split-flap tiles, one tile per character, words kept intact. */
+function FlapText({ text }: { text: string }) {
+  return (
+    <span className="flex flex-wrap gap-x-[0.55em] gap-y-[0.18em]" aria-label={text}>
+      {text
+        .toUpperCase()
+        .split(" ")
+        .filter(Boolean)
+        .map((word, wi) => (
+          <span key={wi} className="flex gap-[0.1em]" aria-hidden>
+            {Array.from(word).map((ch, ci) => (
+              <span
+                key={ci}
+                data-flap={ch}
+                className="relative inline-flex h-[1.55em] w-[1.12em] items-center justify-center overflow-hidden rounded-[3px] bg-[#1e1d1a] font-mono font-semibold text-[#F5EFE0] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)] after:absolute after:inset-x-0 after:top-1/2 after:h-px after:bg-black/70"
+              >
+                {ch}
+              </span>
+            ))}
+          </span>
+        ))}
+    </span>
+  );
+}
+
+/**
+ * Education as a journey between two countries: a dotted flight route draws
+ * itself from Dhaka to Almaty with a plane flying it, an airport departure
+ * board flips each letter into place (school first, then university), and an
+ * "International Scholar" stamp slams onto the university row. Boarding-pass
+ * cards below carry the readable details and campus photos.
+ *
+ * Every animated element is server-rendered in its finished state, so
+ * prefers-reduced-motion simply skips the effect and sees the final page.
+ */
 export function Education() {
-  const gridRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const routeRef = useRef<SVGPathElement>(null);
+  const planeRef = useRef<SVGGElement>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const stampRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const cards = gsap.utils.toArray<HTMLElement>("[data-edu-card]", gridRef.current);
-    const photos = gsap.utils.toArray<HTMLElement>("[data-edu-photo]", gridRef.current);
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const detachTilt = attachTiltHover(cards, 5);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const section = sectionRef.current;
+    const route = routeRef.current;
+    const plane = planeRef.current;
+    const board = boardRef.current;
+    const stamp = stampRef.current;
+    if (!section || !route || !plane || !board || !stamp) return;
 
-    if (reducedMotion) {
-      gsap.set(cards, { opacity: 1, x: 0 });
-      return detachTilt;
-    }
+    const len = route.getTotalLength();
+    const placePlane = (p: number) => {
+      const d = len * p;
+      const a = route.getPointAtLength(d);
+      const b = route.getPointAtLength(Math.min(len, d + 1));
+      const c = d >= len ? route.getPointAtLength(len - 1) : a;
+      const angle = (Math.atan2(b.y - c.y, b.x - c.x) * 180) / Math.PI;
+      // lucide's plane glyph points up-right (-45deg), hence the +45.
+      plane.setAttribute("transform", `translate(${a.x} ${a.y}) rotate(${angle + 45}) translate(-12 -12)`);
+    };
 
-    // Landing-page-style entrance: each half slides in from its own outer
-    // edge (university from the left, school from the right) and meets in
-    // the middle, instead of a plain fade.
-    cards.forEach((card, i) => gsap.set(card, { opacity: 0, x: i === 0 ? -72 : 72 }));
-    const triggers = cards.map((card, i) =>
-      ScrollTrigger.create({
-        trigger: card,
-        start: "top 85%",
-        once: true,
-        onEnter: () =>
-          gsap.to(card, { opacity: 1, x: 0, duration: 1.1, ease: "power3.out", delay: i * 0.15 }),
-      })
-    );
+    const rows = gsap.utils.toArray<HTMLElement>("[data-board-row]", board);
 
-    // Gentle parallax on the campus photos while the section is on screen —
-    // the kind of ambient motion a landing page uses instead of a static
-    // backdrop. Kept small so the mask-reveal edge never exposes bare pixels.
-    const parallaxTrigger = gridRef.current
-      ? ScrollTrigger.create({
-          trigger: gridRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.6,
-          onUpdate: (self) => {
-            const shift = (self.progress - 0.5) * 8;
-            photos.forEach((photo) => gsap.set(photo, { yPercent: shift }));
-          },
-        })
-      : undefined;
+    // One schedule for every tile, driven by a single ticker against elapsed
+    // time — hundreds of chained setTimeouts drifted badly on slow devices
+    // (the board took 2.5x longer than intended).
+    type Tile = { el: HTMLElement; start: number; end: number; last: number; done: boolean };
+    const tiles: Tile[] = [];
+    rows.forEach((row, r) => {
+      const rowStart = r === 0 ? 0.5 : 1.3;
+      row.querySelectorAll<HTMLElement>("[data-flap]").forEach((el, i) => {
+        const start = rowStart + i * 0.022;
+        tiles.push({ el, start, end: start + 0.3 + Math.random() * 0.4, last: -1, done: false });
+      });
+    });
+
+    // Hide everything in its pre-animation state.
+    gsap.set(route, { strokeDasharray: len, strokeDashoffset: len });
+    placePlane(0);
+    tiles.forEach((t) => (t.el.textContent = ""));
+    gsap.set(stamp, { autoAlpha: 0 });
+
+    let t0 = 0;
+    let remaining = tiles.length;
+    const slam = () =>
+      gsap
+        .timeline()
+        .fromTo(
+          stamp,
+          { autoAlpha: 0, scale: 2.6, rotation: -24 },
+          { autoAlpha: 1, scale: 1, rotation: -9, duration: 0.32, ease: "power4.in" }
+        )
+        .fromTo(board, { x: -6, y: 3 }, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.3)" });
+
+    const tick = (time: number) => {
+      const now = time - t0;
+      for (const t of tiles) {
+        if (t.done || now < t.start) continue;
+        if (now >= t.end) {
+          t.el.textContent = t.el.dataset.flap ?? "";
+          t.done = true;
+          remaining--;
+        } else if (now - t.last >= 0.045) {
+          t.el.textContent = FLAP_CHARS[(Math.random() * FLAP_CHARS.length) | 0];
+          t.last = now;
+        }
+      }
+      if (remaining === 0) {
+        gsap.ticker.remove(tick);
+        slam();
+      }
+    };
+
+    const play = () => {
+      t0 = gsap.ticker.time;
+      gsap.ticker.add(tick);
+      const progress = { p: 0 };
+      gsap.to(progress, {
+        p: 1,
+        duration: 2.4,
+        ease: "power1.inOut",
+        onUpdate: () => {
+          gsap.set(route, { strokeDashoffset: len * (1 - progress.p) });
+          placePlane(progress.p);
+        },
+      });
+    };
+
+    const st = ScrollTrigger.create({ trigger: section, start: "top 70%", once: true, onEnter: play });
 
     return () => {
-      triggers.forEach((t) => t.kill());
-      parallaxTrigger?.kill();
-      detachTilt();
+      st.kill();
+      gsap.ticker.remove(tick);
     };
   }, []);
 
@@ -66,136 +166,151 @@ export function Education() {
         <SectionHeading index="01" label="Education" title="Academic foundation" />
       </div>
 
-      {/* Near edge-to-edge split-screen: a direct child of the section (not
-          .cinema-container), so this grid runs almost the full width of the
-          page rather than the site's ~1920px content cap — only the small
-          .cinema-edge inset keeps it just off the exact browser edge.
-          University is always column one (left), school always column two
-          (right) — the source order in @/data/education already matches
-          that. */}
-      <div className="cinema-edge">
-        <div ref={gridRef} className="relative grid w-full grid-cols-1 overflow-hidden border-y border-black/10 md:grid-cols-2">
-        {education.map((item, i) => {
-          const accent = i === 0 ? "gold" : "blue";
-          return (
-            <div
-              key={item.institution}
-              data-edu-card
-              className={`group relative flex min-h-[560px] flex-col justify-center overflow-hidden border-black/10 bg-cinema-elevated p-8 sm:p-12 md:min-h-[680px] md:p-16 lg:p-20 ${
-                i === 0 ? "border-b md:border-b-0 md:border-r" : ""
-              }`}
-            >
-              {/* thin spine bar — a small, quiet color cue that ties this column's
-                  accent (gold for the scholarship, teal for the school) through the
-                  underline, bullets and watermark below */}
+      <div ref={sectionRef} className="cinema-container-full">
+        {/* Flight route */}
+        <div className="mb-10 md:mb-14">
+          <svg viewBox="0 0 1000 170" className="h-auto w-full overflow-visible" aria-hidden>
+            <path d={ROUTE_D} fill="none" stroke="rgba(24,22,15,0.18)" strokeWidth="2.5" strokeDasharray="2 12" strokeLinecap="round" />
+            <path ref={routeRef} d={ROUTE_D} fill="none" stroke="#A97B33" strokeWidth="3" strokeLinecap="round" />
+            <circle cx="40" cy="140" r="9" fill="#2F5654" />
+            <circle cx="960" cy="140" r="9" fill="#A97B33" />
+            <g ref={planeRef} transform={PLANE_END}>
+              <circle cx="12" cy="12" r="25" fill="#18160F" />
+              <Plane x={0} y={0} width={24} height={24} color="#F7F3E9" strokeWidth={2} />
+            </g>
+          </svg>
+          <div className="mt-3 flex items-start justify-between gap-6">
+            {legs.map((leg, i) => (
+              <div key={leg.institution} className={i === 1 ? "text-right" : ""}>
+                <p className="font-display text-[30px] font-extrabold uppercase leading-none tracking-tight text-cinema-text md:text-[44px]">
+                  {city(leg.location)}
+                  <span className="ml-2 align-middle font-mono text-[18.5px] font-semibold text-cinema-muted">
+                    {COUNTRY_CODE[country(leg.location)] ?? country(leg.location)}
+                  </span>
+                </p>
+                <p className="mt-2 text-[19px] text-cinema-muted md:text-[21.6px]">{leg.degree}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Departure board */}
+        <div
+          ref={boardRef}
+          className="relative rounded-[28px] bg-cinema-ink-deep p-5 text-[15px] shadow-portrait sm:p-8 md:text-[16px] lg:p-10 lg:text-[15px] xl:text-[19px] 2xl:text-[21px]"
+        >
+          <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-5">
+            <p className="flex items-center gap-3 font-display text-[24px] font-extrabold uppercase tracking-tight text-[#F5C451] md:text-[30px]">
+              <Plane className="h-7 w-7" strokeWidth={2.2} />
+              Departures
+            </p>
+            <p className="hidden font-mono text-[16.5px] uppercase tracking-[0.08em] text-white/60 sm:block">Education</p>
+          </div>
+
+          <div className="hidden grid-cols-12 gap-6 pb-3 font-mono text-[16.5px] uppercase tracking-[0.08em] text-white/55 lg:grid">
+            <span className="col-span-2">From</span>
+            <span className="col-span-4">Institution</span>
+            <span className="col-span-3">Programme</span>
+            <span className="col-span-3">Status</span>
+          </div>
+
+          <div className="space-y-6 lg:space-y-4">
+            {legs.map((leg, i) => (
               <div
-                className={`pointer-events-none absolute inset-x-0 top-0 z-[1] h-[3px] ${
-                  accent === "gold" ? "bg-cinema-gold/70" : "bg-cinema-blue/70"
-                }`}
-                aria-hidden
-              />
+                key={leg.institution}
+                data-board-row
+                className="grid grid-cols-1 gap-3 border-t border-white/10 pt-6 first:border-t-0 first:pt-0 lg:grid-cols-12 lg:gap-6 lg:pt-4"
+              >
+                {[
+                  { label: "From", text: city(leg.location), span: "lg:col-span-2" },
+                  { label: "Institution", text: leg.institution, span: "lg:col-span-4" },
+                  { label: "Programme", text: leg.degree, span: "lg:col-span-3" },
+                  { label: "Status", text: leg.period, span: "lg:col-span-3" },
+                ].map((field) => (
+                  <div key={field.label} className={field.span}>
+                    <p className="mb-1.5 font-mono text-[14px] uppercase tracking-[0.08em] text-white/50 lg:hidden">
+                      {field.label}
+                    </p>
+                    <FlapText text={field.text} />
+                  </div>
+                ))}
+                {/* the university row carries the stamp */}
+                {i === legs.length - 1 && legs[i].badge && (
+                  <span className="sr-only">{legs[i].badge}</span>
+                )}
+              </div>
+            ))}
+          </div>
 
-              {item.image && (
-                <div data-edu-photo className="pointer-events-none absolute -inset-y-10 inset-x-0" aria-hidden>
-                  {/* Real, animated campus photography — a plain <img> (not next/image)
-                      so the GIF keeps animating rather than being frozen by optimization.
-                      Below md the column is a single full-width block and the text runs
-                      edge to edge over it, so it stays a flat, mostly-hidden backdrop.
-                      At md+, an SVG turbulence mask (public/images/dissolve-mask.svg)
-                      dissolves the photo's left edge into true transparency through a
-                      jagged, hand-torn boundary — not a straight CSS gradient line — so
-                      the text side reads as clean card, not a washed-over photo, while
-                      the photo itself stays sharp and fully visible on the right. */}
+          {legs[legs.length - 1].badge && (
+            <div
+              ref={stampRef}
+              aria-hidden
+              className="pointer-events-none absolute -bottom-6 right-4 rotate-[-9deg] rounded-xl border-[3px] border-[#C2412D] px-4 py-2 font-display text-[19px] font-extrabold uppercase leading-tight tracking-tight text-[#C2412D] sm:right-8 md:-bottom-8 md:text-[26px] lg:right-12"
+              style={{ boxShadow: "inset 0 0 0 3px rgba(194,65,45,0.25)", background: "rgba(247,243,233,0.94)" }}
+            >
+              ★ {legs[legs.length - 1].badge} ★
+            </div>
+          )}
+        </div>
+
+        {/* Boarding passes — the readable details */}
+        <div className="mt-20 grid grid-cols-1 gap-8 md:grid-cols-2">
+          {legs.map((leg, i) => (
+            <article
+              key={leg.institution}
+              className="group flex flex-col overflow-hidden rounded-[28px] border border-black/10 bg-cinema-elevated shadow-cinema transition-transform duration-500 ease-cinema hover:-translate-y-1.5"
+            >
+              {leg.image && (
+                <div className="relative h-56 overflow-hidden md:h-64">
+                  {/* plain <img> so the campus GIF keeps animating */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={item.image}
-                    alt=""
-                    className="h-full w-full scale-105 object-cover opacity-[0.5] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.6] md:hidden"
+                    src={leg.image}
+                    alt={`${leg.institution} campus`}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-cinema-elevated/70 md:hidden" />
-
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.image}
-                    alt=""
-                    style={{
-                      maskImage: "url('/images/dissolve-mask.svg')",
-                      maskSize: "100% 100%",
-                      maskRepeat: "no-repeat",
-                      WebkitMaskImage: "url('/images/dissolve-mask.svg')",
-                      WebkitMaskSize: "100% 100%",
-                      WebkitMaskRepeat: "no-repeat",
-                    }}
-                    className="hidden h-full w-full scale-105 object-cover opacity-[0.92] transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-100 md:block"
-                  />
+                  <span className="absolute left-5 top-5 rounded-full bg-cinema-ink-deep/85 px-3.5 py-1 font-mono text-[15px] uppercase tracking-[0.08em] text-white">
+                    Boarding pass · {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
               )}
 
-              {/* oversized monogram watermark, faint — same technique as the
-                  Publications section's numeral, reused here as the institution's
-                  initial for a quiet, premium editorial signature */}
-              <span
-                aria-hidden
-                className={`pointer-events-none absolute -bottom-12 -right-4 z-[1] select-none font-display text-[13rem] font-bold leading-none md:-bottom-20 md:-right-8 md:text-[19rem] ${
-                  accent === "gold" ? "text-cinema-gold/[0.07]" : "text-cinema-blue/[0.07]"
-                }`}
-              >
-                {item.institution.charAt(0)}
-              </span>
+              {/* perforation */}
+              <div className="relative h-0 border-t-2 border-dashed border-black/15" aria-hidden>
+                <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-cinema-navy" />
+                <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-cinema-navy" />
+              </div>
 
-              <div className="relative z-10 flex max-w-xl flex-col [text-shadow:0_1px_10px_rgba(255,252,244,0.8)]">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <span className="font-mono text-[18.9px] text-cinema-soft">{item.period}</span>
-                  {item.badge && (
-                    <span
-                      className={`rounded-full border px-3 py-1 font-mono text-[16.2px] uppercase tracking-[0.12em] backdrop-blur-sm ${
-                        accent === "gold"
-                          ? "border-cinema-gold/30 bg-cinema-elevated/60 text-cinema-gold"
-                          : "border-black/10 bg-cinema-elevated/60 text-cinema-muted"
-                      }`}
-                    >
-                      {item.badge}
+              <div className="flex flex-1 flex-col p-7 md:p-9">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="font-mono text-[18.9px] text-cinema-soft">{leg.period}</span>
+                  {leg.badge && (
+                    <span className="rounded-full border border-[#C2412D]/40 px-3 py-0.5 font-mono text-[15px] uppercase tracking-[0.08em] text-[#C2412D]">
+                      {leg.badge}
                     </span>
                   )}
                 </div>
-
-                <h3 className="mt-6 font-display text-[30px] font-bold leading-tight text-cinema-text sm:text-[34px] lg:text-[42px] xl:text-[48.6px]">
-                  {item.institution}
+                <h3 className="mt-4 font-display text-[30px] font-bold leading-tight tracking-tight text-cinema-text lg:text-[38px]">
+                  {leg.institution}
                 </h3>
-                <span
-                  className={`mt-5 block h-[2px] w-14 rounded-full ${
-                    accent === "gold" ? "bg-cinema-gold" : "bg-cinema-blue"
-                  }`}
-                  aria-hidden
-                />
-                <p className="mt-4 font-serif text-[27px] italic text-cinema-soft">{item.degree}</p>
-                <p className="mt-3 flex items-center gap-2 text-[21.6px] text-cinema-soft/85">
+                <p className="mt-2 font-serif text-[26px] italic text-cinema-soft">{leg.degree}</p>
+                <p className="mt-2 flex items-center gap-2 text-[20px] text-cinema-muted">
                   <MapPin className="h-4 w-4 shrink-0" />
-                  {item.location}
+                  {leg.location}
                 </p>
-
-                <ul className="mt-8 space-y-3 border-t border-black/20 pt-6">
-                  {item.highlights.map((highlight) => (
-                    <li key={highlight} className="flex gap-3 text-[24.3px] leading-relaxed text-cinema-soft">
-                      <span
-                        className={`mt-2.5 h-1 w-1 shrink-0 rounded-full ${
-                          accent === "gold" ? "bg-cinema-gold" : "bg-cinema-blue"
-                        }`}
-                      />
-                      {highlight}
+                <ul className="mt-6 space-y-2.5 border-t border-black/10 pt-5">
+                  {leg.highlights.map((h) => (
+                    <li key={h} className="flex gap-3 text-[21.6px] leading-relaxed text-cinema-soft">
+                      <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-cinema-gold" />
+                      {h}
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
-          );
-        })}
-
-        {/* small inlaid ornament where the two columns meet — desktop only */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/2 z-20 hidden h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-cinema-gold/50 bg-cinema-surface md:block"
-          aria-hidden
-        />
+            </article>
+          ))}
         </div>
       </div>
     </SectionWrapper>
