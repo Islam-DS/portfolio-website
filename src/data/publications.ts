@@ -9,6 +9,11 @@ export interface Publication {
   link: string;
   /** Defaults to "Conference Paper" for existing entries if omitted. */
   type?: "Conference Paper" | "Preprint" | "Journal Article";
+  /** Page range from the publisher's record (Crossref). */
+  pages?: string;
+  /** Key phrases to highlight — each must appear verbatim in the title or
+   * abstract; anything that doesn't match is simply not highlighted. */
+  highlights?: string[];
 }
 
 export const publications: Publication[] = [
@@ -22,6 +27,8 @@ export const publications: Publication[] = [
     tags: ["Federated Learning", "Medical AI", "Data Heterogeneity"],
     doi: "10.1109/AIEEE71113.2026.11576917",
     link: "https://doi.org/10.1109/AIEEE71113.2026.11576917",
+    pages: "1–6",
+    highlights: ["Federated Learning", "Data Heterogeneity", "Multi-Dataset Medical Study"],
   },
   {
     title:
@@ -35,5 +42,12 @@ export const publications: Publication[] = [
     doi: "10.20944/preprints202609.1158.v1",
     link: "https://doi.org/10.20944/preprints202609.1158.v1",
     type: "Preprint",
+    highlights: [
+      "AI-Driven Diagnostics",
+      "non-invasive cancer detection",
+      "volatile organic compounds",
+      "machine learning and deep learning",
+      "lung, breast, and kidney cancer",
+    ],
   },
 ];
