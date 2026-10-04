@@ -99,7 +99,7 @@ export function Education() {
         <SectionHeading index="01" label="Education" title="Academic foundation" />
       </div>
 
-      <div ref={sectionRef} className="cinema-container-full grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-12">
+      <div ref={sectionRef} className="cinema-container-full grid grid-cols-1 gap-16 overflow-x-clip py-10 lg:grid-cols-2 lg:gap-12">
         {records.map((item, i) => {
           const isScholar = Boolean(item.badge);
           const stampText = item.badge ?? item.period;
