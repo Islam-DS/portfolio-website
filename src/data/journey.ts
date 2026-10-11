@@ -8,6 +8,10 @@ export interface WorkItem {
   summary: string;
   /** Phrases bolded in the CV — each must appear verbatim in `summary`. */
   emphasis: string[];
+  /** Headline figure, taken from the CV text. */
+  stat: { value: number; suffix?: string; label: string };
+  /** Short points condensed from `summary` — no facts beyond the CV. */
+  points: string[];
 }
 
 export const work: WorkItem[] = [
@@ -24,6 +28,13 @@ export const work: WorkItem[] = [
       "molecular, clinical, and medical imaging data",
       "training of new laboratory members",
     ],
+    stat: { value: 30, suffix: " hrs", label: "of research every week" },
+    points: [
+      "2.5+ years in bioinformatics, cancer research, biomedical AI and data science",
+      "Molecular, clinical and medical imaging data — statistical modelling and ML in R and Python",
+      "Reproducible computational workflows for interdisciplinary research",
+      "Trains new laboratory members on concepts, research tasks, projects and methods",
+    ],
   },
   {
     title: "English Teacher",
@@ -32,6 +43,8 @@ export const work: WorkItem[] = [
     location: "Kazakhstan",
     summary: "Teaching English to 35+ students currently.",
     emphasis: ["35+ students"],
+    stat: { value: 35, suffix: "+", label: "students taught English" },
+    points: ["Teaching English to 35+ students at Temirlan School"],
   },
   {
     title: "Co-Founder & Teacher",
@@ -47,6 +60,13 @@ export const work: WorkItem[] = [
       "teaching English, ICT, Science, and Mathematics",
       "213 students",
       "employment opportunities for 5 teachers",
+    ],
+    stat: { value: 213, label: "students taught & mentored" },
+    points: [
+      "Co-founded a private school giving free, quality education to underprivileged students",
+      "Academic Section Manager and Financial Head",
+      "Taught English, ICT, Science and Mathematics — Grade 8 to university level",
+      "Created employment opportunities for 5 teachers",
     ],
   },
 ];
