@@ -27,7 +27,7 @@ export async function Projects() {
     <SectionWrapper id="projects" className="overflow-visible">
       <div className="cinema-container-full">
         <SectionHeading
-          index="03"
+          index="04"
           label="Projects"
           title="Research engineered for impact"
           emphasis="impact"

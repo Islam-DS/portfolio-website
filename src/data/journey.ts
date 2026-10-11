@@ -1,97 +1,52 @@
-export interface JourneyItem {
-  icon: "flask" | "book" | "award" | "globe" | "heart" | "users" | "file";
-  type: "Research" | "Work" | "Scholarship" | "Leadership";
+/** Work experience, transcribed from the CV. Order follows the CV. */
+export interface WorkItem {
   title: string;
   organization: string;
   period: string;
   location?: string;
-  description: string[];
-  tags: string[];
-  link?: string;
-  doi?: string;
+  department?: string;
+  summary: string;
+  /** Phrases bolded in the CV — each must appear verbatim in `summary`. */
+  emphasis: string[];
 }
 
-export const journey: JourneyItem[] = [
+export const work: WorkItem[] = [
   {
-    icon: "book",
-    type: "Work",
-    title: "Head of English Department",
+    title: "University Research Assistant",
+    organization: "Laboratory of Artificial Intelligence & Robotics · Farabi University",
+    period: "1 Mar 2024 — Present",
+    department: "Artificial Intelligence & Big Data",
+    summary:
+      "Research Assistant with 2.5+ years of experience in bioinformatics, cancer research, biomedical AI, and data science, working 30 hours per week. Experienced in analyzing molecular, clinical, and medical imaging data using statistical modelling and machine learning with R and Python. Contribute to interdisciplinary research, reproducible computational workflows, and the training of new laboratory members by providing guidance on fundamental concepts, research tasks, projects, and computational methods.",
+    emphasis: [
+      "2.5+ years of experience",
+      "working 30 hours per week",
+      "molecular, clinical, and medical imaging data",
+      "training of new laboratory members",
+    ],
+  },
+  {
+    title: "English Teacher",
     organization: "Temirlan School",
-    period: "2025 — Present",
+    period: "2 Sep 2025 — Present",
     location: "Kazakhstan",
-    description: [
-      "Led curriculum design and faculty coordination for English programs",
-      "Mentored students in academic communication and critical thinking",
-      "Established quality standards for bilingual education delivery",
-    ],
-    tags: ["Leadership", "Education", "Management"],
+    summary: "Teaching English to 35+ students currently.",
+    emphasis: ["35+ students"],
   },
   {
-    icon: "heart",
-    type: "Leadership",
-    title: "Advisor Panel Member",
-    organization: "Laboratorians Red Crescent Alumni Association",
-    period: "2025 — Present",
+    title: "Co-Founder & Teacher",
+    organization: "Initiator Academy",
+    period: "8 Jan 2021 — 4 Jan 2026",
     location: "Dhaka, Bangladesh",
-    description: [
-      "Advising the alumni network of the Red Crescent Society on continuity and mentorship between graduating and incoming volunteers.",
+    summary:
+      "Co-founded a private school in my locality to provide free, quality education to underprivileged students and create employment opportunities for capable but financially constrained peers. Served as Academic Section Manager and Financial Head, supporting academic and strategic development while teaching English, ICT, Science, and Mathematics. Worked ~6 hours/day before moving to Kazakhstan and now contribute ~2 hours/week online (Sundays). Taught, mentored, and supported 213 students from Grade 8 through university level and helped create employment opportunities for 5 teachers. Maintained an inclusive environment where all students received equal treatment regardless of financial background.",
+    emphasis: [
+      "Co-founded a private school",
+      "provide free, quality education to underprivileged students",
+      "Academic Section Manager and Financial Head",
+      "teaching English, ICT, Science, and Mathematics",
+      "213 students",
+      "employment opportunities for 5 teachers",
     ],
-    tags: ["Red Crescent", "Alumni Network", "Advisory"],
-  },
-  {
-    icon: "flask",
-    type: "Work",
-    title: "Research Assistant",
-    organization: "Artificial Intelligence & Robotics Laboratory",
-    period: "2024 — Present",
-    location: "Remote",
-    description: [
-      "Conducting research in oncology AI and multimodal medical data fusion",
-      "Developing deep learning pipelines for clinical and biological datasets",
-      "Contributing to reproducible research workflows and model evaluation",
-    ],
-    tags: ["Oncology AI", "Deep Learning", "Research"],
-  },
-  {
-    icon: "globe",
-    type: "Leadership",
-    title: "Co-Founder",
-    organization: "Initiator Academy, Dhaka",
-    period: "2022 — Present",
-    location: "Dhaka, Bangladesh",
-    description: [
-      "Built an educational initiative focused on STEM and leadership development",
-      "Scaled programs reaching students across underserved communities",
-      "Designed operational frameworks for sustainable nonprofit growth",
-    ],
-    tags: ["Entrepreneurship", "EdTech", "Community"],
-  },
-  {
-    icon: "heart",
-    type: "Leadership",
-    title: "Group Leader",
-    organization: "Red Crescent Society — Government Laboratory High School",
-    period: "2020 — 2022",
-    location: "Dhaka, Bangladesh",
-    description: [
-      "Organized humanitarian campaigns and community health initiatives",
-      "Coordinated volunteer teams for disaster preparedness programs",
-      "Represented youth leadership in national Red Crescent activities",
-    ],
-    tags: ["Volunteering", "Humanitarian", "Leadership"],
-  },
-  {
-    icon: "users",
-    type: "Leadership",
-    title: "Senior Volunteer Manager",
-    organization: "English Club of the Laboratory",
-    period: "2019 — 2022",
-    location: "Dhaka, Bangladesh",
-    description: [
-      "Managed volunteer operations and event programming for 100+ members",
-      "Facilitated debate, public speaking, and academic English workshops",
-      "Developed peer mentorship structures for sustained club engagement",
-    ],
-    tags: ["Volunteering", "English", "Management"],
   },
 ];

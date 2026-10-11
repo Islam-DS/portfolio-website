@@ -56,8 +56,9 @@ export function Navbar() {
             Mahbubul Islam
           </a>
 
-          <ul className="hidden items-center gap-8 xl:flex">
-            {navLinks.map((link) => {
+          {/* "Contact" is covered by the Get-in-touch button on desktop */}
+          <ul className="hidden items-center gap-5 xl:flex 2xl:gap-9">
+            {navLinks.filter((l) => l.href !== "#contact").map((link) => {
               const id = link.href.replace("#", "");
               const isActive = activeSection === id;
               return (
@@ -65,7 +66,7 @@ export function Navbar() {
                   <a
                     href={link.href}
                     className={cn(
-                      "relative py-1 text-[21.6px] font-medium tracking-wide transition-colors duration-300",
+                      "relative whitespace-nowrap py-1 text-[19px] font-medium tracking-wide transition-colors duration-300 2xl:text-[21.6px]",
                       isActive ? "text-white" : "text-white/75 hover:text-white"
                     )}
                   >
@@ -85,7 +86,7 @@ export function Navbar() {
 
           <a
             href="#contact"
-            className="hidden whitespace-nowrap text-[21.6px] font-medium tracking-wide text-white/85 transition-colors duration-300 hover:text-white xl:block"
+            className="hidden whitespace-nowrap rounded-full border border-cinema-warm/70 px-4 py-1.5 text-[19px] 2xl:px-5 2xl:py-2 2xl:text-[20px] font-semibold tracking-wide text-cinema-warm transition-colors duration-300 hover:bg-cinema-warm hover:text-cinema-ink xl:block"
           >
             Get in touch →
           </a>

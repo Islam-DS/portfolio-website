@@ -28,7 +28,7 @@ export function Contact() {
           variants={fadeInUp}
           className="section-label !text-white/70"
         >
-          05 — Contact
+          06 — Contact
         </motion.p>
 
         <RevealText
