@@ -1,18 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, ChevronDown, MapPin } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { work, type WorkItem } from "@/data/journey";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { CountUpNumber } from "@/components/effects/CountUpNumber";
 import { Emphasized } from "@/components/ui/Emphasized";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
 
-const TUNNEL_COPIES = 5;
-const TUNNEL_LOOP_S = 3.2;
 const ACCENT = "#D9F99D";
 
 /** Role details: meta, short points, and the full CV paragraph behind a toggle. */
@@ -87,58 +83,13 @@ function RoleDetail({ item, compact }: { item: WorkItem; compact?: boolean }) {
 }
 
 /**
- * Work experience on a black stage. A slim kinetic-type tunnel strip
- * (JOURNEY / EXPERIENCE streaming from a vanishing point) introduces it;
- * below, each role leads with its headline number from the CV (counting up)
+ * Work experience on a black stage. Each role leads with its headline number from the CV (counting up)
  * on the left, and the selected role's short points sit in a panel on the
  * right, with the CV's full paragraph behind "Read full description".
  * Below lg the cards stack, each with its own details.
  */
 export function Experience() {
-  const tunnelRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const tunnel = tunnelRef.current;
-    if (!tunnel) return;
-    const height = tunnel.getBoundingClientRect().height;
-    const tl = gsap.timeline({ paused: true });
-    const addStream = (els: HTMLElement[], dir: 1 | -1) =>
-      els.forEach((el, i) =>
-        tl.fromTo(
-          el,
-          { scaleX: 0.06, scaleY: 0.035, y: 0, opacity: 0 },
-          {
-            scaleX: 2.4,
-            scaleY: 1.4,
-            y: dir * height * 0.6,
-            opacity: 1,
-            duration: TUNNEL_LOOP_S,
-            ease: "power2.in",
-            repeat: -1,
-          },
-          (i * TUNNEL_LOOP_S) / els.length
-        )
-      );
-    addStream(gsap.utils.toArray<HTMLElement>("[data-tunnel-top]", tunnel), -1);
-    addStream(gsap.utils.toArray<HTMLElement>("[data-tunnel-bottom]", tunnel), 1);
-    tl.progress(0.5);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return () => tl.kill();
-
-    const st = ScrollTrigger.create({
-      trigger: tunnel,
-      start: "top bottom",
-      end: "bottom top",
-      onToggle: (self) => (self.isActive ? tl.play() : tl.pause()),
-    });
-    return () => {
-      st.kill();
-      tl.kill();
-    };
-  }, []);
-
-  const wordClass =
-    "absolute inset-x-0 top-1/2 -mt-[0.5em] select-none text-center font-display text-[56px] font-extrabold uppercase leading-none tracking-tight text-white opacity-0 will-change-transform md:text-[80px]";
 
   return (
     <SectionWrapper id="experience" className="overflow-hidden bg-cinema-ink-deep">
@@ -163,28 +114,7 @@ export function Experience() {
           </h2>
         </motion.header>
 
-        {/* Slim tunnel strip */}
-        <div ref={tunnelRef} aria-hidden className="relative h-[150px] overflow-hidden rounded-[24px] bg-black md:h-[190px]">
-          {Array.from({ length: TUNNEL_COPIES }).map((_, i) => (
-            <span key={`t${i}`} data-tunnel-top className={wordClass}>
-              Journey
-            </span>
-          ))}
-          {Array.from({ length: TUNNEL_COPIES }).map((_, i) => (
-            <span key={`b${i}`} data-tunnel-bottom className={wordClass}>
-              Experience
-            </span>
-          ))}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_30%_40%_at_50%_50%,rgba(0,0,0,0.95),transparent)]" />
-          <p
-            className="absolute inset-0 flex items-center justify-center font-mono text-[17px] font-semibold uppercase tracking-[0.2em]"
-            style={{ color: ACCENT }}
-          >
-            Work experience
-          </p>
-        </div>
-
-        <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-10">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-10">
           {/* Role cards */}
           <div className="flex flex-col gap-5 lg:col-span-5" role="tablist" aria-label="Roles">
             {work.map((item, i) => {

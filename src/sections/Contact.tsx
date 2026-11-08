@@ -2,7 +2,7 @@
 
 import { useState, type ComponentType } from "react";
 import { motion } from "framer-motion";
-import { Check, Copy, Github, Linkedin, GraduationCap } from "lucide-react";
+import { ArrowUpRight, BookOpen, Check, Copy, Github, GraduationCap, Linkedin } from "lucide-react";
 import { siteConfig } from "@/data/site";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { RevealText } from "@/components/effects/RevealText";
@@ -47,8 +47,9 @@ export function Contact() {
           variants={fadeInUp}
           className="mt-8 max-w-xl text-body-xl text-white/75"
         >
-          Open to research collaborations, speaking engagements, and transformative
-          AI projects.
+          Graduating in June 2027 and looking for MSc research opportunities in
+          medical AI and computational oncology — multimodal learning, DNA
+          methylation, and clinical models that hold up under honest evaluation.
         </motion.p>
 
         <motion.div
@@ -94,18 +95,23 @@ export function Contact() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeInUp}
-          className="mt-16 flex gap-6"
+          className="mt-14 flex flex-wrap gap-3"
         >
-          <Magnetic strength={0.4}>
-            <SocialLink href={siteConfig.github} icon={Github} label="GitHub" />
-          </Magnetic>
-          <Magnetic strength={0.4}>
-            <SocialLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
-          </Magnetic>
-          <Magnetic strength={0.4}>
-            <SocialLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
-          </Magnetic>
+          <SocialLink href={siteConfig.scholar} icon={BookOpen} label="Google Scholar" />
+          <SocialLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
+          <SocialLink href={siteConfig.github} icon={Github} label="GitHub" />
+          <SocialLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
         </motion.div>
+
+        <motion.p
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={fadeInUp}
+          className="mt-10 font-mono text-[16.5px] uppercase tracking-[0.1em] text-white/60"
+        >
+          References available upon request
+        </motion.p>
       </div>
     </SectionWrapper>
   );
@@ -125,11 +131,12 @@ function SocialLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={label}
       data-cursor
-      className="block text-white/70 transition-all duration-300 hover:scale-110 hover:text-white"
+      className="group inline-flex items-center gap-2.5 rounded-full border border-white/20 px-5 py-2.5 text-[18.5px] font-medium text-white/85 transition-colors duration-300 hover:border-cinema-warm hover:text-cinema-warm"
     >
       <Icon className="h-5 w-5" />
+      {label}
+      <ArrowUpRight className="h-4 w-4 opacity-50 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
     </a>
   );
 }

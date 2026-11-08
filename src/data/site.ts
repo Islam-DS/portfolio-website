@@ -13,6 +13,7 @@ export const siteConfig = {
   github: "https://github.com/Islam-DS",
   linkedin: "https://www.linkedin.com/in/mahbubul-islam-2002april/",
   orcid: "https://orcid.org/0009-0009-1910-1980",
+  scholar: "https://scholar.google.com/citations?user=x4BocSYAAAAJ&hl=en",
   keywords: [
     "AI Researcher",
     "Data Science",

@@ -1,4 +1,5 @@
 import { Hero } from "@/sections/Hero";
+import { Research } from "@/sections/Research";
 import { Education } from "@/sections/Education";
 import { Experience } from "@/sections/Experience";
 import { Volunteering } from "@/sections/Volunteering";
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <Research />
       <Education />
       <Experience />
       <Volunteering />
