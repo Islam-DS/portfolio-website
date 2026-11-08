@@ -12,7 +12,7 @@ export const education: EducationItem[] = [
   {
     institution: "Al-Farabi Kazakh National University",
     degree: "BSc in Data Science",
-    period: "2022 — Present",
+    period: "2023 — Present",
     location: "Almaty, Kazakhstan",
     highlights: [
       "International Government Scholar",

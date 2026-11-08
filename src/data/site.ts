@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Mahbubul Islam | AI Researcher & Data Science",
   description:
     "AI Researcher and Data Science student specializing in Oncology AI, Multimodal Learning, Federated Learning, and Medical AI. International scholar at Al-Farabi Kazakh National University.",
-  url: "https://mahbubul.dev",
+  url: "https://portfolio-website-three-kohl-62.vercel.app",
   author: "Mahbubul Islam",
   role: "AI Researcher | Data Science Student | Machine Learning Engineer",
   email: "mahbubulislam331@gmail.com",

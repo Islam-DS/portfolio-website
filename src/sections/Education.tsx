@@ -185,19 +185,21 @@ export function Education() {
 
       <FlightRoute />
 
-      {/* At lg the two diplomas share 9 grid rows (CSS subgrid), so the
-          title, name, degree, details, highlights and stamp line up across
-          both sheets no matter how many lines each institution name takes. */}
+      {/* At lg the two diplomas share 7 grid rows (CSS subgrid), so the
+          title, name, degree, details and highlights line up across both
+          sheets no matter how many lines each institution name takes. */}
       <div
         ref={sectionRef}
-        className="cinema-container-full grid grid-cols-1 gap-16 overflow-x-clip py-10 lg:grid-cols-2 lg:grid-rows-[repeat(9,auto)] lg:gap-x-12 lg:gap-y-0"
+        className="cinema-container-full grid grid-cols-1 gap-20 overflow-x-clip py-16 lg:grid-cols-2 lg:grid-rows-[repeat(7,auto)] lg:gap-x-12 lg:gap-y-0"
       >
         {records.map((item, i) => {
           const isScholar = Boolean(item.badge);
           const stampText = item.badge ?? item.period;
           const stampColor = isScholar ? STAMP_COLOR.scholar : STAMP_COLOR.done;
           const stampRot = isScholar ? -11 : 9;
-          const subgrid = "lg:grid lg:[grid-row:span_9/span_9] lg:[grid-template-rows:subgrid]";
+          const subgrid = "lg:grid lg:[grid-row:span_7/span_7] lg:[grid-template-rows:subgrid]";
+          const pill =
+            "inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-cinema-gold/40 bg-white/70 px-3.5 py-1.5 text-[17px] text-cinema-soft sm:px-4 sm:text-[19px]";
           return (
             <article
               key={item.institution}
@@ -207,7 +209,7 @@ export function Education() {
               {/* double gold frame */}
               <div className={`relative flex h-full flex-col border-[3px] border-cinema-gold/70 p-1.5 ${subgrid}`}>
                 <div
-                  className={`relative flex h-full flex-col items-center border border-cinema-gold/50 px-6 pb-12 pt-10 text-center sm:px-10 md:px-14 md:pt-14 lg:justify-items-center ${subgrid}`}
+                  className={`relative flex h-full flex-col items-center border border-cinema-gold/50 px-6 pb-8 pt-9 text-center sm:px-10 md:px-12 md:pb-10 md:pt-11 lg:justify-items-center ${subgrid}`}
                 >
                   {/* corner ornaments */}
                   {["left-2 top-2", "right-2 top-2 rotate-90", "bottom-2 right-2 rotate-180", "bottom-2 left-2 -rotate-90"].map(
@@ -216,81 +218,71 @@ export function Education() {
                     )
                   )}
 
-                  {/* 1 crest */}
-                  <span className="flex h-[72px] w-[72px] items-center justify-center rounded-full border-2 border-cinema-gold/60 text-cinema-gold">
-                    <GraduationCap className="h-9 w-9" strokeWidth={1.6} />
-                  </span>
+                  {/* 1 crest + label */}
+                  <div data-ink className="flex items-center justify-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-cinema-gold/60 text-cinema-gold">
+                      <GraduationCap className="h-6 w-6" strokeWidth={1.7} />
+                    </span>
+                    <span className="whitespace-nowrap font-mono text-[14px] font-semibold uppercase tracking-[0.12em] text-cinema-gold sm:text-[17px] sm:tracking-[0.18em]">
+                      Academic Record · {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
 
-                  {/* 2 label */}
-                  <p data-ink className="mt-6 whitespace-nowrap font-mono text-[14px] font-semibold uppercase tracking-[0.12em] text-cinema-gold sm:text-[17.5px] sm:tracking-[0.2em]">
-                    Academic Record · {String(i + 1).padStart(2, "0")}
-                  </p>
-
-                  {/* 3 institution */}
+                  {/* 2 institution */}
                   <h3
                     data-ink
-                    className="mt-5 font-display text-[34px] font-extrabold leading-[1.04] tracking-tight text-cinema-text [text-wrap:balance] md:text-[42px] lg:self-center xl:text-[50px]"
+                    className="mt-5 font-display text-[34px] font-extrabold leading-[1.04] tracking-tight text-cinema-text [text-wrap:balance] md:text-[42px] lg:self-center xl:text-[48px]"
                   >
                     {item.institution}
                   </h3>
 
-                  {/* 4 ornament rule */}
-                  <div className="mt-7 flex w-full items-center gap-4" aria-hidden>
+                  {/* 3 ornament rule */}
+                  <div className="mt-5 flex w-full items-center gap-4" aria-hidden>
                     <span className="h-px flex-1 bg-cinema-gold/50" />
                     <span className="h-2.5 w-2.5 rotate-45 bg-cinema-gold/80" />
                     <span className="h-px flex-1 bg-cinema-gold/50" />
                   </div>
 
-                  {/* 5 student */}
-                  <div data-ink className="mt-7">
-                    <p className="font-mono text-[15.5px] font-semibold uppercase tracking-[0.2em] text-cinema-muted">Student</p>
-                    <p className="mt-2 font-serif text-[48px] italic leading-none text-cinema-text md:text-[58px] xl:text-[64px]">
+                  {/* 4 student */}
+                  <div data-ink className="mt-5">
+                    <p className="font-mono text-[15px] font-semibold uppercase tracking-[0.2em] text-cinema-muted">Student</p>
+                    <p className="mt-1.5 font-serif text-[46px] italic leading-none text-cinema-text md:text-[54px] xl:text-[60px]">
                       {siteConfig.name}
                     </p>
                   </div>
 
-                  {/* 6 degree */}
+                  {/* 5 degree */}
                   <p
                     data-ink
-                    className="mt-7 font-display text-[24px] font-extrabold uppercase leading-tight tracking-[0.03em] md:text-[28px]"
+                    className="mt-5 font-display text-[24px] font-extrabold uppercase leading-tight tracking-[0.03em] md:text-[28px]"
                     style={{ color: stampColor }}
                   >
                     {item.degree}
                   </p>
 
-                  {/* 7 place + period */}
-                  <div data-ink className="mt-5 flex flex-col items-center gap-2.5">
-                    <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-cinema-gold/40 bg-white/70 px-3.5 py-1.5 text-[17px] text-cinema-soft sm:px-4 sm:text-[19px] md:text-[20px]">
+                  {/* 6 place + period, side by side */}
+                  <div data-ink className="mt-4 flex flex-wrap justify-center gap-2.5">
+                    <span className={pill}>
                       <MapPin className="h-4 w-4 shrink-0 text-cinema-gold" />
                       {item.location}
                     </span>
-                    <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-cinema-gold/40 bg-white/70 px-3.5 py-1.5 text-[17px] text-cinema-soft sm:px-4 sm:text-[19px] md:text-[20px]">
+                    <span className={pill}>
                       <CalendarDays className="h-4 w-4 shrink-0 text-cinema-gold" />
                       {item.period}
                     </span>
                   </div>
 
-                  {/* 8 highlights */}
-                  <div className="mt-9 w-full border-t border-cinema-gold/30 pt-7 lg:self-start">
-                    <ul className="mx-auto max-w-[32rem] space-y-3.5 text-left">
+                  {/* 7 highlights + rubber stamp side by side: the stamp fills the
+                      space beside the list instead of taking its own row */}
+                  <div className="mt-7 flex w-full flex-col items-center gap-6 border-t border-cinema-gold/30 pt-6 sm:flex-row sm:items-center lg:self-start">
+                    <ul className="flex-1 space-y-3 text-left">
                       {item.highlights.map((h) => (
-                        <li key={h} data-ink className="flex gap-3.5 text-[22px] leading-snug text-cinema-soft md:text-[23px]">
-                          <span className="mt-[0.55em] h-2 w-2 shrink-0 rotate-45 bg-cinema-gold" />
+                        <li key={h} data-ink className="flex gap-3 text-[21px] leading-snug text-cinema-soft md:text-[22px]">
+                          <span className="mt-[0.5em] h-2 w-2 shrink-0 rotate-45 bg-cinema-gold" />
                           {h}
                         </li>
                       ))}
                     </ul>
-                  </div>
-
-                  {/* 9 signature + rubber stamp, on their own row so the stamp
-                      never sits on readable text */}
-                  <div className="mt-10 flex w-full items-end justify-between gap-3 sm:gap-6 lg:self-end">
-                    <div data-ink className="text-left">
-                      <span className="block h-px w-20 bg-cinema-text/40 sm:w-40" />
-                      <span className="mt-2 block font-mono text-[15px] uppercase tracking-[0.1em] text-cinema-muted">
-                        {item.location.split(",")[0]}
-                      </span>
-                    </div>
 
                     {/* rotation set by GSAP (data-rot), with the same value inline
                         so the server-rendered final state matches */}
@@ -306,7 +298,7 @@ export function Education() {
                       }}
                     >
                       <span
-                        className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-dashed px-2 font-display text-[11px] font-extrabold uppercase leading-tight tracking-tight sm:h-32 sm:w-32 sm:px-3 sm:text-[13.5px] md:h-36 md:w-36 md:text-[15px]"
+                        className="flex h-28 w-28 flex-col items-center justify-center rounded-full border-2 border-dashed px-2 font-display text-[12.5px] font-extrabold uppercase leading-tight tracking-tight md:h-32 md:w-32 md:text-[14px]"
                         style={{ borderColor: stampColor }}
                       >
                         <span aria-hidden>★</span>
@@ -322,8 +314,8 @@ export function Education() {
               {item.image && (
                 <figure
                   data-photo
-                  className="absolute -top-8 hidden w-36 bg-white p-2 pb-6 shadow-cinema sm:block md:w-44"
-                  style={{ [i === 0 ? "left" : "right"]: "-1.25rem", transform: `rotate(${i === 0 ? -7 : 6}deg)` }}
+                  className="absolute -top-16 hidden w-32 bg-white p-2 pb-5 shadow-cinema sm:block md:w-36"
+                  style={{ [i === 0 ? "left" : "right"]: "-2.25rem", transform: `rotate(${i === 0 ? -7 : 6}deg)` }}
                 >
                   <span aria-hidden className="absolute -top-3 left-1/2 h-6 w-3 -ml-1.5 rounded-full border-2 border-cinema-muted/70" />
                   {/* plain <img> so the campus GIF keeps animating */}
