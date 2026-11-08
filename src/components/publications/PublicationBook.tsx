@@ -10,6 +10,7 @@ import { PublicationDoi } from "./PublicationDoi";
 const COVERS = [
   { bg: "#1E3A38", spine: "#132826" },
   { bg: "#4A2424", spine: "#321717" },
+  { bg: "#22304A", spine: "#151F31" },
 ];
 
 function citationFor(pub: Publication) {
