@@ -155,9 +155,11 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
               </button>
             </div>
           </div>
-          <div className="relative mt-8 min-h-[340px]">
+          {/* All panels share one grid cell, so the box is as tall as the longest
+              project text instead of a fixed height it could spill out of. */}
+          <div className="mt-8 grid">
             {projects.map((project) => (
-              <div key={project.id} data-stage-info className="absolute inset-0">
+              <div key={project.id} data-stage-info className="[grid-area:1/1]">
                 <ProjectInfo project={project} />
               </div>
             ))}
@@ -171,7 +173,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
               <div
                 key={project.id}
                 data-stack-card
-                className="absolute left-[8%] top-[30%] w-[76%]"
+                className="absolute left-[8%] top-[30%] w-[76%] max-w-[540px]"
                 style={i === 0 ? undefined : { opacity: 0 }}
               >
                 <div className="flex flex-col overflow-hidden rounded-[32px] border border-black/10 bg-cinema-elevated shadow-cinema">
