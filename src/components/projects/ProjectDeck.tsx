@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { ComponentType } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Dna, FlaskConical, Microscope, Network } from "lucide-react";
+import { ChevronLeft, ChevronRight, Dna, FlaskConical, Microscope, Network } from "lucide-react";
 import { Project } from "@/data/projects";
 import { ProjectInfo } from "./ProjectInfo";
 import { ProjectProgress } from "./ProjectProgress";
@@ -23,7 +22,6 @@ const TAG_ICON: Record<string, ComponentType<{ className?: string; strokeWidth?:
   "Negative Result": Microscope,
 };
 
-const AUTO_ADVANCE_MS = 2200;
 
 type Slot = { xPercent: number; yPercent: number; scale: number; opacity: number; zIndex: number };
 
@@ -41,13 +39,10 @@ const SLOTS: Record<number, Slot> = {
 /**
  * Desktop-only, motion-enabled stacked card animation, modelled on the
  * Taste Skill reference video: one card per project, overlapping along a
- * diagonal. Every few seconds the pile shifts one step — the front card
- * slides off the bottom-right, the card behind it grows into the front,
- * and the next one fades in from the top. Wraps around, so it loops
- * forever. The text panel beside it follows the front card.
- *
- * Runs only while the section is on screen (ScrollTrigger enter/leave, no
- * pin) and pauses while the visitor hovers or keyboard-focuses it.
+ * diagonal. The visitor steps through with previous/next buttons or the
+ * arrow keys (no autoplay): the front card slides off the bottom-right, the
+ * card behind grows into the front, and the next fades in from the top.
+ * Wraps around. The text panel beside it follows the front card.
  * Transform/opacity only; cards leaving past the column's right edge are
  * clipped there (overflow-x only, so nothing is cut off vertically).
  */
@@ -56,6 +51,8 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -112,62 +109,24 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
       if (lineRef.current) lineRef.current.style.transform = `scaleY(${(next + 1) / n})`;
     }
 
-    let timer: number | null = null;
-    let inView = false;
-    let hovered = false;
-    function start() {
-      if (timer || !inView || hovered) return;
-      timer = window.setInterval(() => setActive((activeIndex + 1) % n), AUTO_ADVANCE_MS);
-    }
-    function stop() {
-      if (timer) {
-        window.clearInterval(timer);
-        timer = null;
-      }
-    }
-
-    const st = ScrollTrigger.create({
-      trigger: section,
-      start: "top 75%",
-      end: "bottom top",
-      onEnter: () => {
-        inView = true;
-        start();
-      },
-      onEnterBack: () => {
-        inView = true;
-        start();
-      },
-      onLeave: () => {
-        inView = false;
-        stop();
-      },
-      onLeaveBack: () => {
-        inView = false;
-        stop();
-      },
-    });
-
-    const pause = () => {
-      hovered = true;
-      stop();
+    // Visitor-driven: previous / next buttons and arrow keys, no autoplay —
+    // a reader should decide how long to look at each project.
+    const prevBtn = prevRef.current;
+    const nextBtn = nextRef.current;
+    const goPrev = () => setActive((activeIndex - 1 + n) % n);
+    const goNext = () => setActive((activeIndex + 1) % n);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") goPrev();
+      if (e.key === "ArrowRight") goNext();
     };
-    const resume = () => {
-      hovered = false;
-      start();
-    };
-    stage.addEventListener("mouseenter", pause);
-    stage.addEventListener("mouseleave", resume);
-    stage.addEventListener("focusin", pause);
-    stage.addEventListener("focusout", resume);
+    prevBtn?.addEventListener("click", goPrev);
+    nextBtn?.addEventListener("click", goNext);
+    stage.addEventListener("keydown", onKey);
 
     return () => {
-      stop();
-      st.kill();
-      stage.removeEventListener("mouseenter", pause);
-      stage.removeEventListener("mouseleave", resume);
-      stage.removeEventListener("focusin", pause);
-      stage.removeEventListener("focusout", resume);
+      prevBtn?.removeEventListener("click", goPrev);
+      nextBtn?.removeEventListener("click", goNext);
+      stage.removeEventListener("keydown", onKey);
     };
   }, [projects]);
 
@@ -175,7 +134,27 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
     <div ref={sectionRef} className="cinema-container-full relative py-12">
       <div ref={stageRef} className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
-          <ProjectProgress total={projects.length} counterRef={counterRef} lineRef={lineRef} />
+          <div className="flex items-center justify-between gap-6">
+            <ProjectProgress total={projects.length} counterRef={counterRef} lineRef={lineRef} />
+            <div className="flex gap-2.5">
+              <button
+                ref={prevRef}
+                type="button"
+                aria-label="Previous project"
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-black/20 text-cinema-text transition-colors hover:border-cinema-ink hover:bg-cinema-ink hover:text-white"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                ref={nextRef}
+                type="button"
+                aria-label="Next project"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-cinema-ink text-white transition-colors hover:bg-cinema-blue"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
           <div className="relative mt-8 min-h-[340px]">
             {projects.map((project) => (
               <div key={project.id} data-stage-info className="absolute inset-0">

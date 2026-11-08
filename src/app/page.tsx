@@ -12,11 +12,11 @@ export default function Home() {
     <>
       <Hero />
       <Research />
-      <Education />
-      <Experience />
-      <Volunteering />
-      <Projects />
       <Publications />
+      <Projects />
+      <Experience />
+      <Education />
+      <Volunteering />
       <Contact />
     </>
   );

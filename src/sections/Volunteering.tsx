@@ -64,7 +64,7 @@ export function Volunteering() {
     <SectionWrapper id="volunteering">
       <div className="cinema-container-full">
         <SectionHeading
-          index="03"
+          index="05"
           label="Volunteering"
           title="Giving back"
           emphasis="back"

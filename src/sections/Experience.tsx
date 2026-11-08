@@ -102,7 +102,7 @@ export function Experience() {
           variants={fadeInUp}
         >
           <div className="mb-6 flex items-center gap-3">
-            <span className="font-mono text-[18.9px] text-white/60">02</span>
+            <span className="font-mono text-[18.9px] text-white/60">03</span>
             <span className="h-px w-8 bg-white/25" />
             <span className="section-label !text-white/80">Experience</span>
           </div>

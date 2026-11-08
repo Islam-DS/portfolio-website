@@ -31,11 +31,11 @@ export const siteConfig = {
 };
 
 export const navLinks = [
-  { href: "#education", label: "Education" },
-  { href: "#experience", label: "Experience" },
-  { href: "#volunteering", label: "Volunteering" },
-  { href: "#projects", label: "Projects" },
   { href: "#publications", label: "Publications" },
+  { href: "#projects", label: "Projects" },
+  { href: "#experience", label: "Experience" },
+  { href: "#education", label: "Education" },
+  { href: "#volunteering", label: "Volunteering" },
   { href: "#contact", label: "Contact" },
 ];
 

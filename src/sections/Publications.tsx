@@ -7,7 +7,7 @@ export function Publications() {
   return (
     <SectionWrapper id="publications">
       <div className="cinema-container-full">
-        <SectionHeading index="05" label="Publications" title="Research contributions" emphasis="contributions" />
+        <SectionHeading index="01" label="Publications" title="Research contributions" emphasis="contributions" />
 
         <div className="space-y-20 lg:space-y-28">
           {publications.map((pub, i) => (

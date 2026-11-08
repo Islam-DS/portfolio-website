@@ -16,11 +16,6 @@
     scroll-behavior: auto;
   }
 
-  .custom-cursor-active,
-  .custom-cursor-active a,
-  .custom-cursor-active button {
-    cursor: none;
-  }
 
   ::selection {
     @apply bg-cinema-blue/40 text-white;

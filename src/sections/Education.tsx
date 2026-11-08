@@ -180,7 +180,7 @@ export function Education() {
   return (
     <SectionWrapper id="education">
       <div className="cinema-container-full">
-        <SectionHeading index="01" label="Education" title="Academic foundation" emphasis="foundation" />
+        <SectionHeading index="04" label="Education" title="Academic foundation" emphasis="foundation" />
       </div>
 
       <FlightRoute />

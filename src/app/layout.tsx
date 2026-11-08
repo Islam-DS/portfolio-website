@@ -6,7 +6,6 @@ import { CinematicBackground } from "@/components/effects/CinematicBackground";
 import { SceneBackground } from "@/components/effects/SceneBackground";
 import { SectionProgress } from "@/components/effects/SectionProgress";
 import { SmoothScroll } from "@/components/effects/SmoothScroll";
-import { CustomCursor } from "@/components/effects/CustomCursor";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { siteConfig } from "@/data/site";
 import "./globals.css";
@@ -76,7 +75,6 @@ export default function RootLayout({
         <JsonLd />
         <CinematicBackground />
         <SceneBackground />
-        <CustomCursor />
         <SectionProgress />
         <SmoothScroll>
           <Navbar />
