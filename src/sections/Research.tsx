@@ -30,6 +30,22 @@ const AREAS = [
   },
 ];
 
+/** Ongoing research, transcribed from the CV. */
+const ONGOING = [
+  {
+    title: "EVOFLUx-based epigenetic cancer evolution & prognostic biomarker development",
+    since: "Since Dec 2025",
+    detail:
+      "TCGA-KIRC → CPTAC-CCRCC: a Bayesian methylation-based framework inferring 10 patient-level cancer evolutionary parameters from 450K DNA methylation, followed by an EVOFLUx-derived prognostic biomarker and external validation.",
+  },
+  {
+    title: "WGCNA-based identification of oncogenic hub genes and regulatory modules",
+    since: "Since Sep 2025",
+    detail:
+      "Weighted Gene Co-expression Network Analysis (WGCNA) to identify hub modules linked to clinical cancer phenotypes.",
+  },
+];
+
 const FACTS = ["BSc Data Science · Al-Farabi KazNU", "GPA 3.82 / 4.00", "Graduating June 2027", "Seeking MSc research positions"];
 
 /**
@@ -84,6 +100,33 @@ export function Research() {
             ))}
           </motion.ul>
         </div>
+
+        <motion.div
+          className="mt-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={fadeInUp}
+        >
+          <p className="section-label flex items-center gap-3">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-cinema-blue opacity-60 motion-safe:animate-ping" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cinema-blue" />
+            </span>
+            Currently working on
+          </p>
+          <ul className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {ONGOING.map((o) => (
+              <li key={o.title} className="rounded-[24px] border border-cinema-blue/25 bg-white/70 p-6 md:p-7">
+                <p className="font-mono text-[15.5px] uppercase tracking-[0.06em] text-cinema-blue">{o.since}</p>
+                <h3 className="mt-2 font-display text-[22px] font-bold leading-tight tracking-tight text-cinema-text md:text-[24px]">
+                  {o.title}
+                </h3>
+                <p className="mt-2.5 text-[18.5px] leading-snug text-cinema-muted">{o.detail}</p>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
 
         <motion.ul
           className="mt-14 flex flex-wrap gap-3 border-t border-black/10 pt-8"

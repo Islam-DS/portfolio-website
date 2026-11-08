@@ -2,13 +2,28 @@
 
 import { useState, type ComponentType } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, BookOpen, Check, Copy, Github, GraduationCap, Linkedin } from "lucide-react";
+import { ArrowUpRight, BookOpen, Check, Copy, Download, Github, GraduationCap, Linkedin, Mail } from "lucide-react";
 import { siteConfig } from "@/data/site";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { RevealText } from "@/components/effects/RevealText";
-import { Magnetic } from "@/components/ui/Magnetic";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
 
+const ACCENT = "#E3B566";
+
+/** Facts a supervisor looks for, all from the CV. */
+const DETAILS = [
+  { label: "Looking for", value: "MSc research positions" },
+  { label: "Graduating", value: "June 2027" },
+  { label: "Based in", value: "Almaty, Kazakhstan (UTC+5)" },
+  { label: "Research focus", value: "Medical AI · Computational oncology" },
+  { label: "Languages", value: "Bengali (native) · English (C1–C2)" },
+];
+
+/**
+ * Contact for an academic audience: a plain statement of what I'm looking
+ * for, email as the primary channel (send or copy), labelled profile links,
+ * and an at-a-glance card with the facts a prospective supervisor checks.
+ */
 export function Contact() {
   const [copied, setCopied] = useState(false);
 
@@ -33,11 +48,11 @@ export function Contact() {
 
         <RevealText
           as="h2"
-          text="Let's build the future together."
+          text="Interested in working together?"
           splitBy="word"
-          emphasisFrom={4}
+          emphasisFrom={3}
           emphasisClassName="pr-[0.08em] font-serif font-normal italic tracking-normal text-[#E3B566]"
-          className="mt-8 block max-w-3xl font-display text-display-lg font-bold leading-[1.05] tracking-tight text-white"
+          className="mt-6 block max-w-4xl font-display text-display-md font-bold leading-[1.05] tracking-tight text-white"
         />
 
         <motion.p
@@ -45,11 +60,11 @@ export function Contact() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeInUp}
-          className="mt-8 max-w-xl text-body-xl text-white/75"
+          className="mt-6 max-w-3xl text-body-lg text-white/75"
         >
-          Graduating in June 2027 and looking for MSc research opportunities in
-          medical AI and computational oncology — multimodal learning, DNA
-          methylation, and clinical models that hold up under honest evaluation.
+          I&apos;m graduating in June 2027 and looking for MSc research opportunities in medical AI and
+          computational oncology — multimodal learning, DNA methylation, and clinical models that hold up under
+          honest evaluation. Email is the best way to reach me.
         </motion.p>
 
         <motion.div
@@ -57,67 +72,79 @@ export function Contact() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeInUp}
-          className="mt-14 flex flex-wrap items-center gap-x-10 gap-y-6 border-t border-white/10 pt-10"
+          className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-12"
         >
-          <Magnetic strength={0.25}>
-            <button
-              type="button"
-              onClick={handleCopyEmail}
-              data-cursor
-              className="group inline-flex max-w-full items-center gap-3 break-all text-left text-[22px] font-medium text-white transition-colors hover:text-cinema-warm sm:text-[28px] md:text-[40.5px]"
-            >
+          {/* Primary: email + links */}
+          <div className="rounded-[28px] border border-white/15 bg-white/[0.04] p-7 md:p-10 lg:col-span-7">
+            <p className="font-mono text-[15.5px] uppercase tracking-[0.12em] text-white/60">Email</p>
+            <p className="mt-3 break-all font-display text-[26px] font-semibold text-white md:text-[34px]">
               {siteConfig.email}
-              {copied ? (
-                <Check className="h-5 w-5 text-cinema-warm" />
-              ) : (
-                <Copy className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-60" />
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href={`mailto:${siteConfig.email}`}
+                data-cursor
+                className="inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-[19px] font-semibold text-cinema-ink transition-opacity hover:opacity-90"
+                style={{ background: ACCENT }}
+              >
+                <Mail className="h-5 w-5" />
+                Send an email
+              </a>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                data-cursor
+                className="inline-flex items-center gap-2.5 rounded-full border border-white/25 px-6 py-3 text-[19px] font-medium text-white transition-colors hover:border-white/60"
+              >
+                {copied ? <Check className="h-5 w-5" style={{ color: ACCENT }} /> : <Copy className="h-5 w-5" />}
+                {copied ? "Copied" : "Copy address"}
+              </button>
+              {siteConfig.cv && (
+                <a
+                  href={siteConfig.cv}
+                  download
+                  data-cursor
+                  className="inline-flex items-center gap-2.5 rounded-full border border-white/25 px-6 py-3 text-[19px] font-medium text-white transition-colors hover:border-white/60"
+                >
+                  <Download className="h-5 w-5" />
+                  Download CV
+                </a>
               )}
-            </button>
-          </Magnetic>
-        </motion.div>
+            </div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          variants={fadeInUp}
-          className="mt-8 flex flex-wrap items-center gap-8 text-white/75"
-        >
-          <a href={siteConfig.whatsapp} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-            WhatsApp
-          </a>
-          <span className="text-white/20">·</span>
-          <p>{siteConfig.location}</p>
-        </motion.div>
+            <div className="mt-8 border-t border-white/10 pt-7">
+              <p className="font-mono text-[15.5px] uppercase tracking-[0.12em] text-white/60">Profiles</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <ProfileLink href={siteConfig.scholar} icon={BookOpen} label="Google Scholar" />
+                <ProfileLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
+                <ProfileLink href={siteConfig.github} icon={Github} label="GitHub" />
+                <ProfileLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
+              </div>
+            </div>
+          </div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          variants={fadeInUp}
-          className="mt-14 flex flex-wrap gap-3"
-        >
-          <SocialLink href={siteConfig.scholar} icon={BookOpen} label="Google Scholar" />
-          <SocialLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
-          <SocialLink href={siteConfig.github} icon={Github} label="GitHub" />
-          <SocialLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
+          {/* At a glance */}
+          <div className="rounded-[28px] border border-white/15 bg-white/[0.04] p-7 md:p-10 lg:col-span-5">
+            <p className="font-mono text-[15.5px] uppercase tracking-[0.12em] text-white/60">At a glance</p>
+            <dl className="mt-5 divide-y divide-white/10">
+              {DETAILS.map((d) => (
+                <div key={d.label} className="flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                  <dt className="shrink-0 text-[17px] text-white/60">{d.label}</dt>
+                  <dd className="text-[19px] font-medium text-white sm:text-right">{d.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-5 font-mono text-[15px] uppercase tracking-[0.1em] text-white/55">
+              References available upon request
+            </p>
+          </div>
         </motion.div>
-
-        <motion.p
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          variants={fadeInUp}
-          className="mt-10 font-mono text-[16.5px] uppercase tracking-[0.1em] text-white/60"
-        >
-          References available upon request
-        </motion.p>
       </div>
     </SectionWrapper>
   );
 }
 
-function SocialLink({
+function ProfileLink({
   href,
   icon: Icon,
   label,
@@ -132,7 +159,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       data-cursor
-      className="group inline-flex items-center gap-2.5 rounded-full border border-white/20 px-5 py-2.5 text-[18.5px] font-medium text-white/85 transition-colors duration-300 hover:border-cinema-warm hover:text-cinema-warm"
+      className="group inline-flex items-center gap-2.5 rounded-full border border-white/20 px-5 py-2.5 text-[18px] font-medium text-white/85 transition-colors duration-300 hover:border-[#E3B566] hover:text-[#E3B566]"
     >
       <Icon className="h-5 w-5" />
       {label}

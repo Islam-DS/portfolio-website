@@ -9,6 +9,8 @@ import { RevealText } from "@/components/effects/RevealText";
 import { CountUpNumber } from "@/components/effects/CountUpNumber";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
+import { siteConfig } from "@/data/site";
+import { BookOpen, Download, Mail } from "lucide-react";
 
 export function Hero() {
   const [artworkFailed, setArtworkFailed] = useState(false);
@@ -155,8 +157,8 @@ export function Hero() {
               researcher
             </p>
             <p className="mt-5 max-w-md text-body-lg leading-snug text-cinema-muted">
-              AI researcher specialising in medical imaging, oncology, and
-              privacy-preserving federated learning.
+              Working on medical imaging, cancer genomics, and multimodal
+              clinical data.
             </p>
           </div>
 
@@ -214,12 +216,12 @@ export function Hero() {
           </div>
 
           <div ref={rightMetaRef} className="order-3 lg:col-span-4 lg:text-right">
-            <p className="font-mono text-[40.5px] font-bold leading-none tracking-tight text-cinema-text md:text-[48.6px] lg:text-[64.8px]">
-              &lt;engineer&gt;
+            <p className="font-display text-[40.5px] font-bold leading-none tracking-tight text-cinema-text md:text-[48.6px] lg:text-[64.8px]">
+              data scientist
             </p>
             <p className="mt-5 max-w-md text-body-lg leading-snug text-cinema-muted lg:ml-auto">
-              Machine learning engineer who ships reproducible,
-              production-grade pipelines.
+              BSc Data Science at Al-Farabi Kazakh National University,
+              graduating June 2027.
             </p>
           </div>
         </div>
@@ -232,35 +234,56 @@ export function Hero() {
         variants={fadeInUp}
         className="cinema-container-full relative z-10 mt-16 lg:mt-20"
       >
-        <div className="flex flex-col items-center gap-10 border-t border-black/10 pt-10 sm:flex-row sm:justify-center sm:gap-16">
-          <div className="flex items-center gap-8">
+        <div className="flex flex-col items-center gap-10 border-t border-black/10 pt-10 lg:flex-row lg:justify-between">
+          <div className="flex flex-wrap justify-center gap-3">
             <Magnetic>
               <a
-                href="#projects"
+                href={`mailto:${siteConfig.email}`}
                 data-cursor
-                className="group inline-flex items-center gap-2 text-[24.3px] font-medium text-cinema-text transition-colors hover:text-cinema-blue"
+                className="inline-flex items-center gap-2.5 rounded-full bg-cinema-ink px-6 py-3 text-[20px] font-semibold text-white transition-colors hover:bg-cinema-blue"
               >
-                Explore the research
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+                <Mail className="h-5 w-5" />
+                Email me
               </a>
             </Magnetic>
+            {siteConfig.cv && (
+              <a
+                href={siteConfig.cv}
+                download
+                data-cursor
+                className="inline-flex items-center gap-2.5 rounded-full border-2 border-cinema-ink px-6 py-2.5 text-[20px] font-semibold text-cinema-ink transition-colors hover:bg-cinema-ink hover:text-white"
+              >
+                <Download className="h-5 w-5" />
+                Download CV
+              </a>
+            )}
             <a
-              href="#contact"
+              href={siteConfig.scholar}
+              target="_blank"
+              rel="noopener noreferrer"
               data-cursor
-              className="text-[24.3px] font-medium text-cinema-muted transition-colors hover:text-cinema-text"
+              className="inline-flex items-center gap-2.5 rounded-full border border-black/20 px-6 py-3 text-[20px] font-medium text-cinema-text transition-colors hover:border-cinema-ink"
             >
-              Get in touch
+              <BookOpen className="h-5 w-5" />
+              Google Scholar
+            </a>
+            <a
+              href="#publications"
+              data-cursor
+              className="inline-flex items-center gap-2 rounded-full border border-black/20 px-6 py-3 text-[20px] font-medium text-cinema-text transition-colors hover:border-cinema-ink"
+            >
+              Publications ↓
             </a>
           </div>
 
           <div className="flex items-center gap-10">
             <div>
-              <CountUpNumber value={3} suffix="+" className="font-display text-[40.5px] font-bold text-cinema-text" />
-              <p className="mt-1 text-[21.6px] text-cinema-muted">Research domains</p>
+              <CountUpNumber value={3} className="font-display text-[40.5px] font-bold text-cinema-text" />
+              <p className="mt-1 text-[21.6px] text-cinema-muted">Publications</p>
             </div>
             <div>
-              <CountUpNumber value={2} className="font-display text-[40.5px] font-bold text-cinema-text" />
-              <p className="mt-1 text-[21.6px] text-cinema-muted">Countries · one path</p>
+              <p className="font-display text-[40.5px] font-bold text-cinema-text">3.82</p>
+              <p className="mt-1 text-[21.6px] text-cinema-muted">GPA / 4.00</p>
             </div>
           </div>
         </div>

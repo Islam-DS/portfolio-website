@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { CalendarDays, GraduationCap, MapPin, Plane } from "lucide-react";
+import { Award, CalendarDays, GraduationCap, MapPin, Plane } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { education } from "@/data/education";
+import { coursework, education, honours } from "@/data/education";
 import { siteConfig } from "@/data/site";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -331,6 +331,45 @@ export function Education() {
             </article>
           );
         })}
+      </div>
+
+      {/* Academic details: coursework and honours from the CV */}
+      <div className="cinema-container-full mt-8 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="lg:col-span-6">
+          <p className="section-label">Relevant coursework</p>
+          <ul className="mt-6 flex flex-wrap gap-2.5">
+            {coursework.map((c) => (
+              <li
+                key={c}
+                className="rounded-full border border-black/15 bg-white/70 px-4 py-1.5 text-[18px] text-cinema-soft"
+              >
+                {c}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="lg:col-span-6">
+          <p className="section-label">Honours &amp; selection</p>
+          <ul className="mt-6 space-y-4">
+            {honours.map((h) => (
+              <li
+                key={h.title}
+                className="flex gap-4 rounded-[22px] border border-black/10 bg-cinema-elevated p-5 shadow-cinema md:p-6"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cinema-gold/10 text-cinema-gold">
+                  <Award className="h-5 w-5" strokeWidth={1.8} />
+                </span>
+                <div>
+                  <p className="font-display text-[21px] font-bold leading-tight tracking-tight text-cinema-text md:text-[23px]">
+                    {h.title}
+                  </p>
+                  <p className="mt-1 font-mono text-[15.5px] uppercase tracking-[0.06em] text-cinema-gold">{h.period}</p>
+                  <p className="mt-2 text-[18.5px] leading-snug text-cinema-muted">{h.detail}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </SectionWrapper>
   );
