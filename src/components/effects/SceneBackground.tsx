@@ -24,10 +24,10 @@ export function SceneBackground() {
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    // Render at the screen's size once so the baked image covers any window.
+    const width = Math.max(window.screen.width, window.innerWidth);
+    const height = Math.max(window.screen.height, window.innerHeight);
 
     const canvas = document.createElement("canvas");
     let renderer: THREE.WebGLRenderer;
@@ -41,15 +41,8 @@ export function SceneBackground() {
     } catch {
       return; // no WebGL — the flat cream background stands on its own
     }
-    // A soft, half-opacity backdrop gains nothing from retina resolution;
-    // rendering below 1x keeps the GPU from competing with scrolling.
-    renderer.setPixelRatio(0.75);
-    renderer.setSize(width, height);
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    host.appendChild(canvas);
+    renderer.setPixelRatio(1);
+    renderer.setSize(width, height, false);
 
     const scene = new THREE.Scene();
     // Steep look-down so the surface fills the frame. A shallower angle shows the
@@ -100,84 +93,47 @@ export function SceneBackground() {
     scene.add(fill);
     scene.add(new THREE.HemisphereLight(0xf7f3e9, 0xc7a86f, 0.85));
 
-    const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    const onMove = (e: MouseEvent) => {
-      mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
-    };
-    if (!coarse) window.addEventListener("mousemove", onMove, { passive: true });
+    // Baked ONCE into a flat image, then WebGL is shut down. A live WebGL
+    // canvas — even one that never re-renders — sat as a translucent
+    // full-screen layer the browser re-blended on every scroll frame, which
+    // was the site's main source of lag (~33-180ms frames without GPU
+    // compositing). Here the waves are rendered a single time, composited
+    // onto the cream ground at the old 50% strength in a 2D canvas, and set
+    // as one opaque background image: the cheapest layer a browser can draw.
+    uniforms.uTime.value = 6;
+    uniforms.uDrift.value = 4;
+    renderer.render(scene, camera);
 
-    let scrollN = 0; // 0..1 down the document
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      scrollN = max > 0 ? window.scrollY / max : 0;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    const flat = document.createElement("canvas");
+    flat.width = width;
+    flat.height = height;
+    const ctx = flat.getContext("2d");
+    let cancelled = false;
+    if (ctx) {
+      ctx.fillStyle = "#F7F3E9";
+      ctx.fillRect(0, 0, width, height);
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(canvas, 0, 0, width, height);
+      flat.toBlob(
+        (blob) => {
+          if (!blob || cancelled) return;
+          host.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
+        },
+        "image/jpeg",
+        0.9
+      );
+    }
 
-    let raf = 0;
-    let docVisible = true;
-    const onVis = () => (docVisible = document.visibilityState === "visible");
-    document.addEventListener("visibilitychange", onVis);
-
-    const clock = new THREE.Clock();
-    let scrollEased = scrollN;
-    let lastRender = -1;
-    // Frame-rate-independent easing: same feel at 30, 60 or 144Hz.
-    const ease = (perFrameAt60: number, dt: number) => 1 - Math.pow(1 - perFrameAt60, dt * 60);
-
-    const tick = () => {
-      raf = requestAnimationFrame(tick);
-      if (!docVisible) return;
-
-      const t = clock.getElapsedTime();
-      // While the page scrolls (or the mouse moves the camera) render every
-      // frame: at 30fps the backdrop visibly judders against content scrolling
-      // at the display's 60-144Hz. Only when idle — just the slow waves
-      // moving — drop to 30fps, where the difference can't be seen.
-      const moving =
-        Math.abs(scrollN - scrollEased) > 0.0001 ||
-        Math.abs(mouse.tx - mouse.x) > 0.001 ||
-        Math.abs(mouse.ty - mouse.y) > 0.001;
-      if (!moving && t - lastRender < 1 / 30) return;
-      const dt = lastRender < 0 ? 1 / 60 : Math.min(t - lastRender, 0.1);
-      lastRender = t;
-      scrollEased += (scrollN - scrollEased) * ease(0.05, dt);
-      mouse.x += (mouse.tx - mouse.x) * ease(0.03, dt);
-      mouse.y += (mouse.ty - mouse.y) * ease(0.03, dt);
-
-      // scroll pushes the wave field forward so the surface keeps changing
-      uniforms.uTime.value = t;
-      uniforms.uDrift.value = scrollEased * 26;
-
-      camera.position.x = mouse.x * 1.6;
-      camera.position.y = 13 - mouse.y * 0.8 - scrollEased * 1.2;
-      camera.lookAt(0, 0, -1);
-
-      renderer.render(scene, camera);
-    };
-    tick();
-
-    const onResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
-    };
-    window.addEventListener("resize", onResize);
+    geo.dispose();
+    mat.dispose();
+    renderer.dispose();
+    renderer.forceContextLoss();
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-      document.removeEventListener("visibilitychange", onVis);
-      geo.dispose();
-      mat.dispose();
-      renderer.dispose();
-      if (canvas.parentNode === host) host.removeChild(canvas);
+      cancelled = true;
+      const url = host.style.backgroundImage.match(/url\("?(blob:[^")]+)"?\)/)?.[1];
+      if (url) URL.revokeObjectURL(url);
+      host.style.backgroundImage = "";
     };
   }, []);
 
@@ -185,7 +141,7 @@ export function SceneBackground() {
     <div
       ref={hostRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-[5] opacity-[0.5]"
+      className="pointer-events-none fixed inset-0 -z-[5] bg-cover bg-center"
     />
   );
 }

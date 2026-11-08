@@ -138,7 +138,7 @@ export function Experience() {
   }, []);
 
   const wordClass =
-    "absolute inset-x-0 top-1/2 -mt-[0.5em] select-none text-center font-display text-[56px] font-extrabold uppercase leading-none tracking-tight text-white opacity-0 md:text-[80px]";
+    "absolute inset-x-0 top-1/2 -mt-[0.5em] select-none text-center font-display text-[56px] font-extrabold uppercase leading-none tracking-tight text-white opacity-0 will-change-transform md:text-[80px]";
 
   return (
     <SectionWrapper id="experience" className="overflow-hidden bg-cinema-ink-deep">

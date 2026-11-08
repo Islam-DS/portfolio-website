@@ -72,22 +72,20 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference transition-[width,height,opacity] duration-150 ease-out"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cinema-ink transition-[width,height,opacity] duration-150 ease-out"
         style={{
           width: pressed ? 7 : 10,
           height: pressed ? 7 : 10,
           opacity: tracking && !label ? 1 : 0,
+          // White halo keeps the dark dot visible on black sections without a
+          // blend mode (mix-blend forced a full-page recomposite per mousemove).
+          boxShadow: "0 0 0 2px rgba(255,255,255,0.9)",
         }}
         aria-hidden
       />
       <div
         ref={ringRef}
-        className={`pointer-events-none fixed left-0 top-0 z-[9999] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center whitespace-nowrap rounded-full transition-[width,height,padding,opacity,background-color,border-color] duration-200 ease-out ${
-          // Inverts against whatever is underneath: dark on cream sections,
-          // light on the black Experience/Contact sections. The label pill
-          // has its own background, so it stays un-blended.
-          label ? "" : "mix-blend-difference"
-        }`}
+        className={`pointer-events-none fixed left-0 top-0 z-[9999] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center whitespace-nowrap rounded-full transition-[width,height,padding,opacity,background-color,border-color] duration-200 ease-out`}
         style={
           label
             ? {
@@ -95,7 +93,6 @@ export function CustomCursor() {
                 opacity: tracking ? 1 : 0,
                 backgroundColor: "rgba(247,243,233,0.9)",
                 border: "1px solid rgba(24,22,15,0.12)",
-                backdropFilter: "blur(8px)",
                 boxShadow: "0 8px 24px -12px rgba(24,22,15,0.35)",
               }
             : {
@@ -104,7 +101,9 @@ export function CustomCursor() {
                 padding: 0,
                 opacity: tracking ? (pressed ? 1 : active ? 1 : 0.7) : 0,
                 backgroundColor: "transparent",
-                border: `2px solid ${pressed ? "#fff" : "rgba(255,255,255,0.75)"}`,
+                // dark ring with a light outline: readable on cream and on black
+                border: `2px solid ${pressed ? "#000" : "rgba(0,0,0,0.6)"}`,
+                boxShadow: "0 0 0 1.5px rgba(255,255,255,0.6), inset 0 0 0 1.5px rgba(255,255,255,0.6)",
               }
         }
         aria-hidden
