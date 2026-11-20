@@ -29,9 +29,9 @@ export async function Projects() {
         <SectionHeading
           index="02"
           label="Projects"
-          title="Research engineered for impact"
-          emphasis="impact"
-          description="A curated selection of research spanning oncology AI, federated learning, and computational biology — synced live from GitHub."
+          title="Selected research projects"
+          emphasis="projects"
+          description="Medical imaging, cancer genomics, and spatial biology — each with its code on GitHub. Null and negative results are reported as they came out."
         />
       </div>
 

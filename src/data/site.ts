@@ -1,11 +1,11 @@
 export const siteConfig = {
-  name: "Mahbubul Islam",
-  title: "Mahbubul Islam | AI Researcher & Data Science",
+  name: "Md. Mahbubul Islam",
+  title: "Md. Mahbubul Islam | Medical AI & Data Science Research",
   description:
-    "AI Researcher and Data Science student specializing in Oncology AI, Multimodal Learning, Federated Learning, and Medical AI. International scholar at Al-Farabi Kazakh National University.",
+    "BSc Data Science student at Al-Farabi Kazakh National University (graduating June 2027) working on medical AI, computational oncology, and trustworthy model evaluation. Seeking MSc research positions.",
   url: "https://portfolio-website-three-kohl-62.vercel.app",
-  author: "Mahbubul Islam",
-  role: "AI Researcher | Data Science Student | Machine Learning Engineer",
+  author: "Md. Mahbubul Islam",
+  role: "BSc Data Science Student | Medical AI Researcher",
   email: "mahbubulislam331@gmail.com",
   phone: "+7 747 072 9603",
   whatsapp: "https://wa.me/77470729603",

@@ -24,6 +24,9 @@ export function CountUpNumber({ value, className, prefix = "", suffix = "" }: Co
       return;
     }
 
+    // The real value is server-rendered (so previews, no-JS and crawlers see
+    // it); only once JS runs is it reset to 0 and counted up on reveal.
+    el.textContent = `${prefix}0${suffix}`;
     const counter = { n: 0 };
     const st = ScrollTrigger.create({
       trigger: el,
@@ -46,7 +49,7 @@ export function CountUpNumber({ value, className, prefix = "", suffix = "" }: Co
 
   return (
     <span ref={ref} aria-label={`${prefix}${value}${suffix}`} className={className}>
-      {prefix}0{suffix}
+      {prefix}{value}{suffix}
     </span>
   );
 }

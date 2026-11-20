@@ -10,7 +10,7 @@ export const projectOverrides: Record<string, Partial<Project>> = {
   "Med_AI-bias-audit": {
     title: "Subgroup Bias & Failure-Mode Audit of a Chest X-ray Classifier",
     description:
-      "Trained a ConvNeXt-Tiny multi-label classifier on NIH ChestX-ray14, then audited where it fails rather than stopping at overall accuracy — 14 statistically significant subgroup AUROC gaps found across sex, age, and imaging view (e.g. Pneumothorax: 0.831 AUROC on PA view vs 0.680 on AP, p=0.002), with Equalized Odds fairness gaps, post-hoc calibration (temperature scaling), and Captum saliency maps explaining why. Published on Zenodo.",
+      "Trained a ConvNeXt-Tiny multi-label classifier on NIH ChestX-ray14, then audited where it fails rather than stopping at overall accuracy — 14 statistically significant subgroup AUROC gaps found across sex, age, and imaging view (e.g. Pneumothorax: 0.831 AUROC on PA view vs 0.680 on AP, p=0.002), with Equalized Odds fairness gaps, post-hoc calibration (temperature scaling), and Captum saliency maps explaining why. Archived on Zenodo (DOI 10.5281/zenodo.21753602).",
     tags: ["Fairness Audit", "Explainable AI", "Chest X-ray"],
     language: "Python",
     featured: true,
@@ -103,17 +103,17 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     language: "Python",
     image: "/images/projects/openclock-result-ui.png",
     imageAlt: "OpenClock results screen showing Horvath, Hannum, and DNAmPhenoAge age estimates cross-checked between two independent libraries, each with its own known bias noted",
-    stat: "1,388-Person Cross-Validation",
+    stat: "2 Validation Cohorts, 1,388 People",
   },
   "topognn-tnbc-recurrence": {
     title: "Topology-Augmented Graph Learning of TME Niches for TNBC Recurrence",
     description:
-      "A pre-registered, externally-validated study testing whether the spatial and topological organization of the tumor microenvironment improves triple-negative breast cancer recurrence prediction beyond cellular niche composition alone, benchmarked against the QUICHE spatial-niche baseline under a leakage-controlled protocol.",
+      "A pre-registered, externally-validated study testing whether the spatial and topological organization of the tumor microenvironment improves triple-negative breast cancer recurrence prediction beyond cellular niche composition alone, benchmarked against the QUICHE spatial-niche baseline under a leakage-controlled protocol. Across 313 + 142 patients, topology added no gain over QUICHE niches (C-index 0.535 vs 0.511, p = 0.436) — reported as a pre-registered null result.",
     tags: ["Spatial Biology", "Graph Learning", "Oncology"],
     language: "Python",
     image: "/images/projects/topognn-spatial-organization.png",
     imageAlt: "Two tumor microenvironments with the same cell types and numbers but different spatial organization, illustrating the project's central question of whether spatial arrangement carries independent prognostic signal",
-    stat: "Pre-Registered, Externally Validated",
+    stat: "Pre-Registered Null Result",
   },
   "nematic-orientation-histopathology": {
     title: "Anatomically Supervised Orientation-Tensor Learning in Histopathology",

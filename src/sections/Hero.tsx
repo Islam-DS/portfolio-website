@@ -141,7 +141,7 @@ export function Hero() {
         <div className="mt-8">
           <RevealText
             as="h1"
-            text="Mahbubul Islam"
+            text={siteConfig.name}
             splitBy="char"
             trigger="manual"
             delay={0.55}
@@ -184,7 +184,7 @@ export function Hero() {
                   <div ref={midLayerRef} className="absolute inset-0">
                     <Image
                       src={activeSrc}
-                      alt="Mahbubul Islam — AI Researcher"
+                      alt={`${siteConfig.name}, portrait`}
                       fill
                       priority
                       className="object-cover object-top"

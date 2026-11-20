@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { navLinks } from "@/data/site";
+import { navLinks, siteConfig } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -53,7 +53,7 @@ export function Navbar() {
         {!scrolled && <div className="absolute inset-0 bg-cinema-ink" />}
         <nav className="cinema-container relative flex items-center justify-between">
           <a href="#" className="font-display text-[24.3px] font-semibold tracking-tight text-white">
-            Mahbubul Islam
+            {siteConfig.name}
           </a>
 
           {/* "Contact" is covered by the Get-in-touch button on desktop */}
