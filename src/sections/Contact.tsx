@@ -16,7 +16,8 @@ const DETAILS = [
   { label: "Graduating", value: "June 2027" },
   { label: "Based in", value: "Almaty, Kazakhstan (UTC+5)" },
   { label: "Research focus", value: "Medical AI · Computational oncology" },
-  { label: "Languages", value: "Bengali (native) · English (C1–C2)" },
+  { label: "Languages", value: "Bengali (native) · English" },
+  { label: "IELTS", value: "7.0 overall (L 6.5 · R 6.5 · W 7.0 · S 7.0)" },
 ];
 
 /**

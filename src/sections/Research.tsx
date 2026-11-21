@@ -46,7 +46,7 @@ const ONGOING = [
   },
 ];
 
-const FACTS = ["BSc Data Science · Al-Farabi KazNU", "GPA 3.82 / 4.00", "Graduating June 2027", "Seeking MSc research positions"];
+const FACTS = ["BSc Data Science · Al-Farabi KazNU", "GPA 3.82 / 4.00", "IELTS 7.0", "Graduating June 2027", "Seeking MSc research positions"];
 
 /**
  * A short research statement for academic readers, placed straight after

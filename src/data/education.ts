@@ -24,13 +24,12 @@ export const education: EducationItem[] = [
   },
   {
     institution: "Government Laboratory High School",
-    degree: "Secondary Education",
-    period: "Completed",
+    degree: "Secondary School Certificate (SSC)",
+    period: "2019",
     location: "Dhaka, Bangladesh",
     highlights: [
-      "Science-focused curriculum with research orientation",
+      "SSC 2019 — GPA 5.00 / 5.00",
       "Leadership in Red Crescent Society and English Club",
-      "Foundation for computational and analytical thinking",
     ],
     image: "/images/enhanced_school_images.gif",
   },
