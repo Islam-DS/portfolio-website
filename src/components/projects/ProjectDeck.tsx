@@ -53,6 +53,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
   const lineRef = useRef<HTMLDivElement>(null);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const indexRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -81,6 +82,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
     if (counterRef.current) counterRef.current.textContent = "01";
     if (lineRef.current) lineRef.current.style.transform = `scaleY(${1 / n})`;
 
+    const rows = gsap.utils.toArray<HTMLButtonElement>("[data-jump]", indexRef.current ?? undefined);
     let activeIndex = 0;
     function setActive(next: number) {
       const prev = activeIndex;
@@ -105,6 +107,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
       });
 
       activeIndex = next;
+      rows.forEach((row, i) => row.setAttribute("aria-current", i === next ? "true" : "false"));
       if (counterRef.current) counterRef.current.textContent = String(next + 1).padStart(2, "0");
       if (lineRef.current) lineRef.current.style.transform = `scaleY(${(next + 1) / n})`;
     }
@@ -119,6 +122,14 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
       if (e.key === "ArrowLeft") goPrev();
       if (e.key === "ArrowRight") goNext();
     };
+    const jumps = rows.map((row, i) => {
+      const go = () => {
+        setActive(i);
+        stage.scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+      row.addEventListener("click", go);
+      return () => row.removeEventListener("click", go);
+    });
     prevBtn?.addEventListener("click", goPrev);
     nextBtn?.addEventListener("click", goNext);
     stage.addEventListener("keydown", onKey);
@@ -127,6 +138,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
       prevBtn?.removeEventListener("click", goPrev);
       nextBtn?.removeEventListener("click", goNext);
       stage.removeEventListener("keydown", onKey);
+      jumps.forEach((off) => off());
     };
   }, [projects]);
 
@@ -209,6 +221,34 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
             );
           })}
         </div>
+      </div>
+
+      {/* Every project at a glance, so nothing is hidden behind the arrows.
+          A row jumps the deck to that project. */}
+      <div className="mt-16 border-t border-black/10 pt-8">
+        <p className="font-mono text-[16.5px] uppercase tracking-[0.1em] text-cinema-muted">All projects</p>
+        <ol ref={indexRef} className="mt-4 grid grid-cols-2 gap-x-12">
+          {projects.map((project, i) => (
+            <li key={project.id}>
+              <button
+                type="button"
+                data-jump
+                aria-current={i === 0 ? "true" : "false"}
+                className="group flex w-full items-baseline gap-4 border-b border-black/10 py-4 text-left transition-colors hover:text-cinema-blue aria-[current=true]:text-cinema-gold"
+              >
+                <span className="font-mono text-[16.5px] text-cinema-muted group-aria-[current=true]:text-cinema-gold">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="flex-1 font-display text-[20px] font-semibold leading-snug text-cinema-text group-hover:text-cinema-blue group-aria-[current=true]:text-cinema-gold">
+                  {project.title}
+                </span>
+                {project.stat && (
+                  <span className="shrink-0 text-right text-[16.5px] text-cinema-muted">{project.stat}</span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );

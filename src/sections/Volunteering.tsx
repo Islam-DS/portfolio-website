@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { MapPin } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, MapPin } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { volunteering } from "@/data/volunteering";
@@ -10,6 +10,13 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Emphasized } from "@/components/ui/Emphasized";
 
 const ACCENT = "#B23A2A";
+
+/** First sentence of the CV paragraph; the rest opens on demand. */
+function splitSummary(text: string) {
+  // A full stop followed by a capital letter, so "M.A.D. (" isn't a break.
+  const m = /\.\s+(?=[A-Z])/.exec(text);
+  return m ? [text.slice(0, m.index + 1), text.slice(m.index + m[0].length)] : [text, ""];
+}
 
 /**
  * Volunteering as a timeline: a rail down the left fills in as the visitor
@@ -20,6 +27,17 @@ const ACCENT = "#B23A2A";
 export function Volunteering() {
   const listRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState<string | null>(null);
+
+  // Opening an entry changes the page height below it; re-measure triggers.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    ScrollTrigger.refresh();
+  }, [open]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -77,8 +95,11 @@ export function Volunteering() {
             <div ref={fillRef} className="h-full w-full rounded-full" style={{ background: ACCENT }} />
           </div>
 
-          <div className="space-y-20 md:space-y-24">
-            {volunteering.map((item) => (
+          <div className="space-y-14 md:space-y-16">
+            {volunteering.map((item) => {
+              const [lead, rest] = splitSummary(item.summary);
+              const isOpen = open === item.organization;
+              return (
               <article key={item.organization} data-vol className="relative">
                 <span
                   data-node
@@ -89,11 +110,13 @@ export function Volunteering() {
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-12">
                   <div data-rise className="lg:col-span-4">
-                    <p className="font-display text-[56px] font-extrabold leading-none tracking-tight md:text-[76px]" style={{ color: ACCENT }}>
-                      {item.startYear}
-                    </p>
-                    <p className="mt-1 font-serif text-[34px] italic leading-none text-cinema-soft md:text-[42px]">
-                      to {item.endYear === "Now" ? "present" : item.endYear}
+                    <p className="flex flex-wrap items-baseline gap-x-3">
+                      <span className="font-display text-[56px] font-extrabold leading-none tracking-tight md:text-[64px]" style={{ color: ACCENT }}>
+                        {item.startYear}
+                      </span>
+                      <span className="font-serif text-[34px] italic leading-none text-cinema-soft md:text-[38px]">
+                        to {item.endYear === "Now" ? "present" : item.endYear}
+                      </span>
                     </p>
                     <p className="mt-4 font-mono text-[17.5px] uppercase tracking-[0.08em] text-cinema-muted">{item.period}</p>
                     <p className="mt-1.5 flex items-center gap-2 text-[19px] text-cinema-muted">
@@ -117,13 +140,33 @@ export function Volunteering() {
                         {item.role}
                       </span>
                     </p>
-                    <p data-rise className="mt-6 text-[21.6px] leading-relaxed text-cinema-soft md:text-[23px]">
-                      <Emphasized text={item.summary} phrases={item.emphasis} strongClassName="font-semibold text-cinema-text" />
-                    </p>
+                    <div data-rise className="mt-6 text-[21.6px] leading-relaxed text-cinema-soft md:text-[23px]">
+                      <p>
+                        <Emphasized text={lead} phrases={item.emphasis} strongClassName="font-semibold text-cinema-text" />
+                      </p>
+                      {rest && isOpen && (
+                        <p className="mt-4">
+                          <Emphasized text={rest} phrases={item.emphasis} strongClassName="font-semibold text-cinema-text" />
+                        </p>
+                      )}
+                      {rest && (
+                        <button
+                          type="button"
+                          aria-expanded={isOpen}
+                          onClick={() => setOpen(isOpen ? null : item.organization)}
+                          className="mt-4 inline-flex items-center gap-1.5 font-mono text-[16.5px] font-semibold uppercase tracking-[0.08em] transition-opacity hover:opacity-70"
+                          style={{ color: ACCENT }}
+                        >
+                          {isOpen ? "Show less" : "Read more"}
+                          <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

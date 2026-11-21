@@ -18,6 +18,26 @@ function citationFor(pub: Publication) {
   return `${pub.authors} (${pub.year}). ${pub.title}. ${pub.venue}${pages}. https://doi.org/${pub.doi}`;
 }
 
+/** BibTeX for reference managers: @inproceedings for conference papers,
+ * @misc (with the server as publisher) for preprints. */
+function bibtexFor(pub: Publication) {
+  const surname = pub.authors.split(",")[0].trim().split(/\s+/).pop()!.toLowerCase();
+  const word = pub.title.toLowerCase().replace(/[^a-z\s]/g, "").split(/\s+/).find((w) => w.length > 3) ?? "paper";
+  const key = `${surname}${pub.year}${word}`;
+  const isConf = (pub.type ?? "Conference Paper") === "Conference Paper";
+  const fields: [string, string][] = [
+    ["title", `{${pub.title}}`],
+    ["author", pub.authors.split(",").map((a) => a.trim()).join(" and ")],
+    [isConf ? "booktitle" : "publisher", pub.venue.split(" · ")[0]],
+    ["year", pub.year],
+  ];
+  if (pub.pages) fields.push(["pages", pub.pages.replace("–", "--")]);
+  if (!isConf) fields.push(["note", "Preprint"]);
+  fields.push(["doi", pub.doi], ["url", pub.link]);
+  const body = fields.map(([k, v]) => `  ${k} = {${v}}`).join(",\n");
+  return `@${isConf ? "inproceedings" : "misc"}{${key},\n${body}\n}`;
+}
+
 /** Wraps every verbatim occurrence of a highlight phrase in a <mark>. */
 function Highlighted({ text, phrases }: { text: string; phrases?: string[] }) {
   const found = (phrases ?? []).filter((p) => text.includes(p));
@@ -62,11 +82,11 @@ function DoiBarcode({ doi }: { doi: string }) {
 }
 
 function CiteBlock({ pub }: { pub: Publication }) {
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    await navigator.clipboard.writeText(citationFor(pub));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const [copied, setCopied] = useState<"" | "text" | "bibtex">("");
+  const copy = async (kind: "text" | "bibtex") => {
+    await navigator.clipboard.writeText(kind === "text" ? citationFor(pub) : bibtexFor(pub));
+    setCopied(kind);
+    setTimeout(() => setCopied(""), 2000);
   };
   return (
     <div>
@@ -79,19 +99,24 @@ function CiteBlock({ pub }: { pub: Publication }) {
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <button
           type="button"
-          onClick={copy}
-          data-cursor
+          onClick={() => copy("text")}
           className="inline-flex items-center gap-2 rounded-full bg-cinema-ink-deep px-5 py-2.5 text-[17.5px] font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5"
         >
-          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          {copied ? "Copied!" : "Copy citation"}
+          {copied === "text" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {copied === "text" ? "Copied!" : "Copy citation"}
+        </button>
+        <button
+          type="button"
+          onClick={() => copy("bibtex")}
+          className="inline-flex items-center gap-2 rounded-full border border-black/15 px-5 py-2.5 font-mono text-[16.5px] font-semibold text-cinema-text transition-colors hover:bg-black/5"
+        >
+          {copied === "bibtex" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {copied === "bibtex" ? "Copied!" : "BibTeX"}
         </button>
         <a
           href={pub.link}
           target="_blank"
           rel="noopener noreferrer"
-          data-cursor
-          data-cursor-label="Read Paper"
           className="inline-flex items-center gap-2 rounded-full border border-black/15 px-5 py-2.5 text-[17.5px] font-semibold text-cinema-text transition-colors hover:bg-black/5"
         >
           View paper <ExternalLink className="h-4 w-4" />
@@ -188,14 +213,14 @@ export function PublicationBook({ pub, index }: { pub: Publication; index: numbe
           {/* bookplate */}
           <div aria-hidden className="flex items-baseline gap-3 text-cinema-gold">
             <span className="font-mono text-[15px] uppercase tracking-[0.12em]">No.</span>
-            <span className="font-serif text-[120px] italic leading-[0.8]">{String(index + 1).padStart(2, "0")}</span>
+            <span className="font-serif text-[88px] italic leading-[0.8]">{String(index + 1).padStart(2, "0")}</span>
           </div>
           <CiteBlock pub={pub} />
         </div>
       </div>
 
       {/* Right page */}
-      <article className="relative rounded-b-[22px] bg-[#FDFAF2] p-8 shadow-cinema md:p-12 lg:col-start-2 lg:rounded-l-md lg:rounded-r-[22px] xl:p-14">
+      <article className="relative rounded-b-[22px] bg-[#FDFAF2] p-8 shadow-cinema md:p-12 lg:col-start-2 lg:min-h-[680px] lg:rounded-l-md lg:rounded-r-[22px] xl:p-14">
         {/* Below lg the cover sits directly above this page and already shows
             the title, authors and venue, so it isn't repeated here. */}
         <div className="mb-8 hidden lg:block">
