@@ -143,6 +143,9 @@ export function PublicationBook({ pub, index }: { pub: Publication; index: numbe
   const rootRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
   const cover = COVERS[index % COVERS.length];
+  // Abstracts are clipped so all books are the same height; the full text
+  // opens on demand (and the book then grows to fit it).
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -220,10 +223,14 @@ export function PublicationBook({ pub, index }: { pub: Publication; index: numbe
       </div>
 
       {/* Right page */}
-      <article className="relative rounded-b-[22px] bg-[#FDFAF2] p-8 shadow-cinema md:p-12 lg:col-start-2 lg:min-h-[680px] lg:rounded-l-md lg:rounded-r-[22px] xl:p-14">
+      <article
+        className={`relative flex flex-col rounded-b-[22px] bg-[#FDFAF2] p-8 shadow-cinema md:p-12 lg:col-start-2 lg:rounded-l-md lg:rounded-r-[22px] xl:p-14 ${
+          expanded ? "lg:min-h-[860px] xl:min-h-[820px]" : "lg:h-[860px] xl:h-[820px]"
+        }`}
+      >
         {/* Below lg the cover sits directly above this page and already shows
             the title, authors and venue, so it isn't repeated here. */}
-        <div className="mb-8 hidden lg:block">
+        <div className="mb-8 hidden shrink-0 lg:block">
           <p className="font-mono text-[16.5px] uppercase tracking-[0.12em] text-cinema-muted">
             {type} · {pub.year}
           </p>
@@ -238,24 +245,45 @@ export function PublicationBook({ pub, index }: { pub: Publication; index: numbe
         </div>
 
         {pub.abstract && (
-          <>
-            <p className="font-mono text-[15px] uppercase tracking-[0.12em] text-cinema-gold">Abstract</p>
-            <p className="mt-3 text-[21.6px] leading-relaxed text-cinema-soft">
-              <Highlighted text={pub.abstract} phrases={pub.highlights} />
-            </p>
-          </>
+          <div className={`flex flex-col ${expanded ? "" : "lg:min-h-0 lg:flex-1"}`}>
+            <p className="shrink-0 font-mono text-[15px] uppercase tracking-[0.12em] text-cinema-gold">Abstract</p>
+            <div
+              className={`relative mt-3 ${expanded ? "" : "max-h-[15em] overflow-hidden lg:max-h-none lg:min-h-0 lg:flex-1"}`}
+            >
+              <p className="text-[21.6px] leading-relaxed text-cinema-soft">
+                <Highlighted text={pub.abstract} phrases={pub.highlights} />
+              </p>
+              {!expanded && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FDFAF2] to-transparent"
+                />
+              )}
+            </div>
+            <button
+              type="button"
+              aria-expanded={expanded}
+              onClick={() => {
+                setExpanded(!expanded);
+                requestAnimationFrame(() => ScrollTrigger.refresh());
+              }}
+              className="mt-3 shrink-0 self-start font-mono text-[16.5px] font-semibold uppercase tracking-[0.08em] text-cinema-gold transition-opacity hover:opacity-70"
+            >
+              {expanded ? "Show less ↑" : "Read full abstract ↓"}
+            </button>
+          </div>
         )}
 
         <p
-          className={`text-[18.5px] text-cinema-muted ${
-            pub.abstract ? "mt-8 border-t border-black/10 pt-5" : "lg:border-t lg:border-black/10 lg:pt-5"
+          className={`shrink-0 text-[18.5px] text-cinema-muted ${
+            pub.abstract ? "mt-6 border-t border-black/10 pt-5" : "lg:mt-auto lg:border-t lg:border-black/10 lg:pt-5"
           }`}
         >
           {pub.tags.join(" · ")}
         </p>
 
         {/* below lg the inside cover isn't shown, so the citation lives here */}
-        <div className="mt-8 border-t border-black/10 pt-8 lg:hidden">
+        <div className="mt-8 shrink-0 border-t border-black/10 pt-8 lg:hidden">
           <CiteBlock pub={pub} />
         </div>
       </article>
