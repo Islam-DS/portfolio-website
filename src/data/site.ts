@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Md. Mahbubul Islam | Medical AI & Data Science Research",
   description:
     "BSc Data Science student at Al-Farabi Kazakh National University (graduating June 2027) working on medical AI, computational oncology, and trustworthy model evaluation. Seeking MSc research positions.",
-  url: "https://portfolio-website-three-kohl-62.vercel.app",
+  url: "https://mahbubul-islam.vercel.app",
   author: "Md. Mahbubul Islam",
   role: "BSc Data Science Student | Medical AI Researcher",
   email: "mahbubulislam331@gmail.com",
