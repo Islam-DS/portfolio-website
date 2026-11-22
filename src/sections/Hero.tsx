@@ -131,7 +131,7 @@ export function Hero() {
       <div className="cinema-container-full relative z-10 text-center">
         <RevealText
           as="p"
-          text="International Government Scholar — AI Research"
+          text="Kazakhstan Government Scholar · Medical AI Research"
           className="section-label block justify-center"
           splitBy="word"
           trigger="manual"
