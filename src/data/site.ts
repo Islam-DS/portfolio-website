@@ -1,11 +1,11 @@
 export const siteConfig = {
   name: "Md. Mahbubul Islam",
-  title: "Md. Mahbubul Islam | Medical AI & Data Science Research",
+  title: "Md. Mahbubul Islam | Data Science & Trustworthy Machine Learning",
   description:
-    "BSc Data Science student at Al-Farabi Kazakh National University (graduating June 2027) working on medical AI, computational oncology, and trustworthy model evaluation. Seeking MSc research positions.",
+    "BSc Data Science student at Al-Farabi Kazakh National University (graduating June 2027) working on trustworthy machine learning across clinical, genomic, EEG and text data, including LLM and RAG evaluation. Seeking MSc research positions.",
   url: "https://mahbubul-islam.vercel.app",
   author: "Md. Mahbubul Islam",
-  role: "BSc Data Science Student | Medical AI Researcher",
+  role: "BSc Data Science Student | Machine Learning Researcher",
   email: "mahbubulislam331@gmail.com",
   phone: "+7 747 072 9603",
   whatsapp: "https://wa.me/77470729603",
@@ -21,7 +21,10 @@ export const siteConfig = {
     "AI Researcher",
     "Data Science",
     "Machine Learning",
-    "Oncology AI",
+    "Trustworthy Machine Learning",
+    "LLM Evaluation",
+    "Retrieval-Augmented Generation",
+    "EEG",
     "Medical AI",
     "Federated Learning",
     "Multimodal Learning",
@@ -40,6 +43,9 @@ export const navLinks = [
 ];
 
 export const focusAreas = [
+  "Trustworthy Machine Learning",
+  "LLM Evaluation",
+  "EEG Signal Analysis",
   "Oncology AI",
   "Multimodal Learning",
   "Federated Learning",

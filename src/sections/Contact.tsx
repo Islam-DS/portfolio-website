@@ -15,7 +15,7 @@ const DETAILS = [
   { label: "Looking for", value: "MSc research positions" },
   { label: "Graduating", value: "June 2027" },
   { label: "Based in", value: "Almaty, Kazakhstan (UTC+5)" },
-  { label: "Research focus", value: "Medical AI · Computational oncology" },
+  { label: "Research focus", value: "Trustworthy ML · Health & EEG data · LLM evaluation" },
   { label: "Languages", value: "Bengali (native) · English" },
   { label: "IELTS", value: "7.0 overall (L 6.5 · R 6.5 · W 7.0 · S 7.0)" },
 ];
@@ -63,9 +63,9 @@ export function Contact() {
           variants={fadeInUp}
           className="mt-6 max-w-3xl text-body-lg text-white/75"
         >
-          I&apos;m graduating in June 2027 and looking for MSc research opportunities in medical AI and
-          computational oncology — multimodal learning, DNA methylation, and clinical models that hold up under
-          honest evaluation. Email is the best way to reach me.
+          I&apos;m graduating in June 2027 and looking for MSc research opportunities in data science and machine
+          learning — multimodal and signal data, health applications, and LLM evaluation, with models that hold up
+          under honest evaluation. Email is the best way to reach me.
         </motion.p>
 
         <motion.div

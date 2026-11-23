@@ -7,6 +7,17 @@ import { Project } from "@/data/projects";
  * only exists to layer curated descriptions/images/demos on top.
  */
 export const projectOverrides: Record<string, Partial<Project>> = {
+  retractionbench: {
+    title: "RetractionBench: Retracted Evidence in Medical RAG",
+    description:
+      "Tests whether retrieval-augmented LLMs handle retracted medical evidence: 28 items screened from 71,540 records, 900 responses (3 models × 4 conditions × 3 seeds), blind hand labels, and pre-registered analyses. Even with the retraction notice in context, answers cited the retracted source in 166 of 209 responses (79%), and only 40 of 100 hand-labelled answers were correct.",
+    tags: ["LLM Evaluation", "RAG", "Research Integrity"],
+    language: "Python",
+    image: "/images/projects/retractionbench-failure-cascade.png",
+    imageAlt:
+      "Forest plot of RetractionBench results with 95% intervals: retraction tagging gaps in PubMed, retrieval of notices and replacement evidence, and how often models cited the retracted source or answered correctly",
+    stat: "79% Still Cited the Retraction",
+  },
   "Med_AI-bias-audit": {
     title: "Subgroup Bias & Failure-Mode Audit of a Chest X-ray Classifier",
     description:

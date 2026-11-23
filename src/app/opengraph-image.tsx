@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 /** Social preview card (email, LinkedIn, Slack link unfurls): the facts a
  * prospective supervisor scans first, instead of only the portrait. */
-export const alt = "Md. Mahbubul Islam — Medical AI and Data Science research";
+export const alt = "Md. Mahbubul Islam — Data Science and trustworthy machine learning";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -32,7 +32,7 @@ export default function OpengraphImage() {
             Md. Mahbubul Islam
           </div>
           <div style={{ display: "flex", marginTop: 16, fontSize: 40, color: "#3D3A33" }}>
-            Medical AI · Computational Oncology
+            Trustworthy ML · Health, EEG & Language Data
           </div>
         </div>
 

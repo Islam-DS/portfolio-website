@@ -1,22 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Dna, Layers, Network, ShieldCheck } from "lucide-react";
+import { Activity, Dna, MessageSquareText, ShieldCheck } from "lucide-react";
 import { fadeInUp, staggerContainer, viewportOnce } from "@/lib/motion";
 
 /** Each area cites work that is on this site or in the CV — nothing aspirational. */
 const AREAS = [
-  {
-    icon: Dna,
-    title: "Computational oncology & epigenetics",
-    evidence:
-      "DNA-methylation age prediction, EVOFLUx-based cancer evolution (TCGA-KIRC → CPTAC-CCRCC), WGCNA hub-gene modules.",
-  },
-  {
-    icon: Layers,
-    title: "Multimodal medical AI",
-    evidence: "Ultrasound + clinical data for pediatric appendicitis — multimodal fusion reached AUC 0.896.",
-  },
   {
     icon: ShieldCheck,
     title: "Trustworthy evaluation",
@@ -24,9 +13,22 @@ const AREAS = [
       "Subgroup bias audits, label-construction circularity, and pre-registered studies reported even when the result is null.",
   },
   {
-    icon: Network,
-    title: "Federated learning",
-    evidence: "Conflict-aware regularization under data heterogeneity — IEEE AIEEE 2026.",
+    icon: MessageSquareText,
+    title: "LLMs & retrieval-augmented generation",
+    evidence:
+      "RetractionBench: medical RAG answers cited the retracted source in 79% of responses even with the retraction notice in context.",
+  },
+  {
+    icon: Activity,
+    title: "Multimodal & signal data",
+    evidence:
+      "Ultrasound + clinical fusion for pediatric appendicitis (AUC 0.896), EEG-based cognitive state sensing, and federated learning across heterogeneous data (IEEE AIEEE 2026).",
+  },
+  {
+    icon: Dna,
+    title: "Health & genomic data",
+    evidence:
+      "DNA-methylation age prediction, EVOFLUx-based cancer evolution (TCGA-KIRC → CPTAC-CCRCC), WGCNA hub-gene modules.",
   },
 ];
 
@@ -71,8 +73,8 @@ export function Research() {
               <em className="pr-[0.08em] font-serif font-normal italic tracking-normal text-cinema-gold">hold up?</em>
             </h2>
             <p className="mt-6 text-body-lg text-cinema-muted">
-              I work where machine learning meets cancer biology and clinical data — and I care as much about whether a
-              finding survives honest evaluation as about the finding itself.
+              I build machine-learning models on real-world data — clinical, genomic, EEG signals, and text — and I care
+              as much about whether a finding survives honest evaluation as about the finding itself.
             </p>
           </motion.div>
 

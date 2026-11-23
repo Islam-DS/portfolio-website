@@ -10,6 +10,7 @@ import { ProjectsSection } from "@/components/projects/ProjectsSection";
  * not alphabetical or fetch order. Every entry here has a real result image.
  */
 const FEATURED_IDS = [
+  "retractionbench",
   "Med_AI-bias-audit",
   "pediatric-appendicitis-multimodal-ai",
   "OpenClock",
@@ -31,7 +32,7 @@ export async function Projects() {
           label="Projects"
           title="Selected research projects"
           emphasis="projects"
-          description="Medical imaging, cancer genomics, and spatial biology — each with its code on GitHub. Null and negative results are reported as they came out."
+          description="LLM evaluation, medical imaging, genomics, and spatial biology — each with its code on GitHub. Null and negative results are reported as they came out."
         />
       </div>
 

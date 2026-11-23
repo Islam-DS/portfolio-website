@@ -5,7 +5,7 @@ export function JsonLd() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: siteConfig.name,
-    jobTitle: "BSc Data Science Student and Medical AI Researcher",
+    jobTitle: "BSc Data Science Student and Machine Learning Researcher",
     description: siteConfig.description,
     url: siteConfig.url,
     email: siteConfig.email,

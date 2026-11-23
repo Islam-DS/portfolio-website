@@ -131,7 +131,7 @@ export function Hero() {
       <div className="cinema-container-full relative z-10 text-center">
         <RevealText
           as="p"
-          text="Kazakhstan Government Scholar · Medical AI Research"
+          text="Kazakhstan Government Scholar · Data Science Research"
           className="section-label block justify-center"
           splitBy="word"
           trigger="manual"
@@ -157,8 +157,8 @@ export function Hero() {
               researcher
             </p>
             <p className="mt-5 max-w-md text-body-lg leading-snug text-cinema-muted">
-              Working on medical imaging, cancer genomics, and multimodal
-              clinical data.
+              Machine learning on clinical, genomic, EEG, and text data, and
+              whether the result holds up.
             </p>
           </div>
 

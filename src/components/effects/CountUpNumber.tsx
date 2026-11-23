@@ -30,7 +30,7 @@ export function CountUpNumber({ value, className, prefix = "", suffix = "" }: Co
     const counter = { n: 0 };
     const st = ScrollTrigger.create({
       trigger: el,
-      start: "top 85%",
+      start: "top bottom",
       once: true,
       onEnter: () => {
         gsap.to(counter, {
