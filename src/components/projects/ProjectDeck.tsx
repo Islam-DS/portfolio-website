@@ -227,23 +227,30 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
           A row jumps the deck to that project. */}
       <div className="mt-16 border-t border-black/10 pt-8">
         <p className="font-mono text-[16.5px] uppercase tracking-[0.1em] text-cinema-muted">All projects</p>
-        <ol ref={indexRef} className="mt-4 grid grid-cols-2 gap-x-12">
+        <ol ref={indexRef} className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {projects.map((project, i) => (
-            <li key={project.id}>
+            <li key={project.id} className="flex">
               <button
                 type="button"
                 data-jump
                 aria-current={i === 0 ? "true" : "false"}
-                className="group flex w-full items-baseline gap-4 border-b border-black/10 py-4 text-left transition-colors hover:text-cinema-blue aria-[current=true]:text-cinema-gold"
+                className="group flex w-full flex-col gap-4 rounded-[24px] border border-black/10 bg-cinema-elevated/80 p-6 text-left shadow-[0_1px_2px_rgba(26,24,20,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-cinema-blue/40 hover:shadow-cinema aria-[current=true]:border-cinema-gold/60 aria-[current=true]:bg-cinema-gold/[0.07]"
               >
-                <span className="font-mono text-[16.5px] text-cinema-muted group-aria-[current=true]:text-cinema-gold">
-                  {String(i + 1).padStart(2, "0")}
+                <span className="flex items-center justify-between gap-3">
+                  <span className="font-mono text-[16.5px] text-cinema-muted group-aria-[current=true]:text-cinema-gold">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="whitespace-nowrap rounded-full border border-cinema-gold/30 px-3 py-1 font-mono text-[12px] uppercase tracking-[0.1em] text-cinema-gold">
+                    {project.tags[0]}
+                  </span>
                 </span>
                 <span className="flex-1 font-display text-[20px] font-semibold leading-snug text-cinema-text group-hover:text-cinema-blue group-aria-[current=true]:text-cinema-gold">
                   {project.title}
                 </span>
                 {project.stat && (
-                  <span className="shrink-0 text-right text-[16.5px] text-cinema-muted">{project.stat}</span>
+                  <span className="border-t border-black/10 pt-4 text-[16.5px] font-medium text-cinema-muted">
+                    {project.stat}
+                  </span>
                 )}
               </button>
             </li>

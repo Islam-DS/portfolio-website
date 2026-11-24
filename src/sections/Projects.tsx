@@ -14,6 +14,7 @@ const FEATURED_IDS = [
   "Med_AI-bias-audit",
   "pediatric-appendicitis-multimodal-ai",
   "OpenClock",
+  "Deconvolution-review",
   "nematic-orientation-histopathology",
   "topognn-tnbc-recurrence",
   "brca-singlecell-pam50",

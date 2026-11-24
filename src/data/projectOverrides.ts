@@ -116,6 +116,17 @@ export const projectOverrides: Record<string, Partial<Project>> = {
     imageAlt: "OpenClock results screen showing Horvath, Hannum, and DNAmPhenoAge age estimates cross-checked between two independent libraries, each with its own known bias noted",
     stat: "2 Validation Cohorts, 1,388 People",
   },
+  "Deconvolution-review": {
+    title: "Cell-Type Deconvolution: A Bibliometric Review",
+    description:
+      "A reproducible bibliometric review of methods that estimate cell-type proportions from bulk RNA and DNA-methylation data. 1,465 Scopus records were screened with written rules and checked by a blind audit, leaving 960 studies from 2010 to 2026. Publications grew about 29% a year from 2015 to 2025, but only 118 of the 960 propose new methods and 18 are benchmarks. RNA and DNA-methylation research form two largely separate keyword communities. Every reference is checked against Crossref before it is cited.",
+    tags: ["Bibliometrics", "DNA Methylation", "Transcriptomics"],
+    language: "Python",
+    image: "/images/projects/deconvolution-review-annual.png",
+    imageAlt:
+      "Stacked bar chart of deconvolution studies per year from 2010 to 2026, split into RNA, DNA methylation, both, and unclassified, rising to about 160 records a year",
+    stat: "960 Studies Reviewed",
+  },
   "topognn-tnbc-recurrence": {
     title: "Topology-Augmented Graph Learning of TME Niches for TNBC Recurrence",
     description:
