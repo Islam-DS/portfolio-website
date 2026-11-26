@@ -13,7 +13,19 @@ const thumbOf = (src: string) => src.replace(/(\.\w+)$/, "-thumb$1");
  * Photos from a role, as evidence. The thumbnails deal out from a stack once
  * (a short flip-through), then a click opens a full-size viewer with captions.
  */
-export function PhotoStrip({ photos, accent }: { photos: WorkPhoto[]; accent: string }) {
+export function PhotoStrip({
+  photos,
+  accent,
+  label = "From the classroom",
+  tone = "dark",
+}: {
+  photos: WorkPhoto[];
+  accent: string;
+  label?: string;
+  /** Background the strip sits on. */
+  tone?: "dark" | "light";
+}) {
+  const light = tone === "light";
   const [open, setOpen] = useState<number | null>(null);
   const reduce = useReducedMotion();
   const n = photos.length;
@@ -39,10 +51,14 @@ export function PhotoStrip({ photos, accent }: { photos: WorkPhoto[]; accent: st
 
   return (
     <div className="mt-8">
-      <p className="mb-4 flex items-center gap-2 font-mono text-[15.5px] uppercase tracking-[0.1em] text-white/60">
-        <Camera className="h-4 w-4" /> From the classroom
+      <p
+        className={`mb-4 flex items-center gap-2 font-mono text-[15.5px] uppercase tracking-[0.1em] ${
+          light ? "text-cinema-muted" : "text-white/60"
+        }`}
+      >
+        <Camera className="h-4 w-4" /> {label}
       </p>
-      <ul className="grid grid-cols-3 gap-3">
+      <ul className="grid max-w-[640px] grid-cols-3 gap-3">
         {photos.map((p, i) => (
           <motion.li
             key={p.src}
@@ -57,7 +73,9 @@ export function PhotoStrip({ photos, accent }: { photos: WorkPhoto[]; accent: st
               type="button"
               onClick={() => setOpen(i)}
               aria-label={`Open photo: ${p.caption}`}
-              className="group block w-full overflow-hidden rounded-2xl border border-white/15 bg-white/5"
+              className={`group block w-full overflow-hidden rounded-2xl border ${
+                light ? "border-black/10 bg-black/5 shadow-cinema" : "border-white/15 bg-white/5"
+              }`}
             >
               <img
                 src={thumbOf(p.src)}

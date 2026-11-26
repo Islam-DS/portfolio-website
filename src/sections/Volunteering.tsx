@@ -8,6 +8,7 @@ import { volunteering } from "@/data/volunteering";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Emphasized } from "@/components/ui/Emphasized";
+import { PhotoStrip } from "@/components/experience/PhotoStrip";
 
 const ACCENT = "#B23A2A";
 
@@ -162,6 +163,11 @@ export function Volunteering() {
                         </button>
                       )}
                     </div>
+                    {item.photos && item.photos.length > 0 && (
+                      <div data-rise>
+                        <PhotoStrip photos={item.photos} accent={ACCENT} label="Photos" tone="light" />
+                      </div>
+                    )}
                   </div>
                 </div>
               </article>

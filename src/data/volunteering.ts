@@ -1,3 +1,5 @@
+import type { WorkPhoto } from "./journey";
+
 /** Volunteering experience, transcribed from the CV. Newest first. */
 export interface VolunteerItem {
   organization: string;
@@ -10,6 +12,8 @@ export interface VolunteerItem {
   summary: string;
   /** Phrases bolded in the CV — each must appear verbatim in `summary`. */
   emphasis: string[];
+  /** Photos as evidence (faces other than mine blurred). */
+  photos?: WorkPhoto[];
 }
 
 export const volunteering: VolunteerItem[] = [
@@ -43,6 +47,23 @@ export const volunteering: VolunteerItem[] = [
       "two hours each week",
       "certified Search and Rescue (SAR) professional",
     ],
+    photos: [
+      {
+        src: "/images/volunteering/red-crescent-award.jpg",
+        alt: "Glass award plaque from the Youth Red Crescent Unit of Government Laboratory High School, Dhaka, with the Red Crescent emblem",
+        caption: "Special honour award, Youth Red Crescent Unit, Govt. Laboratory High School",
+      },
+      {
+        src: "/images/volunteering/red-crescent-group.jpg",
+        alt: "Red Crescent unit members in front of the school building holding award plaques, faces blurred for privacy",
+        caption: "Award day with fellow Red Crescent unit members",
+      },
+      {
+        src: "/images/volunteering/red-crescent-award-pair.jpg",
+        alt: "Two Red Crescent unit members holding award plaques in the school grounds, faces blurred for privacy",
+        caption: "Award day at Govt. Laboratory High School",
+      },
+    ],
   },
   {
     organization: "English Club of The Laboratorians (E.C.L)",
@@ -58,6 +79,13 @@ export const volunteering: VolunteerItem[] = [
       "secured sponsorships from major national corporations",
       "dedicated two hours weekly to mentoring junior members",
       "public speaking and leadership",
+    ],
+    photos: [
+      {
+        src: "/images/volunteering/ecl-event.jpg",
+        alt: "Large group of English Club members and volunteers with event lanyards on a field, faces blurred for privacy",
+        caption: "With the English Club team at an event",
+      },
     ],
   },
 ];

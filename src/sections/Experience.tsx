@@ -9,6 +9,7 @@ import { CountUpNumber } from "@/components/effects/CountUpNumber";
 import { Emphasized } from "@/components/ui/Emphasized";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
 import { PhotoStrip } from "@/components/experience/PhotoStrip";
+import { RoleVideo } from "@/components/experience/RoleVideo";
 
 const ACCENT = "#D9F99D";
 
@@ -50,6 +51,9 @@ function RoleDetail({ item, compact }: { item: WorkItem; compact?: boolean }) {
         ))}
       </ul>
 
+      {item.video && (
+        <RoleVideo src={item.video.src} poster={item.video.poster} label="In the classroom" caption={item.video.caption} />
+      )}
       {item.photos && item.photos.length > 0 && <PhotoStrip photos={item.photos} accent={ACCENT} />}
 
       {item.summary.length > 80 && (

@@ -14,6 +14,8 @@ export interface WorkItem {
   points: string[];
   /** Photos from the role (full size; a `-thumb` copy sits next to each). */
   photos?: WorkPhoto[];
+  /** Short silent montage from the role. */
+  video?: { src: string; poster: string; caption: string };
 }
 
 export interface WorkPhoto {
@@ -53,6 +55,11 @@ export const work: WorkItem[] = [
     emphasis: ["35+ students"],
     stat: { value: 35, suffix: "+", label: "students taught English" },
     points: ["Teaching English to 35+ students at Temirlan School"],
+    video: {
+      src: "/videos/temirlan-teaching.mp4",
+      poster: "/videos/temirlan-teaching-poster.jpg",
+      caption: "Preparing lessons and teaching English at Temirlan School",
+    },
   },
   {
     title: "Co-Founder & Teacher",
