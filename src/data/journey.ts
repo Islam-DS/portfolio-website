@@ -12,6 +12,14 @@ export interface WorkItem {
   stat: { value: number; suffix?: string; label: string };
   /** Short points condensed from `summary` — no facts beyond the CV. */
   points: string[];
+  /** Photos from the role (full size; a `-thumb` copy sits next to each). */
+  photos?: WorkPhoto[];
+}
+
+export interface WorkPhoto {
+  src: string;
+  alt: string;
+  caption: string;
 }
 
 export const work: WorkItem[] = [
@@ -68,6 +76,23 @@ export const work: WorkItem[] = [
       "Taught English, ICT, Science and Mathematics — Grade 8 to university level",
       "Created employment opportunities for 5 teachers",
       "Still teaching online from Kazakhstan, ~2 hours every Sunday",
+    ],
+    photos: [
+      {
+        src: "/images/experience/initiator-teaching.jpg",
+        alt: "Teaching at the whiteboard while students follow from their desks at Initiator Academy",
+        caption: "Teaching a class at Initiator Academy",
+      },
+      {
+        src: "/images/experience/initiator-students.jpg",
+        alt: "Selfie with a group of Initiator Academy students in the classroom, their faces blurred for privacy",
+        caption: "With students after class",
+      },
+      {
+        src: "/images/experience/initiator-team.jpg",
+        alt: "Group photo with a few Initiator Academy students, their faces blurred for privacy",
+        caption: "With one of my student groups",
+      },
     ],
   },
 ];

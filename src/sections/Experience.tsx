@@ -8,6 +8,7 @@ import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { CountUpNumber } from "@/components/effects/CountUpNumber";
 import { Emphasized } from "@/components/ui/Emphasized";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
+import { PhotoStrip } from "@/components/experience/PhotoStrip";
 
 const ACCENT = "#D9F99D";
 
@@ -48,6 +49,8 @@ function RoleDetail({ item, compact }: { item: WorkItem; compact?: boolean }) {
           </li>
         ))}
       </ul>
+
+      {item.photos && item.photos.length > 0 && <PhotoStrip photos={item.photos} accent={ACCENT} />}
 
       {item.summary.length > 80 && (
         <div className="mt-8 border-t border-white/10 pt-5">
