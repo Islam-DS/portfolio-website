@@ -49,7 +49,7 @@ export const work: WorkItem[] = [
   {
     title: "Co-Founder & Teacher",
     organization: "Initiator Academy",
-    period: "8 Jan 2021 — 4 Jan 2026",
+    period: "8 Jan 2021 — Present",
     location: "Dhaka, Bangladesh",
     summary:
       "Co-founded a private school in my locality to provide free, quality education to underprivileged students and create employment opportunities for capable but financially constrained peers. Served as Academic Section Manager and Financial Head, supporting academic and strategic development while teaching English, ICT, Science, and Mathematics. Worked ~6 hours/day before moving to Kazakhstan and now contribute ~2 hours/week online (Sundays). Taught, mentored, and supported 213 students from Grade 8 through university level and helped create employment opportunities for 5 teachers. Maintained an inclusive environment where all students received equal treatment regardless of financial background.",
@@ -67,6 +67,7 @@ export const work: WorkItem[] = [
       "Academic Section Manager and Financial Head",
       "Taught English, ICT, Science and Mathematics — Grade 8 to university level",
       "Created employment opportunities for 5 teachers",
+      "Still teaching online from Kazakhstan, ~2 hours every Sunday",
     ],
   },
 ];

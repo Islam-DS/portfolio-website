@@ -2,13 +2,15 @@
 
 import { useState, type ComponentType } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, BookOpen, Check, Copy, Download, Github, GraduationCap, Linkedin, Mail, Youtube } from "lucide-react";
+import { ArrowUpRight, BookOpen, Check, Copy, Download, Github, GraduationCap, Linkedin, Mail, Send, Youtube } from "lucide-react";
 import { siteConfig } from "@/data/site";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { RevealText } from "@/components/effects/RevealText";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
 
 const ACCENT = "#E3B566";
+/** Pre-filled subject, so a message sent from the site is easy to spot. */
+const EMAIL_SUBJECT = "Contact from your website";
 
 /** Facts a supervisor looks for, all from the CV. */
 const DETAILS = [
@@ -83,13 +85,23 @@ export function Contact() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a
-                href={`mailto:${siteConfig.email}`}
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${siteConfig.email}&su=${encodeURIComponent(EMAIL_SUBJECT)}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 data-cursor
                 className="inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-[19px] font-semibold text-cinema-ink transition-opacity hover:opacity-90"
                 style={{ background: ACCENT }}
               >
                 <Mail className="h-5 w-5" />
-                Send an email
+                Write in Gmail
+              </a>
+              <a
+                href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(EMAIL_SUBJECT)}`}
+                data-cursor
+                className="inline-flex items-center gap-2.5 rounded-full border border-white/25 px-6 py-3 text-[19px] font-medium text-white transition-colors hover:border-white/60"
+              >
+                <Send className="h-5 w-5" />
+                Open email app
               </a>
               <button
                 type="button"
@@ -112,6 +124,10 @@ export function Contact() {
                 </a>
               )}
             </div>
+            <p className="mt-5 text-[17px] leading-snug text-white/60">
+              These buttons open your own email with my address filled in, so your message comes straight to my inbox.
+              Or copy the address and write from any email account.
+            </p>
 
             <div className="mt-8 border-t border-white/10 pt-7">
               <p className="font-mono text-[15.5px] uppercase tracking-[0.12em] text-white/60">Profiles</p>
