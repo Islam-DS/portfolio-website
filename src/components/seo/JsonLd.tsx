@@ -20,7 +20,7 @@ export function JsonLd() {
         name: "Government Laboratory High School",
       },
     ],
-    sameAs: [siteConfig.scholar, siteConfig.orcid, siteConfig.github, siteConfig.linkedin],
+    sameAs: [siteConfig.scholar, siteConfig.orcid, siteConfig.github, siteConfig.linkedin, siteConfig.youtube],
   };
 
   return (

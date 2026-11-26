@@ -2,7 +2,7 @@
 
 import { useState, type ComponentType } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, BookOpen, Check, Copy, Download, Github, GraduationCap, Linkedin, Mail } from "lucide-react";
+import { ArrowUpRight, BookOpen, Check, Copy, Download, Github, GraduationCap, Linkedin, Mail, Youtube } from "lucide-react";
 import { siteConfig } from "@/data/site";
 import { SectionWrapper } from "@/components/effects/SectionWrapper";
 import { RevealText } from "@/components/effects/RevealText";
@@ -120,6 +120,7 @@ export function Contact() {
                 <ProfileLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
                 <ProfileLink href={siteConfig.github} icon={Github} label="GitHub" />
                 <ProfileLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
+                <ProfileLink href={siteConfig.youtube} icon={Youtube} label="YouTube" />
               </div>
             </div>
           </div>

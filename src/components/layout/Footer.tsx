@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentType } from "react";
-import { BookOpen, Github, Linkedin, GraduationCap, Heart } from "lucide-react";
+import { BookOpen, Github, Linkedin, GraduationCap, Heart, Youtube } from "lucide-react";
 import { siteConfig, navLinks } from "@/data/site";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 
@@ -19,6 +19,7 @@ export function Footer() {
               <SocialLink href={siteConfig.github} icon={Github} label="GitHub" />
               <SocialLink href={siteConfig.linkedin} icon={Linkedin} label="LinkedIn" />
               <SocialLink href={siteConfig.orcid} icon={GraduationCap} label="ORCID" />
+              <SocialLink href={siteConfig.youtube} icon={Youtube} label="YouTube" />
               <SocialLink href={siteConfig.whatsapp} icon={WhatsAppIcon} label="WhatsApp" />
             </div>
           </div>

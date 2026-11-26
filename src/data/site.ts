@@ -14,6 +14,7 @@ export const siteConfig = {
   linkedin: "https://www.linkedin.com/in/mahbubul-islam-2002april/",
   orcid: "https://orcid.org/0009-0009-1910-1980",
   scholar: "https://scholar.google.com/citations?user=x4BocSYAAAAJ&hl=en",
+  youtube: "https://www.youtube.com/@mahbubulislam9737",
   /** Public CV PDF under /public. Empty until a version without date of
    * birth and home address is provided — CV buttons stay hidden until then. */
   cv: "",

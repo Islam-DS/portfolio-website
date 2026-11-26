@@ -28,23 +28,30 @@ const AREAS = [
     icon: Dna,
     title: "Health & genomic data",
     evidence:
-      "DNA-methylation age prediction, EVOFLUx-based cancer evolution (TCGA-KIRC → CPTAC-CCRCC), WGCNA hub-gene modules.",
+      "DNA-methylation age prediction, EVOFLUx-based cancer evolution (TCGA-KIRC → CPTAC-CCRCC), and a bibliometric review of 960 cell-type deconvolution studies.",
   },
 ];
 
-/** Ongoing research, transcribed from the CV. */
+/** Ongoing research. Unfinished work: describe the question and approach,
+ * not results that may still change. */
 const ONGOING = [
   {
+    title: "When does combining RNA and DNA methylation improve cell-type deconvolution?",
+    since: "In progress",
+    detail:
+      "Every tumour sample is a mix of cancer, immune and stromal cells, and that mix shapes prognosis. It can be read from a sample's gene expression or from its DNA methylation, and more and more studies now measure both. So it seems obvious that two views should beat one. But should they? Two omics can disagree, and they can also be wrong in the same way. I am building GateDecon, a model that decides for each sample and each cell type how much to trust each omic, to find out when combining them truly helps and when it cannot.",
+  },
+  {
     title: "EVOFLUx-based epigenetic cancer evolution & prognostic biomarker development",
-    since: "Since Dec 2025",
+    since: "Undergraduate thesis · Since Dec 2025",
     detail:
       "TCGA-KIRC → CPTAC-CCRCC: a Bayesian methylation-based framework inferring 10 patient-level cancer evolutionary parameters from 450K DNA methylation, followed by an EVOFLUx-derived prognostic biomarker and external validation.",
   },
   {
-    title: "WGCNA-based identification of oncogenic hub genes and regulatory modules",
-    since: "Since Sep 2025",
+    title: "Cross-country differences in the labour force participation of migrant women",
+    since: "In progress",
     detail:
-      "Weighted Gene Co-expression Network Analysis (WGCNA) to identify hub modules linked to clinical cancer phenotypes.",
+      "Do migrant women work or look for work as often as migrant men, and as often as women born in the same country? I am comparing these gaps across countries using ILOSTAT labour data and the UN DESA International Migrant Stock.",
   },
 ];
 
@@ -73,7 +80,8 @@ export function Research() {
               <em className="pr-[0.08em] font-serif font-normal italic tracking-normal text-cinema-gold">hold up?</em>
             </h2>
             <p className="mt-6 text-body-lg text-cinema-muted">
-              I build machine-learning models on real-world data — clinical, genomic, EEG signals, and text — and I care
+              I build machine-learning models on real-world data — clinical, genomic, EEG signals, text, and labour
+              statistics — and I care
               as much about whether a finding survives honest evaluation as about the finding itself.
             </p>
           </motion.div>
@@ -117,7 +125,7 @@ export function Research() {
             </span>
             Currently working on
           </p>
-          <ul className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <ul className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
             {ONGOING.map((o) => (
               <li key={o.title} className="rounded-[24px] border border-cinema-blue/25 bg-white/70 p-6 md:p-7">
                 <p className="font-mono text-[15.5px] uppercase tracking-[0.06em] text-cinema-blue">{o.since}</p>
