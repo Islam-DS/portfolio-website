@@ -43,7 +43,7 @@ const ONGOING = [
   },
   {
     title: "EVOFLUx-based epigenetic cancer evolution & prognostic biomarker development",
-    since: "Undergraduate thesis · Since Dec 2025",
+    since: "Undergraduate thesis",
     detail:
       "TCGA-KIRC → CPTAC-CCRCC: a Bayesian methylation-based framework inferring 10 patient-level cancer evolutionary parameters from 450K DNA methylation, followed by an EVOFLUx-derived prognostic biomarker and external validation.",
   },
