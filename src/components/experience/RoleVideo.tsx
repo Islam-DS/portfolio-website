@@ -7,7 +7,19 @@ import { Video } from "lucide-react";
  * Short silent montage from a role. Plays (muted, looping) only while on
  * screen; people who prefer reduced motion get the poster and controls.
  */
-export function RoleVideo({ src, poster, label, caption }: { src: string; poster: string; label: string; caption: string }) {
+export function RoleVideo({
+  src,
+  poster,
+  label,
+  caption,
+  landscape,
+}: {
+  src: string;
+  poster: string;
+  label: string;
+  caption: string;
+  landscape?: boolean;
+}) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -41,7 +53,7 @@ export function RoleVideo({ src, poster, label, caption }: { src: string; poster
         playsInline
         preload="metadata"
         aria-label={caption}
-        className="aspect-[4/5] w-full max-w-[420px] rounded-2xl border border-white/15 bg-black object-cover"
+        className={`${landscape ? "aspect-[4/3] max-w-[600px]" : "aspect-[4/5] max-w-[420px]"} w-full rounded-2xl border border-white/15 bg-black object-cover`}
       >
         {/* WebM (VP9) is smaller; MP4 (H.264) covers Safari and older browsers. */}
         <source src={src.replace(/\.mp4$/, ".webm")} type="video/webm" />

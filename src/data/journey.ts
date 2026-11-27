@@ -15,7 +15,7 @@ export interface WorkItem {
   /** Photos from the role (full size; a `-thumb` copy sits next to each). */
   photos?: WorkPhoto[];
   /** Short silent montage from the role. */
-  video?: { src: string; poster: string; caption: string };
+  video?: { src: string; poster: string; caption: string; landscape?: boolean };
 }
 
 export interface WorkPhoto {
@@ -84,6 +84,12 @@ export const work: WorkItem[] = [
       "Created employment opportunities for 5 teachers",
       "Still teaching online from Kazakhstan, ~2 hours every Sunday",
     ],
+    video: {
+      src: "/videos/initiator-academy.mp4",
+      poster: "/videos/initiator-academy-poster.jpg",
+      caption: "Classes and student groups at Initiator Academy (students' faces blurred)",
+      landscape: true,
+    },
     photos: [
       {
         src: "/images/experience/initiator-teaching.jpg",

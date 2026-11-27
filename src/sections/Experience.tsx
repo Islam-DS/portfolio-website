@@ -52,7 +52,10 @@ function RoleDetail({ item, compact }: { item: WorkItem; compact?: boolean }) {
       </ul>
 
       {item.video && (
-        <RoleVideo src={item.video.src} poster={item.video.poster} label="In the classroom" caption={item.video.caption} />
+        <RoleVideo src={item.video.src} poster={item.video.poster} label="In the classroom"
+          caption={item.video.caption}
+          landscape={item.video.landscape}
+        />
       )}
       {item.photos && item.photos.length > 0 && <PhotoStrip photos={item.photos} accent={ACCENT} />}
 
